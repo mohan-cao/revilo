@@ -41,8 +41,11 @@ Using Eclipse:
 ## Maven (if you've forgotten)
 
 `mvn clean` - Cleans project (start from scratch)
+
 `mvn clean test` - Run unit test (from scratch)
+
 `mvn test` - Run unit test
+
 `mvn package` - Package classes into a jar (works but not executable JAR yet)
 
 ## Nice
