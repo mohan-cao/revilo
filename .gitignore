@@ -24,3 +24,6 @@ hs_err_pid*
 # IntelliJ-specific files/folders
 .idea/
 *.iml
+
+# Macintosh-specific files that are very annoying
+.DS_Store
