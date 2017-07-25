@@ -1,6 +1,7 @@
-<div style="margin: 0 auto;width:100%;">
-<img style="display:inline-block;" src="http://placehold.it/800x500" alt="Our logo WIP"><br>
-<sup>Master branch is currently </sup><img style="display:inline-block;" src="https://travis-ci.com/mohan-cao/SE306-1.svg?token=geujzTyWrzPD96doTGqK&branch=master" alt="Build status">
+<div align="center">
+<a href="https://github.com/mohan-cao/SE306-1"><img style="display:inline-block;" src="https://placehold.it/400x250" alt="Our logo WIP"></a>
+<br>
+<sup>Master branch is currently </sup><a href="https://travis-ci.com/mohan-cao/SE306-1"><img style="display:inline-block;" src="https://travis-ci.com/mohan-cao/SE306-1.svg?token=geujzTyWrzPD96doTGqK&branch=master" alt="Build status"></a>
 </div>
 
 # SOFTENG 306 Project 1
