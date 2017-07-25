@@ -1,14 +1,16 @@
 <div align="center">
-<a href="https://github.com/mohan-cao/SE306-1"><img style="display:inline-block;" src="https://placehold.it/400x250" alt="Our logo WIP"></a>
+<a href="https://github.com/mohan-cao/revilo"><img style="display:inline-block;" src="./revilo.png" alt="Our logo WIP"></a>
 <br>
-<sup>Master branch is currently </sup><a href="https://travis-ci.com/mohan-cao/SE306-1"><img style="display:inline-block;" src="https://travis-ci.com/mohan-cao/SE306-1.svg?token=geujzTyWrzPD96doTGqK&branch=master" alt="Build status"></a>
+<sup>Master branch is currently </sup><a href="https://travis-ci.com/mohan-cao/revilo"><img style="display:inline-block;" src="https://travis-ci.com/mohan-cao/revilo.svg?token=geujzTyWrzPD96doTGqK&branch=master" alt="Build status"></a>
 </div>
 
-# SOFTENG 306 Project 1
+# Revilo Task Scheduler
 
-Greetings friends!
+The official page for the Revilo Task Scheduler Project!
 
-Please only merge branches if they pass the unit tests on the build server!
+Planning and documentation can be found here: [Revilo Wiki](https://github.com/mohan-cao/revilo/wiki)
+
+For developers, please only merge branches if they pass the unit tests on the build server!
 
 ## The Fam
 
@@ -22,7 +24,7 @@ Please only merge branches if they pass the unit tests on the build server!
 
 Clone the project anywhere
 
-`git clone git@github.com:mohan-cao/SE306-1`
+`git clone git@github.com:mohan-cao/revilo.git`
 
 Using IntelliJ IDEA:
 
@@ -37,7 +39,7 @@ Using Eclipse:
 3. Select the root directory of your project
 4. Do a few more trivial steps to reach the proof, and you're done!
 
-## Maven (if you've forgotten)
+## Installation and running unit tests
 
 `mvn clean` - Cleans project (start from scratch)
 
@@ -46,6 +48,8 @@ Using Eclipse:
 `mvn test` - Run unit test
 
 `mvn package` - Package classes into a jar (works but not executable JAR yet)
+
+`mvn install` - Do all the above and install the package
 
 ## Nice
 

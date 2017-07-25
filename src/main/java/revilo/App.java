@@ -1,4 +1,4 @@
-package SE306;
+package revilo;
 
 /**
  * Hello world!
