@@ -14,7 +14,6 @@ Please only merge branches if they pass the unit tests on the build server!
 
 - Abby Shen ashe848@aucklanduni.ac.nz
 - Aimee Tagle atag549@aucklanduni.ac.nz
-- Aprajit Gandhi can't find you in inbox :(
 - Michael Kemp mkem114@aucklanduni.ac.nz
 - Mohan Cao mcao024@aucklanduni.ac.nz
 - Terran Kroft tkro003@aucklanduni.ac.nz
