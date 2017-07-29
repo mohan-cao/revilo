@@ -1,5 +1,5 @@
 <div align="center">
-<a href="https://github.com/mohan-cao/revilo"><img style="display:inline-block;" src="./nz.co.revilo.png" alt="Our logo WIP"></a>
+<a href="https://github.com/mohan-cao/revilo"><img style="display:inline-block;" src="./revilo.png" alt="Our logo WIP"></a>
 <br>
 <sup>Master branch is currently </sup><a href="https://travis-ci.com/mohan-cao/revilo"><img style="display:inline-block;" src="https://travis-ci.com/mohan-cao/revilo.svg?token=geujzTyWrzPD96doTGqK&branch=master" alt="Build status"></a>
 </div>
