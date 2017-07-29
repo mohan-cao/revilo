@@ -1,14 +1,14 @@
 <div align="center">
-<a href="https://github.com/mohan-cao/nz.co.revilo"><img style="display:inline-block;" src="./nz.co.revilo.png" alt="Our logo WIP"></a>
+<a href="https://github.com/mohan-cao/revilo"><img style="display:inline-block;" src="./nz.co.revilo.png" alt="Our logo WIP"></a>
 <br>
-<sup>Master branch is currently </sup><a href="https://travis-ci.com/mohan-cao/nz.co.revilo"><img style="display:inline-block;" src="https://travis-ci.com/mohan-cao/nz.co.revilo.svg?token=geujzTyWrzPD96doTGqK&branch=master" alt="Build status"></a>
+<sup>Master branch is currently </sup><a href="https://travis-ci.com/mohan-cao/revilo"><img style="display:inline-block;" src="https://travis-ci.com/mohan-cao/revilo.svg?token=geujzTyWrzPD96doTGqK&branch=master" alt="Build status"></a>
 </div>
 
 # Revilo Task Scheduler
 
 The official page for the Revilo Task Scheduler Project!
 
-Planning and documentation can be found here: [Revilo Wiki](https://github.com/mohan-cao/nz.co.revilo/wiki)
+Planning and documentation can be found here: [Revilo Wiki](https://github.com/mohan-cao/revilo/wiki)
 
 For developers, please only merge branches if they pass the unit tests on the build server!
 
@@ -24,7 +24,7 @@ For developers, please only merge branches if they pass the unit tests on the bu
 
 Clone the project anywhere
 
-`git clone git@github.com:mohan-cao/nz.co.revilo.git`
+`git clone git@github.com:mohan-cao/revilo.git`
 
 Using IntelliJ IDEA:
 
