@@ -1,8 +1,14 @@
 package nz.co.revilo;
 
 import nz.co.revilo.Input.DotFileReader;
+import nz.co.revilo.Output.DotFileProducer;
+import nz.co.revilo.Output.DotFileWriter;
+import nz.co.revilo.Scheduling.AlgorithmManager;
+import nz.co.revilo.Scheduling.SchedulingAlgorithmManager;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.implementations.SingleGraph;
+
+import java.io.FileNotFoundException;
 
 /**
  * App is the main class using the singleton pattern and is used to take the command line arguments and co-ordinate
@@ -34,7 +40,7 @@ public class App {
             _inst = this;
         } else {
             System.out.println("App was instantiated more than one");
-            //TO-DO
+            //TODO
         }
     }
 
@@ -63,7 +69,7 @@ public class App {
                     try {
                         _inst._numExecutionCores = Integer.parseInt(args[j + 1]);
                     } catch (NumberFormatException e) {
-                        //TO-DO
+                        //TODO
                         System.out.println("Please only use digits and a value less than 2 billion for the number of cores argument");
                     }
                 }
@@ -82,10 +88,15 @@ public class App {
         // Parse file and give it algorithm manager to give results to. @Michael Kemp
         AlgorithmManager manager = new SchedulingAlgorithmManager(_inst._numExecutionCores);
         DotFileReader reader = new DotFileReader(_inst._inputFilename);
-        reader.startParsing(manager);
+        try {
+            reader.startParsing(manager);
+        } catch (FileNotFoundException e) {
+            //TODO
+            System.out.println("INPUT FILE NOT FOUND");
+        }
 
         // Output to file @Michael Kemp
-        DotFileProducer output = new DotFileWriter(_inst._outputFilename, SchedulingAlgorithmManager);
+        DotFileProducer output = new DotFileWriter(_inst._outputFilename);
         manager.inform(output);
 
 
