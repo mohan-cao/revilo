@@ -1,46 +1,34 @@
 package nz.co.revilo.Input;
 
+import java.io.FileNotFoundException;
+
 /**
  * DotFileParser is an abstract class designed to be extended to give all the required functionality to read a DOT file
  * then load the DAG into a data structure which is yet to be determined.
  *
  * @author Michael Kemp
  * @version 1.0
- * @since alpha
  */
 public abstract class DotFileParser {
 
-    boolean _finishedParsing = false;
-    String _filename;
+    private String _filename;
 
     /**
      * DotFileParser is a constructor for the abstract class which currently does nothing
      */
-    DotFileParser() {
-    }
-
-    /**
-     * Changes the filename of the file to be parsed
-     */
-    void changeFilename(String filename) {
+     public DotFileParser(String filename) {
         _filename = filename;
-        _finishedParsing = false;
     }
 
     /**
-     * Initiates the file parsing on another thread
+     * Returns the name of the filename to be parsed
      */
-    abstract void startParsing();
-
-    /**
-     * Returns true if the file has already been parsed
-     */
-    boolean finishedParsing() {
-        return _finishedParsing;
+    protected String getFilename() {
+        return _filename;
     }
 
     /**
-     * Add a listener (to the list) to be sent the results upon parsing finish
+     * Initiates the file parsing on another thread and returns the result to the listener
      */
-    abstract void addParseResultListener();
+    public abstract void startParsing(ParseResultListener newListener) throws FileNotFoundException;
 }
