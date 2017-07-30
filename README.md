@@ -9,6 +9,7 @@
 The official page for the Revilo Task Scheduler Project!
 
 Planning and documentation can be found here: [Revilo Wiki](https://github.com/mohan-cao/revilo/wiki)
+Shared Google Drive folder for resources: [Revilo Project Folder](https://drive.google.com/open?id=0B6EjuC_mOLoyZ2NCa0RuOEp4Y3c)
 
 For developers, please only merge branches if they pass the unit tests on the build server!
 
