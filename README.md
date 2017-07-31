@@ -6,7 +6,7 @@
 
 # Revilo Task Scheduler
 
-The official page for the Revilo Task Scheduler Project!
+The official page for the Revilo (**ruh -*VEE*- low**) Task Scheduler Project!
 
 Planning and documentation can be found here: [Revilo Wiki](https://github.com/mohan-cao/revilo/wiki)
 
