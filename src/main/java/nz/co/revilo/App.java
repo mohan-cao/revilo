@@ -24,7 +24,7 @@ public class App {
 
     public static final String REGEX_VISUALISATION = "-[vV]*";
     public static final String REGEX_OUTPUT_FILENAME = "-[oO]*";
-    public static final String REGEX_EXFECUTION_CORES = "-[pP]*";
+    public static final String REGEX_EXECUTION_CORES = "-[pP]*";
     public static final boolean DEFAULT_VISUALISATION = false;
     public static final String DEFAULT_OUTPUT_FILENAME_EXTENSION = "−output.dot";
     public static final int DEFAULT_EXECUTION_CORES = 1;
@@ -65,7 +65,7 @@ public class App {
             //Number of execution cores
             _inst._numExecutionCores = DEFAULT_EXECUTION_CORES; //Default setting
             for (int j = 2; j < args.length - 1; j++) {
-                if (args[j].matches(REGEX_EXFECUTION_CORES)) {
+                if (args[j].matches(REGEX_EXECUTION_CORES)) {
                     try {
                         _inst._numExecutionCores = Integer.parseInt(args[j + 1]);
                     } catch (NumberFormatException e) {
