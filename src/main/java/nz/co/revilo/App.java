@@ -30,7 +30,7 @@ public class App {
     public static final int DEFAULT_EXECUTION_CORES = 1;
 
     private int _numExecutionCores;
-    private int _numParrallelProcessors;
+    private int _numParallelProcessors;
     private boolean _visualise;
     private String _outputFilename;
     private String _inputFilename;
@@ -51,7 +51,7 @@ public class App {
         if (args.length >= 2) {
             //Input filename and number of processors for the algorithm
             _inst._inputFilename = args[0];
-            _inst._numParrallelProcessors = Integer.parseInt(args[1]);
+            _inst._numParallelProcessors = Integer.parseInt(args[1]);
             _inst._outputFilename = _inst._inputFilename + DEFAULT_OUTPUT_FILENAME_EXTENSION;
 
             //Visualisation
@@ -105,9 +105,18 @@ public class App {
         graph.addNode("A" );
         graph.addNode("B" );
         graph.addNode("C" );
+        graph.addNode("D" );
+        graph.addNode("E" );
         graph.addEdge("AB", "A", "B");
         graph.addEdge("BC", "B", "C");
-        graph.addEdge("CA", "C", "A");
+        graph.addEdge("CD", "C", "D");
+        graph.addEdge("DE", "D", "E");
+        graph.addEdge("EA", "E", "A");
+        graph.addEdge("AC", "A", "C");
+        graph.addEdge("AD", "A", "D");
+        graph.addEdge("BD", "B", "D");
+        graph.addEdge("BE", "B", "E");
+        graph.addEdge("CE", "C", "E");
         graph.display();
     }
 }
