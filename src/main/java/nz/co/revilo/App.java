@@ -34,12 +34,12 @@ public class App {
     private boolean _visualise;
     private String _outputFilename;
     private String _inputFilename;
-
+    
     private App () {
-        if (_inst.equals(null)) {
+        if (_inst == null) {
             _inst = this;
         } else {
-            System.out.println("App was instantiated more than one");
+            System.out.println("App was instantiated more than once");
             //TODO
         }
     }
