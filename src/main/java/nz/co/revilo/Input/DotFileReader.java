@@ -28,6 +28,7 @@ public class DotFileReader extends DotFileParser {
 
         try {
         	//TODO Empty file
+        	//Note: regex might not work
             String line = reader.readLine();
             while (!line.equals("}") && (line != null)) {
                 //[\s]*[\p{Alpha}]*[\s]*.>[\s]*[\p{Alpha}]*[\s]*\[[\s]*[Ww]eight[\s]*[=][\s]*[\p{Digit}]*[\s]*\][\s]*;
