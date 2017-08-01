@@ -9,11 +9,12 @@
 The official page for the Revilo Task Scheduler Project!
 
 Planning and documentation can be found here: [Revilo Wiki](https://github.com/mohan-cao/revilo/wiki)
+
 Shared Google Drive folder for resources: [Revilo Project Folder](https://drive.google.com/open?id=0B6EjuC_mOLoyZ2NCa0RuOEp4Y3c)
 
 For developers, please only merge branches if they pass the unit tests on the build server!
 
-## The Fam
+## The Team
 
 - Abby Shen ashe848@aucklanduni.ac.nz
 - Aimee Tagle atag549@aucklanduni.ac.nz
@@ -21,7 +22,7 @@ For developers, please only merge branches if they pass the unit tests on the bu
 - Mohan Cao mcao024@aucklanduni.ac.nz
 - Terran Kroft tkro003@aucklanduni.ac.nz
 
-## Quick startup guide
+## Quick Startup Guide
 
 Clone the project anywhere
 
@@ -40,7 +41,7 @@ Using Eclipse:
 3. Select the root directory of your project
 4. Do a few more trivial steps to reach the proof, and you're done!
 
-## Installation and running unit tests
+## Installation and Running Unit Tests
 
 `mvn clean` - Cleans project (start from scratch)
 
@@ -51,7 +52,3 @@ Using Eclipse:
 `mvn package` - Package classes into a jar (works but not executable JAR yet)
 
 `mvn install` - Do all the above and install the package
-
-## Nice
-
-\>:]
