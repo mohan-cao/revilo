@@ -37,9 +37,11 @@ Using IntelliJ IDEA:
 Using Eclipse:
 
 1. Right click the left-hand side package explorer (where you have projects and stuff)
-2. Go to Import... > Maven > Existing Maven Project
-3. Select the root directory of your project
-4. Do a few more trivial steps to reach the proof, and you're done!
+2. Go to Import... > Git > Clone from repository
+3. Set up as new project using Project Wizard
+4. Name it "revilo"
+5. Right click project > Configure > Convert into Maven project
+6. Done! 
 
 ## Installation and Running Unit Tests
 
