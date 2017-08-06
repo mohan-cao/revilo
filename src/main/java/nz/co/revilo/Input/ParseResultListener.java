@@ -14,6 +14,6 @@ public interface ParseResultListener {
      * ParsingResults is called when a DotFileParser that the implementor is subscribed to has finished. The parameter
      * will be the results but is yet to be determined.
      */
-    void ParsingResults();
+    void ParsingResults(int[] nodeWeights, boolean[][] arcs, int[][] arcWeights);
 
 }
