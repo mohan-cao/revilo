@@ -1,0 +1,32 @@
+package nz.co.revilo.CommandLine;
+
+import com.beust.jcommander.Parameter;
+
+/**
+ * Holds the parameters used for CLI parsing as well as their getters. The instance variables
+ * are the default values but there may be better ways to do them in the future. Further investigation
+ * must be done for this.
+ *
+ * @author Terran Kroft
+ * @version pre-alpha
+ */
+public class Parameters {
+    @Parameter(names={"--parallel", "-p"})
+    private int _parallelCores = 0;
+    @Parameter(names={"--visualise", "--visualize", "-v"})
+    private boolean _visualise = false;
+    @Parameter(names={"--output", "-o"})
+    private String _outputName = "INPUT-output.dot";
+
+    public int getParallelCores() {
+        return _parallelCores;
+    }
+
+    public boolean getVisualise() {
+        return _visualise;
+    }
+
+    public String getOutputName() {
+        return _outputName;
+    }
+}
