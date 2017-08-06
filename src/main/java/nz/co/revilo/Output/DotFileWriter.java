@@ -2,6 +2,7 @@ package nz.co.revilo.Output;
 
 import java.io.BufferedOutputStream;
 import java.io.IOException;
+import java.util.List;
 
 public class DotFileWriter extends DotFileProducer {
 
