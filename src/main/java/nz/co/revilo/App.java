@@ -6,12 +6,11 @@ import nz.co.revilo.Output.DotFileProducer;
 import nz.co.revilo.Output.DotFileWriter;
 import nz.co.revilo.Scheduling.AlgorithmManager;
 import nz.co.revilo.Scheduling.SchedulingAlgorithmManager;
-import org.graphstream.graph.Graph;
-import org.graphstream.graph.implementations.SingleGraph;
 import com.beust.jcommander.*;
 import java.io.FileNotFoundException;
 import java.util.Arrays;
-
+//import org.graphstream.graph.Graph;
+//import org.graphstream.graph.implementations.SingleGraph;
 /**
  * App is the main class using the singleton pattern and is used to take the command line arguments and co-ordinate
  * everything. It's not a final class name nor implementation, it purely exists to be a starting point in the program.
@@ -24,18 +23,11 @@ public class App {
 
     private static App _inst = null;
 
-    public static final String REGEX_VISUALISATION = "-[vV]*";
-    public static final String REGEX_OUTPUT_FILENAME = "-[oO]*";
-    public static final String REGEX_EXECUTION_CORES = "-[pP]*";
-    public static final boolean DEFAULT_VISUALISATION = false;
-    public static final String DEFAULT_OUTPUT_FILENAME_EXTENSION = "−output.dot";
-    public static final int DEFAULT_EXECUTION_CORES = 1;
-
+    private String _inputFilename;
     private int _numExecutionCores;
     private int _numParallelProcessors;
-//    private boolean _visualise;
+    private boolean _visualise;
     private String _outputFilename;
-    private String _inputFilename;
 
 
 
@@ -51,6 +43,10 @@ public class App {
 
     public static void main( String[] args ) {
         new App();
+        Parameters params = new Parameters();
+        JCommander jc = new JCommander();
+
+        //Section to display the consumed args
         int i = 0;
         for (String s: args) {
             System.out.println(i + ": " + s);
@@ -60,76 +56,22 @@ public class App {
         if (args.length < 2) {
             //insufficient arguments
             System.out.println("Insufficient arguments. Try once more.");
-        } else if (args.length == 2) {
-            //no optional arguments
         } else {
             String[] optionalArgs = Arrays.copyOfRange(args, 2, args.length);
-            Parameters params = new Parameters();
-            JCommander jc = new JCommander();
             jc.newBuilder().addObject(params).build().parse(optionalArgs);
 
-            if (params.getVisualise()) {
-                //only show visualization of graph if -v
-                Graph graph = new SingleGraph("Tutorial 1");
-                graph.addNode("A" );
-                graph.addNode("B" );
-                graph.addNode("C" );
-                graph.addNode("D" );
-                graph.addNode("E" );
-                graph.addEdge("AB", "A", "B");
-                graph.addEdge("BC", "B", "C");
-                graph.addEdge("CD", "C", "D");
-                graph.addEdge("DE", "D", "E");
-                graph.addEdge("EA", "E", "A");
-                graph.addEdge("AC", "A", "C");
-                graph.addEdge("AD", "A", "D");
-                graph.addEdge("BD", "B", "D");
-                graph.addEdge("BE", "B", "E");
-                graph.addEdge("CE", "C", "E");
-                graph.display();
-            }
+            _inst._inputFilename = args[0];
+            _inst._numExecutionCores = Integer.parseInt(args[1]); //need error handling
+            _inst._numParallelProcessors = params.getParallelCores();
+            _inst._visualise = params.getVisualise();
+            _inst._outputFilename = params.getOutputName();
         }
 
+        System.out.println("This is the schedule called " + _inst._outputFilename + " processed on " + _inst._numParallelProcessors + " core(s).");
+        if (_inst._visualise) {
+            System.out.println("There is a visualisation outputted.");
+        }
 
-//          Michael's input argument stuff
-//        //Input arguments @Michael Kemp
-//        if (args.length >= 2) {
-//            //Input filename and number of processors for the algorithm
-//            _inst._inputFilename = args[0];
-//            _inst._numParallelProcessors = Integer.parseInt(args[1]);
-//            _inst._outputFilename = _inst._inputFilename + DEFAULT_OUTPUT_FILENAME_EXTENSION;
-//
-//            //Visualisation
-//            _inst._visualise = DEFAULT_VISUALISATION; //Default setting
-//            for (int i = 2; i < args.length; i++) {
-//                if (args[i].matches(REGEX_VISUALISATION)) {
-//                    _inst._visualise = true;
-//                }
-//            }
-//
-//            //Number of execution cores
-//            _inst._numExecutionCores = DEFAULT_EXECUTION_CORES; //Default setting
-//            for (int j = 2; j < args.length - 1; j++) {
-//                if (args[j].matches(REGEX_EXECUTION_CORES)) {
-//                    try {
-//                        _inst._numExecutionCores = Integer.parseInt(args[j + 1]);
-//                    } catch (NumberFormatException e) {
-//                        //TODO
-//                        System.out.println("Please only use digits and a value less than 2 billion for the number of cores argument");
-//                    }
-//                }
-//            }
-//
-//            //Output Filename
-//            for (int k = 2; k < args.length - 1; k++) {
-//                if (args[k].matches(REGEX_OUTPUT_FILENAME)) {
-//                    _inst._outputFilename = args[k+1];
-//                }
-//            }
-//        } else {
-//            System.out.println("Please check argument usage, a filename then number of processors is required");
-//        }
-//
 //        // Parse file and give it algorithm manager to give results to. @Michael Kemp
 //        AlgorithmManager manager = new SchedulingAlgorithmManager(_inst._numExecutionCores);
 //        DotFileReader reader = new DotFileReader(_inst._inputFilename);
@@ -146,6 +88,22 @@ public class App {
 
 
         //Mohan's stuff
-
+//        Graph graph = new SingleGraph("Tutorial 1");
+//        graph.addNode("A" );
+//        graph.addNode("B" );
+//        graph.addNode("C" );
+//        graph.addNode("D" );
+//        graph.addNode("E" );
+//        graph.addEdge("AB", "A", "B");
+//        graph.addEdge("BC", "B", "C");
+//        graph.addEdge("CD", "C", "D");
+//        graph.addEdge("DE", "D", "E");
+//        graph.addEdge("EA", "E", "A");
+//        graph.addEdge("AC", "A", "C");
+//        graph.addEdge("AD", "A", "D");
+//        graph.addEdge("BD", "B", "D");
+//        graph.addEdge("BE", "B", "E");
+//        graph.addEdge("CE", "C", "E");
+//        graph.display();
     }
 }

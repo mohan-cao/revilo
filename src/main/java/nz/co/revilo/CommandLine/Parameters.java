@@ -12,11 +12,11 @@ import com.beust.jcommander.Parameter;
  */
 public class Parameters {
     @Parameter(names={"--parallel", "-p"})
-    private int _parallelCores = 0;
+    private int _parallelCores = 1; //default one core
     @Parameter(names={"--visualise", "--visualize", "-v"})
     private boolean _visualise = false;
     @Parameter(names={"--output", "-o"})
-    private String _outputName = "INPUT-output.dot";
+    private String _outputName = "INPUT-output.dot"; //should get input name actually
 
     public int getParallelCores() {
         return _parallelCores;
