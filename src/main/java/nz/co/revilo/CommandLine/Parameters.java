@@ -11,6 +11,7 @@ import com.beust.jcommander.Parameter;
  * @version pre-alpha
  */
 public class Parameters {
+
     @Parameter(names={"--parallel", "-p"})
     private int _parallelCores = 1; //default one core
     @Parameter(names={"--visualise", "--visualize", "-v"})
