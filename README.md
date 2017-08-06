@@ -52,6 +52,6 @@ Using Eclipse (Start from Eclipse instead of importing clone!):
 
 `mvn test` - Run unit test
 
-`mvn package` - Package classes into a jar (works but not executable JAR yet)
+`mvn package` - Package classes into a jar. JAR is executable.
 
 `mvn install` - Do all the above and install the package
