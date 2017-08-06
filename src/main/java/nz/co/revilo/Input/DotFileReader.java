@@ -4,6 +4,11 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  *  DotFileReader is a class that extends DotFileParser it's purpose is to read the file and place the digraph in to a
@@ -16,6 +21,17 @@ import java.io.IOException;
  */
 public class DotFileReader extends DotFileParser {
 
+    public static final Pattern graphName = Pattern.compile("[\\s]*digraph[\\s]*\"(.*)\"[\\s]*\\{[\\s]*");
+    public static final Pattern arcFrom = Pattern.compile("[\\s]*([\\p{Alpha}]*)[\\s]*.>[\\s]*[\\p{Alpha}]*[\\s]*\\[[\\s]*[Ww]eight[\\s]*[=][\\s]*[\\p{Digit}]*[\\s]*\\][\\s]*;");
+    public static final Pattern arcTo =  Pattern.compile("[\\s]*[\\p{Alpha}]*[\\s]*.>[\\s]*([\\p{Alpha}]*)[\\s]*\\[[\\s]*[Ww]eight[\\s]*[=][\\s]*[\\p{Digit}]*[\\s]*\\][\\s]*;");
+    public static final Pattern arcWeight = Pattern.compile("[\\s]*[\\p{Alpha}]*[\\s]*.>[\\s]*[\\p{Alpha}]*[\\s]*\\[[\\s]*[Ww]eight[\\s]*[=][\\s]*([\\p{Digit}]*)[\\s]*\\][\\s]*;");
+    public static final Pattern nodeName = Pattern.compile("[\\s]*([\\p{Alpha}]*)[\\s]*\\[[\\s]*[Ww]eight[\\s]*[=][\\s]*[\\p{Digit}]*[\\s]*\\][\\s]*;");
+    public static final Pattern nodeWeight = Pattern.compile("[\\s]*[\\p{Alpha}]*[\\s]*\\[[\\s]*[Ww]eight[\\s]*[=][\\s]*([\\p{Digit}]*)[\\s]*\\][\\s]*;");
+
+    HashMap<String, Integer> nodeNames;
+    List<Integer> nodeWeights;
+    HashMap<String, HashMap<String, Integer>> arcs;
+
     private ParseResultListener _listener;
 
     public DotFileReader(String filename) {
@@ -26,18 +42,64 @@ public class DotFileReader extends DotFileParser {
         _listener = newListener;
         BufferedReader reader = openFile();
 
+        nodeNames = new HashMap<>();
+        nodeWeights = new ArrayList<>();
+        arcs = new HashMap<>();
+
         try {
         	//TODO Empty file
         	//Note: regex might not work
             String line = reader.readLine();
-            while (!line.equals("}") && (line != null)) {
+            while (!line.contains("}") && (line != null)) {
                 //[\s]*[\p{Alpha}]*[\s]*.>[\s]*[\p{Alpha}]*[\s]*\[[\s]*[Ww]eight[\s]*[=][\s]*[\p{Digit}]*[\s]*\][\s]*;
+                // arc
                 if (line.matches("[\\s]*[\\p{Alpha}]*[\\s]*.>[\\s]*[\\p{Alpha}]*[\\s]*\\[[\\s]*[Ww]eight[\\s]*[=][\\s]*[\\p{Digit}]*[\\s]*\\][\\s]*;")) {
-                //[\s]*[\p{Alpha}]*[\s]*\[[\s]*[Ww]eight[\s]*[=][\s]*[\p{Digit}]*[\s]*\][\s]*;
-                } else if (line.matches("[\\s]*[\\p{Alpha}]*[\\s]*\\[[\\s]*[Ww]eight[\\s]*[=][\\s]*[\\p{Digit}]*[\\s]*\\][\\s]*;")) {
-                //[\s]*digraph[\s]*"[\s]*[\p{Alpha}\p{Digit}]*[\s]*"[\s]*\{[\s]*
-                } else if (line.matches("[\\s]*digraph[\\s]*\"[\\s]*[\\p{Alpha}\\p{Digit}]*[\\s]*\"[\\s]*\\{[\\s]*")) {
+                    Matcher m = arcFrom.matcher(line);
+                    m.find();
+                    String from = m.group(1);
+                    m = arcTo.matcher(line);
+                    m.find();
+                    String to = m.group(1);
+                    m = arcWeight.matcher(line);
+                    m.find();
+                    int weight = Integer.parseInt(m.group(1));
 
+                    if (!nodeNames.containsKey(from)) {
+                        nodeWeights.set(nodeNames.get(from), 0);
+                    } if (!nodeNames.containsKey(to)) {
+                        nodeWeights.set(nodeNames.get(to), 0);
+                    }
+                    if (!arcs.containsKey(from)) {
+                        arcs.put(from, new HashMap<>());
+                    }
+                    if (!arcs.get(from).containsKey(to)) {
+                        arcs.get(from).put(to, weight);
+                    } else {
+                        arcs.get(from).replace(to, weight);
+                    }
+
+                //[\s]*[\p{Alpha}]*[\s]*\[[\s]*[Ww]eight[\s]*[=][\s]*[\p{Digit}]*[\s]*\][\s]*;
+                // node
+                } else if (line.matches("[\\s]*[\\p{Alpha}]*[\\s]*\\[[\\s]*[Ww]eight[\\s]*[=][\\s]*[\\p{Digit}]*[\\s]*\\][\\s]*;")) {
+                    Matcher m = nodeName.matcher(line);
+                    m.find();
+                    String name = m.group(1);
+                    m = nodeWeight.matcher(line);
+                    m.find();
+                    int weight = Integer.parseInt(m.group(1));
+                    if (nodeNames.containsKey(name)) {
+                        nodeWeights.set(nodeNames.get(name), weight);
+                    } else {
+                        nodeNames.put(name, nodeWeights.size());
+                        nodeWeights.add(weight);
+                    }
+
+                //[\s]*digraph[\s]*".*"[\s]*\{[\s]*
+                // graph name
+                } else if (line.matches("[\\s]*digraph[\\s]*\".*\"[\\s]*\\{[\\s]*")) {
+                    Matcher m = graphName.matcher(line);
+                    m.find();
+                    String name = m.group(1);
                 }
                 line = reader.readLine();
             }
@@ -45,7 +107,28 @@ public class DotFileReader extends DotFileParser {
             //TODO
         }
 
-        _listener.ParsingResults();
+        String[] nodeNamesPrimitive = new String[nodeWeights.size()];
+        int[] nodeWeightsPrimitive = new int[nodeWeights.size()];
+        List<String> tempNames = new ArrayList<>(nodeNames.keySet());
+        for (int i = 0; i < nodeWeights.size(); i++) {
+            nodeWeightsPrimitive[i] = nodeWeights.get(i);
+            nodeNamesPrimitive[nodeNames.get(tempNames.get(i))] = tempNames.get(i);
+        }
+
+        boolean[][] arcsPrimitive = new boolean[nodeWeights.size()][nodeWeights.size()];
+        int[][] arcWeightsPrimitive = new int[nodeWeights.size()][nodeWeights.size()];
+        for (int j = 0; j < nodeNamesPrimitive.length; j++) {
+            for (int k = 0; k < nodeNamesPrimitive.length; k++) {
+                if (arcs.containsKey(nodeNamesPrimitive[j])) {
+                    if (arcs.get(nodeNamesPrimitive[j]).containsKey(nodeNamesPrimitive[k])) {
+                        arcsPrimitive[j][k] = true;
+                        arcWeightsPrimitive[j][k] = arcs.get(nodeNamesPrimitive[j]).get(nodeNamesPrimitive[j]);
+                    }
+                }
+            }
+        }
+
+        //_listener.ParsingResults(nodeWeightsPrimitive,arcsPrimitive, arcWeightsPrimitive);
     }
 
     private BufferedReader openFile() throws FileNotFoundException {
