@@ -3,14 +3,15 @@ package nz.co.revilo.Output;
 import nz.co.revilo.Scheduling.AlgorithmManager;
 
 import java.io.BufferedOutputStream;
+import java.util.List;
 
 public abstract class DotFileProducer implements ScheduleResultListener {
 
     private String _outputFilename;
     private AlgorithmManager _manager;
 
-    public void finalSchedule() {
-        //TODO take argument of data structure and produce output
+    @Override
+    public void finalSchedule(String graphName, List<String> nodeNames, List<List<Boolean>> arcs, List<List<Integer>> arcWeights, List<Integer> nodeWeights, List<Integer> nodeStarts, List<Integer> nodeProcessor) {
         produceOutput(new BufferedOutputStream(System.out));
     }
 
