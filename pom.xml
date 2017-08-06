@@ -58,11 +58,6 @@
 			<version>1.72</version>
 			<optional>false</optional>
 		</dependency>
-        <dependency>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-jar-plugin</artifactId>
-            <version>3.0.2</version>
-        </dependency>
 	</dependencies>
 
 	<build>
@@ -76,19 +71,6 @@
 					<target>1.8</target>
 				</configuration>
 			</plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>3.0.2</version>
-                <configuration>
-                    <archive>
-                        <manifest>
-                            <addClasspath>true</addClasspath>
-                            <mainClass>nz.co.revilo.App</mainClass>
-                        </manifest>
-                    </archive>
-                </configuration>
-            </plugin>
 		</plugins>
 	</build>
 </project>
