@@ -6,6 +6,6 @@ package nz.co.revilo.Algorithms;
  * @author Abby S
  *
  */
-public class LinearScheduling {
+public class ListScheduling {
 
 }
