@@ -1,7 +1,6 @@
 package nz.co.revilo.Output;
 
 
-import java.io.BufferedOutputStream;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
@@ -31,7 +30,10 @@ public abstract class DotFileProducer implements ScheduleResultListener {
         _nodeProcessor = nodeProcessor;
 
         try {
-            produceOutput(new PrintWriter(_outputFilename, CHAR_SET));
+            PrintWriter pw = new PrintWriter(_outputFilename, CHAR_SET);
+            produceOutput(pw);
+            pw.flush();
+            pw.close();
         } catch (UnsupportedEncodingException e) {
             //TODO
         } catch (FileNotFoundException e) {
