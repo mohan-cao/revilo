@@ -1,5 +1,6 @@
 package nz.co.revilo.Algorithms;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -11,7 +12,7 @@ import java.util.List;
  *
  */
 public class ListScheduling {
-	static List<Node> list;
+	static List<Node> list = new ArrayList<Node>();
 	
 	public static void listSchedule(){
 		int readyTime=0;
@@ -35,18 +36,16 @@ public class ListScheduling {
 	public static void process(Node n){
 		//do the processing
 	}
-}
-
-
-
-/**
- * Represents a node
- * @author Abby S
- *
- */
-class Node {
-	List<Node> predecessors;
-	int startTime;
-	int finishTime;
-	int nodeWeight;
+	
+	/**
+	 * Represents a node
+	 * @author Abby S
+	 *
+	 */
+	class Node {
+		List<Node> predecessors;
+		int startTime;
+		int finishTime;
+		int nodeWeight;
+	}
 }
