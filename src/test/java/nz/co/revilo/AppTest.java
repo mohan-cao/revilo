@@ -5,16 +5,41 @@ import org.junit.Test;
 import static org.junit.Assert.assertTrue;
 
 /**
- * Sample unit test
+ * Test cases for edge cases of algorithm
+ * 
+ * TODO: make input.dor
+ * 
+ * @author Abby S
+ *
  */
 public class AppTest {
 
     /**
-     * NON-TRIVIAL TESTS WOW
+     * Sample test
      */
     @Test
     public void App() {
         assertTrue(true);
     }
+    
+    /**
+     * Serial
+     */
+    
+    
+    /**
+     * One on each processor
+     */
+    
+    
+    /**
+     * Even split
+     */
+    
+    
+    /**
+     * No gaps
+     */
+
 
 }

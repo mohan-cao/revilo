@@ -34,12 +34,15 @@ Using IntelliJ IDEA:
 2. Wait for IntelliJ to fetch the required resources
 3. Yay!
 
-Using Eclipse:
+Using Eclipse (Start from Eclipse instead of importing clone!):
 
 1. Right click the left-hand side package explorer (where you have projects and stuff)
-2. Go to Import... > Maven > Existing Maven Project
-3. Select the root directory of your project
-4. Do a few more trivial steps to reach the proof, and you're done!
+2. Go to Import... > Git > Clone from repository
+3. If ssh not set up: clone with HTTPS `https://github.com/mohan-cao/revilo.git` 
+4. Set up as new project using Project Wizard
+5. Name it "revilo"
+6. Right click project > Configure > Convert into Maven project
+7. Done! 
 
 ## Installation and Running Unit Tests
 
@@ -49,6 +52,6 @@ Using Eclipse:
 
 `mvn test` - Run unit test
 
-`mvn package` - Package classes into a jar (works but not executable JAR yet)
+`mvn package` - Package classes into a jar. JAR is executable.
 
 `mvn install` - Do all the above and install the package

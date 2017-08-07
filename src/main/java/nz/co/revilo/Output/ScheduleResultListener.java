@@ -1,5 +1,8 @@
 package nz.co.revilo.Output;
 
+import java.util.List;
+
 public interface ScheduleResultListener {
-    public void finalSchedule(); //TODO determine data structure to pass
+    public void finalSchedule(String graphName, List<String> nodeNames, List<List<Boolean>> arcs, List<List<Integer>> arcWeights, List<Integer> nodeWeights, List<Integer> nodeStarts, List<Integer> nodeProcessor); //TODO determine data structure to pass
+
 }
