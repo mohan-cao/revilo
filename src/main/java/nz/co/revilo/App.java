@@ -28,6 +28,8 @@ public class App {
     private int _numParallelProcessors;
     private boolean _visualise;
     private String _outputFilename;
+    private static String DEFAULT_FILETYPE = ".dot";
+    private static String DEFAULT_OUTPUT_FILENAME = "-output.dot";
 
 
 
@@ -53,6 +55,7 @@ public class App {
             i++;
 
         }
+
         if (args.length < 2) {
             //insufficient arguments
             System.out.println("Insufficient arguments. Try once more.");
@@ -60,12 +63,25 @@ public class App {
             String[] optionalArgs = Arrays.copyOfRange(args, 2, args.length);
             jc.newBuilder().addObject(params).build().parse(optionalArgs);
 
+            //get file name first
+
+
             _inst._inputFilename = args[0];
             _inst._numExecutionCores = Integer.parseInt(args[1]); //need error handling
             _inst._numParallelProcessors = params.getParallelCores();
             _inst._visualise = params.getVisualise();
-            _inst._outputFilename = params.getOutputName();
+
+            if (params.getOutputName() == null) {
+                int fileNameLocation = _inst._inputFilename.toLowerCase().lastIndexOf(DEFAULT_FILETYPE);
+                String fileNameWithoutExtension = _inst._inputFilename.substring(0, fileNameLocation);
+                _inst._outputFilename = fileNameWithoutExtension + DEFAULT_OUTPUT_FILENAME;
+            } else {
+                _inst._outputFilename = params.getOutputName();
+            }
         }
+
+        //here we get the actual input name (.dot)
+
 
         System.out.println("This is the schedule called " + _inst._outputFilename + " processed on " + _inst._numParallelProcessors + " core(s).");
         if (_inst._visualise) {
