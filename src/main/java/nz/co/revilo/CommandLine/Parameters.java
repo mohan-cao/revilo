@@ -17,7 +17,7 @@ public class Parameters {
     @Parameter(names={"--visualise", "--visualize", "-v"})
     private boolean _visualise = false;
     @Parameter(names={"--output", "-o"})
-    private String _outputName = "INPUT-output.dot"; //should get input name actually
+    private String _outputName = null; //should get input name actually
 
     public int getParallelCores() {
         return _parallelCores;
@@ -29,5 +29,9 @@ public class Parameters {
 
     public String getOutputName() {
         return _outputName;
+    }
+
+    public void setDefaultOutputName(String outputFileName) {
+        _outputName = outputFileName + "-output.dot";
     }
 }
