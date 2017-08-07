@@ -1,7 +1,6 @@
 package nz.co.revilo;
 
 import nz.co.revilo.CommandLine.Parameters;
-import nz.co.revilo.Input.DotFileGraphReader;
 import nz.co.revilo.Input.DotFileReader;
 import nz.co.revilo.Output.DotFileProducer;
 import nz.co.revilo.Output.DotFileWriter;
@@ -91,7 +90,7 @@ public class App {
 
         // Parse file and give it algorithm manager to give results to. @Michael Kemp
         AlgorithmManager manager = new SchedulingAlgorithmManager(_inst._numExecutionCores);
-        DotFileGraphReader reader = new DotFileGraphReader(_inst._inputFilename);
+        DotFileReader reader = new DotFileReader(_inst._inputFilename);
         try {
             reader.startParsing(manager);
         } catch (FileNotFoundException e) {

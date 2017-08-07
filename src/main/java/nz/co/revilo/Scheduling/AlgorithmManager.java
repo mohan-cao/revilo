@@ -26,6 +26,7 @@ public abstract class AlgorithmManager implements ParseResultListener {
         _arcWeights = arcWeights;
         _arcs = arcs;
         _nodeWeights = nodeWeights;
+        execute();
     }
 
     protected int getProcessingCores() {

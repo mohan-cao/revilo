@@ -4,7 +4,7 @@ import java.util.*;
 
 public class SchedulingAlgorithmManager extends AlgorithmManager {
 
-    long worstCase = 0;
+    long upperBound = 0;
 
     public SchedulingAlgorithmManager(int processingCores) {
         super(processingCores);
@@ -42,11 +42,11 @@ public class SchedulingAlgorithmManager extends AlgorithmManager {
 
         // Find worst case
         for (int weight : _nodeWeights) {
-            worstCase += weight;
+            upperBound += weight;
         }
 
         // Initialise schedule
-        schedule = new int[getProcessingCores()][(int) worstCase * 10];
+        schedule = new int[getProcessingCores()][(int) upperBound * 10];
         Arrays.fill(schedule, -1);
 
         // For every start node do a search and return the best schedule
@@ -59,9 +59,9 @@ public class SchedulingAlgorithmManager extends AlgorithmManager {
             }
             int[][] resultSchedule = recursiveMemeHere(scheduleClone, unvisitedNodesClone, _nodeWeights[start]);
             long costOfResult = scheduleCost(resultSchedule);
-            if (costOfResult < worstCase) {
+            if (costOfResult < upperBound) {
                 schedule = resultSchedule;
-                worstCase = costOfResult;
+                upperBound = costOfResult;
             }
         }
 
@@ -94,7 +94,7 @@ public class SchedulingAlgorithmManager extends AlgorithmManager {
                     long currentCostClone = currentCost + _nodeWeights[unvisited];
                     int[][] resultSchedule = recursiveMemeHere(currentScheduleClone, unvisitedNodesClone, currentCostClone);
                     long resultCost = scheduleCost(resultSchedule);
-                    if (resultCost < worstCase) {
+                    if (resultCost <= upperBound) {
                         currentCost = resultCost;
                         bestschedule = resultSchedule;
                     }
