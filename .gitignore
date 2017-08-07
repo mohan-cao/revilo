@@ -27,3 +27,9 @@ hs_err_pid*
 
 # Macintosh-specific files that are very annoying
 .DS_Store
+
+# Eclipse-specific files/folders
+.classpath
+.project
+.settings/
+target/
