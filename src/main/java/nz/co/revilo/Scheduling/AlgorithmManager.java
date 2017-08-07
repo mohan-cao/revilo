@@ -7,6 +7,10 @@ public abstract class AlgorithmManager implements ParseResultListener {
 
     private int _processingCores;
     private ScheduleResultListener _listener;
+    int[] _nodeWeights;
+    boolean[][] _arcs;
+    int[][] _arcWeights;
+
 
     public AlgorithmManager(int processingCores) {
         _processingCores = processingCores;
@@ -19,14 +23,16 @@ public abstract class AlgorithmManager implements ParseResultListener {
     }
     
     public void ParsingResults(int[] nodeWeights, boolean[][] arcs, int[][] arcWeights) {
-        //TODO
+        _arcWeights = arcWeights;
+        _arcs = arcs;
+        _nodeWeights = nodeWeights;
     }
 
-    protected int get_processingCores() {
+    protected int getProcessingCores() {
         return _processingCores;
     }
 
-    protected ScheduleResultListener get_listener() {
+    protected ScheduleResultListener getListener() {
         return _listener;
     }
 }
