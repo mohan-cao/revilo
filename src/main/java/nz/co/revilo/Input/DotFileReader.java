@@ -22,11 +22,11 @@ import java.util.regex.Pattern;
 public class DotFileReader extends DotFileParser {
 
     public static final Pattern graphName = Pattern.compile("[\\s]*digraph[\\s]*\"(.*)\"[\\s]*\\{[\\s]*");
-    public static final Pattern arcFrom = Pattern.compile("[\\s]*([\\p{Alpha}]*)[\\s]*.>[\\s]*[\\p{Alpha}]*[\\s]*\\[[\\s]*[Ww]eight[\\s]*[=][\\s]*[\\p{Digit}]*[\\s]*\\][\\s]*;");
-    public static final Pattern arcTo =  Pattern.compile("[\\s]*[\\p{Alpha}]*[\\s]*.>[\\s]*([\\p{Alpha}]*)[\\s]*\\[[\\s]*[Ww]eight[\\s]*[=][\\s]*[\\p{Digit}]*[\\s]*\\][\\s]*;");
-    public static final Pattern arcWeight = Pattern.compile("[\\s]*[\\p{Alpha}]*[\\s]*.>[\\s]*[\\p{Alpha}]*[\\s]*\\[[\\s]*[Ww]eight[\\s]*[=][\\s]*([\\p{Digit}]*)[\\s]*\\][\\s]*;");
-    public static final Pattern nodeName = Pattern.compile("[\\s]*([\\p{Alpha}]*)[\\s]*\\[[\\s]*[Ww]eight[\\s]*[=][\\s]*[\\p{Digit}]*[\\s]*\\][\\s]*;");
-    public static final Pattern nodeWeight = Pattern.compile("[\\s]*[\\p{Alpha}]*[\\s]*\\[[\\s]*[Ww]eight[\\s]*[=][\\s]*([\\p{Digit}]*)[\\s]*\\][\\s]*;");
+    public static final Pattern arcFrom = Pattern.compile("[\\s]*([\\p{Alnum}]*)[\\s]*.>[\\s]*[\\p{Alnum}]*[\\s]*\\[[\\s]*[Ww]eight[\\s]*[=][\\s]*[\\p{Digit}]*[\\s]*\\][\\s]*;");
+    public static final Pattern arcTo =  Pattern.compile("[\\s]*[\\p{Alnum}]*[\\s]*.>[\\s]*([\\p{Alnum}]*)[\\s]*\\[[\\s]*[Ww]eight[\\s]*[=][\\s]*[\\p{Digit}]*[\\s]*\\][\\s]*;");
+    public static final Pattern arcWeight = Pattern.compile("[\\s]*[\\p{Alnum}]*[\\s]*.>[\\s]*[\\p{Alnum}]*[\\s]*\\[[\\s]*[Ww]eight[\\s]*[=][\\s]*([\\p{Digit}]*)[\\s]*\\][\\s]*;");
+    public static final Pattern nodeName = Pattern.compile("[\\s]*([\\p{Alnum}]*)[\\s]*\\[[\\s]*[Ww]eight[\\s]*[=][\\s]*[\\p{Digit}]*[\\s]*\\][\\s]*;");
+    public static final Pattern nodeWeight = Pattern.compile("[\\s]*[\\p{Alnum}]*[\\s]*\\[[\\s]*[Ww]eight[\\s]*[=][\\s]*([\\p{Digit}]*)[\\s]*\\][\\s]*;");
 
     HashMap<String, Integer> nodeNames;
     List<Integer> nodeWeights;
@@ -51,9 +51,9 @@ public class DotFileReader extends DotFileParser {
         	//Note: regex might not work
             String line = reader.readLine();
             while (!line.contains("}") && (line != null)) {
-                //[\s]*[\p{Alpha}]*[\s]*.>[\s]*[\p{Alpha}]*[\s]*\[[\s]*[Ww]eight[\s]*[=][\s]*[\p{Digit}]*[\s]*\][\s]*;
+                //[\s]*[\p{Alnum}]*[\s]*.>[\s]*[\p{Alnum}]*[\s]*\[[\s]*[Ww]eight[\s]*[=][\s]*[\p{Digit}]*[\s]*\][\s]*;
                 // arc
-                if (line.matches("[\\s]*[\\p{Alpha}]*[\\s]*.>[\\s]*[\\p{Alpha}]*[\\s]*\\[[\\s]*[Ww]eight[\\s]*[=][\\s]*[\\p{Digit}]*[\\s]*\\][\\s]*;")) {
+                if (line.matches("[\\s]*[\\p{Alnum}]*[\\s]*.>[\\s]*[\\p{Alnum}]*[\\s]*\\[[\\s]*[Ww]eight[\\s]*[=][\\s]*[\\p{Digit}]*[\\s]*\\][\\s]*;")) {
                     Matcher m = arcFrom.matcher(line);
                     m.find();
                     String from = m.group(1);
@@ -78,9 +78,9 @@ public class DotFileReader extends DotFileParser {
                         arcs.get(from).replace(to, weight);
                     }
 
-                //[\s]*[\p{Alpha}]*[\s]*\[[\s]*[Ww]eight[\s]*[=][\s]*[\p{Digit}]*[\s]*\][\s]*;
+                //[\s]*[\p{Alnum}]*[\s]*\[[\s]*[Ww]eight[\s]*[=][\s]*[\p{Digit}]*[\s]*\][\s]*;
                 // node
-                } else if (line.matches("[\\s]*[\\p{Alpha}]*[\\s]*\\[[\\s]*[Ww]eight[\\s]*[=][\\s]*[\\p{Digit}]*[\\s]*\\][\\s]*;")) {
+                } else if (line.matches("[\\s]*[\\p{Alnum}]*[\\s]*\\[[\\s]*[Ww]eight[\\s]*[=][\\s]*[\\p{Digit}]*[\\s]*\\][\\s]*;")) {
                     Matcher m = nodeName.matcher(line);
                     m.find();
                     String name = m.group(1);
