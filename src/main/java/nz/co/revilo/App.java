@@ -58,7 +58,7 @@ public class App {
 
         if (args.length < 2) {
             //insufficient arguments
-            System.out.println("Insufficient arguments. Try once more.");
+            throw new RuntimeException("Insufficient arguments given. Needs [input file] [# processors]");
         } else {
             String[] optionalArgs = Arrays.copyOfRange(args, 2, args.length);
             jc.newBuilder().addObject(params).build().parse(optionalArgs);
@@ -67,7 +67,11 @@ public class App {
 
 
             _inst._inputFilename = args[0];
-            _inst._numExecutionCores = Integer.parseInt(args[1]); //need error handling
+            try {
+                _inst._numExecutionCores = Integer.parseInt(args[1]);
+            }catch(NumberFormatException nfe){
+                throw new RuntimeException("Invalid number of processors");
+            }
             _inst._numParallelProcessors = params.getParallelCores();
             _inst._visualise = params.getVisualise();
 
@@ -94,8 +98,7 @@ public class App {
         try {
             reader.startParsing(manager);
         } catch (FileNotFoundException e) {
-            //TODO
-            System.out.println("INPUT FILE NOT FOUND");
+            throw new RuntimeException("Input file does not exist");
         }
 
         // Output to file @Michael Kemp
