@@ -1,6 +1,8 @@
 package nz.co.revilo.Scheduling;
 
 import java.util.*;
+import java.util.stream.Collectors;
+
 
 public class VeryBasicAlgorithmManager extends AlgorithmManager {
 
@@ -78,7 +80,71 @@ public class VeryBasicAlgorithmManager extends AlgorithmManager {
         }
         System.out.println(depthMap);
 
+        ArrayList<Integer> nodeInOrder = new ArrayList<>();
 
+        for (Integer k: depthMap.keySet()) {
+            nodeInOrder.addAll(depthMap.get(k));
+        }
+
+        ArrayList<Integer> nStarts = new ArrayList<>();
+        ArrayList<Integer> processorsDummy = new ArrayList<>();
+        int currentCost = 0;
+        for (Integer node: nodeInOrder) {
+            nStarts.add(currentCost);
+            processorsDummy.add(0);
+            currentCost += _nodeWeights[node];
+        }
+        System.out.println(nStarts);
+
+//    public void finalSchedule(String graphName, List<String> nodeNames, List<List<Boolean>> arcs, List<List<Integer>> arcWeights, List<Integer> nodeWeights, List<Integer> nodeStarts, List<Integer> nodeProcessor); //TODO determine data structure to pass
+
+        getListener().finalSchedule(
+                "new graph",
+                allNodes.stream().map(Object::toString).collect(Collectors.toList()),
+                primToBool(_arcs),
+                primToInt(_arcWeights),
+                getToInteger(_nodeWeights),
+                nStarts,
+                processorsDummy
+        );
+
+
+    }
+
+
+
+    private List<Integer> getToInteger(int[] prim) {
+        ArrayList<Integer> oop = new ArrayList<>();
+        for (int i: prim) {
+            oop.add(i);
+        }
+        return oop;
+    }
+
+    private List<List<Boolean>> primToBool(boolean[][] b) {
+        List<List<Boolean>> bb = new ArrayList<>();
+
+        for (int i = 0; i < b.length; i++) {
+            bb.add(new ArrayList<>());
+            for (int j = 0; j < b[i].length; j++) {
+                bb.get(i).add(b[i][j]);
+            }
+        }
+
+        return bb;
+    }
+
+    private List<List<Integer>> primToInt(int[][] iii) {
+        List<List<Integer>> ii = new ArrayList<>();
+
+        for (int i = 0; i < iii.length; i++) {
+            ii.add(new ArrayList<>());
+            for (int j = 0; j < iii[i].length; j++) {
+                ii.get(i).add(iii[i][j]);
+            }
+        }
+
+        return ii;
     }
 
 }

@@ -1,0 +1,8 @@
+digraph "output" {
+		0 -> 1	[Weight=1];
+		0 -> 2	[Weight=2];
+		0		[Weight=1,Start=0,Processor=0];
+		1		[Weight=2,Start=1,Processor=0];
+		2		[Weight=3,Start=2,Processor=0];
+		3		[Weight=4,Start=3,Processor=0];
+}

@@ -43,11 +43,6 @@ public class DotFileGraphReader extends DotFileParser {
             fs.addSink(g);
             fs.readAll(getFilename());
 
-            //just for node naming
-            for (Node n: g.getEachNode()) {
-                n.addAttribute("ui.label", n.getId());
-            }
-
             g.display();
             //print out a bunch of graph stuff
             for (Node n: g.getEachNode()) {
