@@ -115,7 +115,7 @@ public class SchedulingAlgorithmManager extends AlgorithmManager {
                 dependenciesList.add(node);
             }
         }
-        return Arrays.stream((Integer[]) dependenciesList.toArray()).mapToInt(Integer::intValue).toArray();
+        return dependenciesList.stream().mapToInt(Number::intValue).toArray();
     }
 
     private long scheduleCost(int[][] schedule) {
