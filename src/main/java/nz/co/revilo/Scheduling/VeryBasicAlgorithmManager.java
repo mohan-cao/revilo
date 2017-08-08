@@ -1,6 +1,5 @@
 package nz.co.revilo.Scheduling;
 
-import javax.jnlp.IntegrationService;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -24,19 +23,20 @@ public class VeryBasicAlgorithmManager extends AlgorithmManager {
         // find the sources
         // create column arrays first
         for (int row = 0; row < _arcWeights.length; row++) {
-            Set<Integer> smolSet = new HashSet<>();
+            Set<Integer> setToTestUniqueElemsInColumn = new HashSet<>();
             depths.add(0);
             int[] colArray = new int[_arcWeights.length];
             for (int j = 0; j < _arcWeights.length; j++) {
-                smolSet.add( _arcWeights[j][row]);
+                setToTestUniqueElemsInColumn.add( _arcWeights[j][row]);
             }
-            boolean isAllEqual = smolSet.size() == 1 && smolSet.contains(-1);
-            if (isAllEqual) {
+
+            //if they only have a single -1 element then it will
+            //be considered a sink
+            if (setToTestUniqueElemsInColumn.size() == 1 && setToTestUniqueElemsInColumn.contains(-1)) {
                 sinks.add(row);
                 int[] thisRow = _arcWeights[row];
             }
         }
-        System.out.println("The sinks are: " + sinks);
 
         //now we want to get ALL the nodes okay?
 
@@ -45,7 +45,6 @@ public class VeryBasicAlgorithmManager extends AlgorithmManager {
         }
 
         //and after that we will start looking for things?
-        System.out.println("All nodes: " + allNodes);
 
         toProcess.addAll(sinks); //
         for (Integer i: sinks) {
@@ -65,8 +64,6 @@ public class VeryBasicAlgorithmManager extends AlgorithmManager {
                 }
             }
 
-            System.out.println("now it's: " + toProcess);
-            System.out.println("our depths: " + depths);
         }
 
         HashMap<Integer, ArrayList<Integer>> depthMap = new HashMap<>();
@@ -97,8 +94,6 @@ public class VeryBasicAlgorithmManager extends AlgorithmManager {
         }
         System.out.println(nStarts);
 
-//    public void finalSchedule(String graphName, List<String> nodeNames, List<List<Boolean>> arcs, List<List<Integer>> arcWeights, List<Integer> nodeWeights, List<Integer> nodeStarts, List<Integer> nodeProcessor); //TODO determine data structure to pass
-
         getListener().finalSchedule(
                 "new graph",
                 getToString(allNodes),
@@ -108,53 +103,48 @@ public class VeryBasicAlgorithmManager extends AlgorithmManager {
                 nStarts,
                 processorsDummy
         );
-
-
     }
 
-
-
-    private List<String> getToString(ArrayList<Integer> inta) {
-        ArrayList<String> sss = new ArrayList<>();
-        for (int i: inta) {
-            sss.add(Integer.toString(i));
+    private List<String> getToString(ArrayList<Integer> intList) {
+        ArrayList<String> strList = new ArrayList<>();
+        for (int i: intList) {
+            strList.add(Integer.toString(i));
         }
-        return sss;
+        return strList;
     }
 
-    private List<Integer> getToInteger(int[] prim) {
-        ArrayList<Integer> oop = new ArrayList<>();
-        for (int i: prim) {
-            oop.add(i);
+    private List<Integer> getToInteger(int[] primitiveInts) {
+        ArrayList<Integer> objectInts = new ArrayList<>();
+        for (int i: primitiveInts) {
+            objectInts.add(i);
         }
-        return oop;
+        return objectInts;
     }
 
 
-    private List<List<Boolean>> primToBool(boolean[][] b) {
-        List<List<Boolean>> bb = new ArrayList<>();
+    private List<List<Boolean>> primToBool(boolean[][] primitiveBools) {
+        List<List<Boolean>> objectBools = new ArrayList<>();
 
-        for (int i = 0; i < b.length; i++) {
-            bb.add(new ArrayList<>());
-            for (int j = 0; j < b[i].length; j++) {
-                bb.get(i).add(b[i][j]);
+        for (int i = 0; i < primitiveBools.length; i++) {
+            objectBools.add(new ArrayList<>());
+            for (int j = 0; j < primitiveBools[i].length; j++) {
+                objectBools.get(i).add(primitiveBools[i][j]);
             }
         }
 
-        return bb;
+        return objectBools;
     }
 
-    private List<List<Integer>> primToInt(int[][] iii) {
-        List<List<Integer>> ii = new ArrayList<>();
+    private List<List<Integer>> primToInt(int[][] primitiveInts) {
+        List<List<Integer>> objectInts = new ArrayList<>();
 
-        for (int i = 0; i < iii.length; i++) {
-            ii.add(new ArrayList<>());
-            for (int j = 0; j < iii[i].length; j++) {
-                ii.get(i).add(iii[i][j]);
+        for (int i = 0; i < primitiveInts.length; i++) {
+            objectInts.add(new ArrayList<>());
+            for (int j = 0; j < primitiveInts[i].length; j++) {
+                objectInts.get(i).add(primitiveInts[i][j]);
             }
         }
-
-        return ii;
+        return objectInts;
     }
 
 }
