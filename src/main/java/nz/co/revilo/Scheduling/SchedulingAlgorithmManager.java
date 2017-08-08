@@ -35,7 +35,8 @@ public class SchedulingAlgorithmManager extends AlgorithmManager {
             }
         }
         //https://stackoverflow.com/questions/31394715/convert-integer-to-int-array
-        startNodes = Arrays.stream((Integer[]) startNodesTemp.toArray()).mapToInt(Integer::intValue).toArray();
+        //https://stackoverflow.com/questions/2451184/how-can-i-convert-a-java-hashsetinteger-to-a-primitive-int-array
+        startNodes = startNodesTemp.stream().mapToInt(Number::intValue).toArray();
 
         // All nodes are unvisited
         Arrays.fill(unvisitedNodes, true);
