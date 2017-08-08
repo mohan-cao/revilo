@@ -89,7 +89,7 @@ public class VeryBasicAlgorithmManager extends AlgorithmManager {
         int currentCost = 0;
         for (Integer node: nodeInOrder) {
             nStarts.add(currentCost);
-            processorsDummy.add(0);
+            processorsDummy.add(1);
             currentCost += _nodeWeights[node];
         }
         System.out.println(nStarts);
