@@ -42,8 +42,13 @@ public class DotFileGraphReader extends DotFileParser {
             FileSource fs = FileSourceFactory.sourceFor(getFilename());
             fs.addSink(g);
             fs.readAll(getFilename());
-            g.display();
 
+            //just for node naming
+            for (Node n: g.getEachNode()) {
+                n.addAttribute("ui.label", n.getId());
+            }
+
+            g.display();
             //print out a bunch of graph stuff
             for (Node n: g.getEachNode()) {
                 System.out.println("Node " + n + " has weight " + n.getAttribute("Weight") + ".");

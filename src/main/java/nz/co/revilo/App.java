@@ -6,6 +6,7 @@ import nz.co.revilo.Output.DotFileProducer;
 import nz.co.revilo.Output.DotFileWriter;
 import nz.co.revilo.Scheduling.AlgorithmManager;
 import nz.co.revilo.Scheduling.SchedulingAlgorithmManager;
+import nz.co.revilo.Scheduling.VeryBasicAlgorithmManager;
 import com.beust.jcommander.*;
 import java.io.FileNotFoundException;
 import java.util.Arrays;
@@ -89,7 +90,7 @@ public class App {
         }
 
         // Parse file and give it algorithm manager to give results to. @Michael Kemp
-        AlgorithmManager manager = new SchedulingAlgorithmManager(_inst._numExecutionCores);
+        AlgorithmManager manager = new VeryBasicAlgorithmManager(_inst._numExecutionCores);
         DotFileGraphReader reader = new DotFileGraphReader(_inst._inputFilename);
         try {
             reader.startParsing(manager);
