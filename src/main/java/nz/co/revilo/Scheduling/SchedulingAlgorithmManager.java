@@ -48,7 +48,9 @@ public class SchedulingAlgorithmManager extends AlgorithmManager {
 
         // Initialise schedule
         schedule = new int[getProcessingCores()][(int) upperBound * 10];
-        Arrays.fill(schedule, -1);
+        for (int[] subSchedule : schedule) {
+            Arrays.fill(subSchedule, -1);
+        }
 
         // For every start node do a search and return the best schedule
         for (int start : startNodes) {
