@@ -1,12 +1,15 @@
 package nz.co.revilo;
 
 import nz.co.revilo.CommandLine.Parameters;
-import nz.co.revilo.Input.DotFileReader;
+import nz.co.revilo.Input.DotFileGraphReader;
 import nz.co.revilo.Output.DotFileProducer;
 import nz.co.revilo.Output.DotFileWriter;
 import nz.co.revilo.Scheduling.AlgorithmManager;
 import nz.co.revilo.Scheduling.SchedulingAlgorithmManager;
+import nz.co.revilo.Scheduling.VeryBasicAlgorithmManager;
 import com.beust.jcommander.*;
+import nz.co.revilo.Scheduling.TopologicalSort;
+
 import java.io.FileNotFoundException;
 import java.util.Arrays;
 //import org.graphstream.graph.Graph;
@@ -58,7 +61,7 @@ public class App {
 
         if (args.length < 2) {
             //insufficient arguments
-            System.out.println("Insufficient arguments. Try once more.");
+            throw new RuntimeException("Insufficient arguments given. Needs [input file] [# processors]");
         } else {
             String[] optionalArgs = Arrays.copyOfRange(args, 2, args.length);
             jc.newBuilder().addObject(params).build().parse(optionalArgs);
@@ -67,7 +70,11 @@ public class App {
 
 
             _inst._inputFilename = args[0];
-            _inst._numExecutionCores = Integer.parseInt(args[1]); //need error handling
+            try {
+                _inst._numExecutionCores = Integer.parseInt(args[1]);
+            }catch(NumberFormatException nfe){
+                throw new RuntimeException("Invalid number of processors");
+            }
             _inst._numParallelProcessors = params.getParallelCores();
             _inst._visualise = params.getVisualise();
 
@@ -88,19 +95,21 @@ public class App {
             System.out.println("There is a visualisation outputted.");
         }
 
-//        // Parse file and give it algorithm manager to give results to. @Michael Kemp
-//        AlgorithmManager manager = new SchedulingAlgorithmManager(_inst._numExecutionCores);
-//        DotFileReader reader = new DotFileReader(_inst._inputFilename);
-//        try {
-//            reader.startParsing(manager);
-//        } catch (FileNotFoundException e) {
-//            //TODO
-//            System.out.println("INPUT FILE NOT FOUND");
-//        }
-//
-//        // Output to file @Michael Kemp
-//        DotFileProducer output = new DotFileWriter(_inst._outputFilename);
-//        manager.inform(output);
+        // Parse file and give it algorithm manager to give results to. @Michael Kemp
+
+        AlgorithmManager manager = new VeryBasicAlgorithmManager(_inst._numExecutionCores);
+        //AlgorithmManager manager = new SchedulingAlgorithmManager(_inst._numExecutionCores);
+        DotFileGraphReader reader = new DotFileGraphReader(_inst._inputFilename);
+        // Output to file @Michael Kemp
+        DotFileProducer output = new DotFileWriter(_inst._outputFilename);
+        manager.inform(output);
+        try {
+            reader.startParsing(manager);
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException("Input file does not exist");
+        }
+
+
 
 
         //Mohan's stuff

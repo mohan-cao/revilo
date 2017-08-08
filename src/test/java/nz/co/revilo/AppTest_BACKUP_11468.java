@@ -10,7 +10,7 @@ import static org.junit.Assert.fail;
 /**
  * Test cases for edge cases of algorithm
  * 
- * TODO: make input.dot
+ * TODO: make input.dor
  * 
  * @author Abby S
  *
@@ -18,7 +18,11 @@ import static org.junit.Assert.fail;
 public class AppTest {
 
     /**
+<<<<<<< HEAD
+     * Sample test
+=======
      * Test for no valid params
+>>>>>>> 96afc36d9ef039b6c6b52d871b145781e12990fc
      */
     @Test
     public void AppNoParams() {
