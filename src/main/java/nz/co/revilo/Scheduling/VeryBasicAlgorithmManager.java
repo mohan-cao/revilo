@@ -1,5 +1,6 @@
 package nz.co.revilo.Scheduling;
 
+import javax.jnlp.IntegrationService;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -100,7 +101,7 @@ public class VeryBasicAlgorithmManager extends AlgorithmManager {
 
         getListener().finalSchedule(
                 "new graph",
-                allNodes.stream().map(Object::toString).collect(Collectors.toList()),
+                getToString(allNodes),
                 primToBool(_arcs),
                 primToInt(_arcWeights),
                 getToInteger(_nodeWeights),
@@ -113,6 +114,14 @@ public class VeryBasicAlgorithmManager extends AlgorithmManager {
 
 
 
+    private List<String> getToString(ArrayList<Integer> inta) {
+        ArrayList<String> sss = new ArrayList<>();
+        for (int i: inta) {
+            sss.add(Integer.toString(i));
+        }
+        return sss;
+    }
+
     private List<Integer> getToInteger(int[] prim) {
         ArrayList<Integer> oop = new ArrayList<>();
         for (int i: prim) {
@@ -120,6 +129,7 @@ public class VeryBasicAlgorithmManager extends AlgorithmManager {
         }
         return oop;
     }
+
 
     private List<List<Boolean>> primToBool(boolean[][] b) {
         List<List<Boolean>> bb = new ArrayList<>();

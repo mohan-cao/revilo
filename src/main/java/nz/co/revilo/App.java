@@ -97,7 +97,7 @@ public class App {
 
         // Parse file and give it algorithm manager to give results to. @Michael Kemp
 
-        AlgorithmManager manager = new TopologicalSort(_inst._numExecutionCores);
+        AlgorithmManager manager = new VeryBasicAlgorithmManager(_inst._numExecutionCores);
         //AlgorithmManager manager = new SchedulingAlgorithmManager(_inst._numExecutionCores);
         DotFileGraphReader reader = new DotFileGraphReader(_inst._inputFilename);
         // Output to file @Michael Kemp
