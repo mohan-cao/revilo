@@ -2,6 +2,7 @@ package nz.co.revilo;
 
 import nz.co.revilo.CommandLine.Parameters;
 import nz.co.revilo.Input.DotFileGraphReader;
+import nz.co.revilo.Input.DotFileReader;
 import nz.co.revilo.Output.DotFileProducer;
 import nz.co.revilo.Output.DotFileWriter;
 import nz.co.revilo.Scheduling.AlgorithmManager;
@@ -101,7 +102,7 @@ public class App {
 
         AlgorithmManager manager = new VeryBasicAlgorithmManager(_inst._numExecutionCores);
         //AlgorithmManager manager = new SchedulingAlgorithmManager(_inst._numExecutionCores);
-        DotFileGraphReader reader = new DotFileGraphReader(_inst._inputFilename);
+        DotFileReader reader = new DotFileReader(_inst._inputFilename);
         // Output to file @Michael Kemp
         DotFileProducer output = new DotFileWriter(_inst._outputFilename);
         manager.inform(output);
