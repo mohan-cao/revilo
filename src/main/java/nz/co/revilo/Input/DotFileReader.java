@@ -32,7 +32,7 @@ public class DotFileReader extends DotFileParser {
     HashMap<String, Integer> nodeNames;
     List<Integer> nodeWeights;
     HashMap<String, HashMap<String, Integer>> arcs;
-    List<GraphObject> nodeOrder;
+    List<GraphObject> inputOrder;
     List<String> edgeStrings;
 
     private ParseResultListener _listener;
@@ -49,7 +49,7 @@ public class DotFileReader extends DotFileParser {
         nodeWeights = new ArrayList<>();
         arcs = new HashMap<>();
         List<String> arcStrings = new ArrayList<>();
-        nodeOrder = new ArrayList<>();
+        inputOrder = new ArrayList<>();
         edgeStrings = new ArrayList<>();
 
         try {
@@ -60,7 +60,7 @@ public class DotFileReader extends DotFileParser {
                 //[\s]*[\p{Alnum}]*[\s]*.>[\s]*[\p{Alnum}]*[\s]*\[[\s]*[Ww]eight[\s]*[=][\s]*[\p{Digit}]*[\s]*\][\s]*;
                 // arc
                 if (line.matches("[\\s]*[\\p{Alnum}]*[\\s]*.>[\\s]*[\\p{Alnum}]*[\\s]*\\[[\\s]*[Ww]eight[\\s]*[=][\\s]*[\\p{Digit}]*[\\s]*\\][\\s]*;")) {
-                    nodeOrder.add(GraphObject.EDGE);
+                    inputOrder.add(GraphObject.EDGE);
                     edgeStrings.add(line);
                     Matcher m = arcFrom.matcher(line);
                     m.find();
@@ -89,8 +89,7 @@ public class DotFileReader extends DotFileParser {
                 //[\s]*[\p{Alnum}]*[\s]*\[[\s]*[Ww]eight[\s]*[=][\s]*[\p{Digit}]*[\s]*\][\s]*;
                 // node
                 } else if (line.matches("[\\s]*[\\p{Alnum}]*[\\s]*\\[[\\s]*[Ww]eight[\\s]*[=][\\s]*[\\p{Digit}]*[\\s]*\\][\\s]*;")) {
-                    nodeOrder.add(GraphObject.NODE);
-                    arcStrings.add(line);
+                    inputOrder.add(GraphObject.NODE);
                     Matcher m = nodeName.matcher(line);
                     m.find();
                     String name = m.group(1);
@@ -140,7 +139,7 @@ public class DotFileReader extends DotFileParser {
             }
         }
 
-        _listener.ParsingResults(nodeWeightsPrimitive, arcsPrimitive, arcWeightsPrimitive, nodeOrder, edgeStrings);
+        _listener.ParsingResults(nodeWeightsPrimitive, arcsPrimitive, arcWeightsPrimitive, inputOrder, edgeStrings);
     }
 
     private BufferedReader openFile() throws FileNotFoundException {
