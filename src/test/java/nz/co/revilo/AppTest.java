@@ -8,12 +8,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 /**
- * Test cases for edge cases of algorithm
- * 
- * TODO: make input.dot
- * 
- * @author Abby S
- *
+ * Tests Application interface
  */
 public class AppTest {
 
@@ -28,26 +23,6 @@ public class AppTest {
             assertEquals(re.getMessage(),"Insufficient arguments given. Needs [input file] [# processors]");
         }
     }
-    
-    /**
-     * Serial
-     */
-    
-    
-    /**
-     * One on each processor
-     */
-    
-    
-    /**
-     * Even split
-     */
-    
-    
-    /**
-     * No gaps
-     */
-
 
     /**
      * Test that a valid file was given to the application
