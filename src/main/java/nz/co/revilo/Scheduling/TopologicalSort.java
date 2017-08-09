@@ -54,7 +54,7 @@ public class TopologicalSort extends AlgorithmManager {
         getListener().finalSchedule(
                 "output",
                 _nodeOrder,
-                new ArrayList<String>(),
+                _edgeStrings,
                 IntStream.range(0, size).boxed().map(c->String.valueOf(c)).collect(Collectors.toList()),
                 arcsToBoolList(_arcs),
                 arcsToIntList(_arcWeights),

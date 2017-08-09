@@ -1,0 +1,31 @@
+digraph "new graph" {
+		0		 [Weight=6,Start=0,Processor=1];
+		1		 [Weight=10,Start=6,Processor=1];
+		0 -> 3	 [Weight=34];
+		2		 [Weight=3,Start=16,Processor=1];
+		0 -> 4	 [Weight=24];
+		3		 [Weight=8,Start=19,Processor=1];
+		0 -> 9	 [Weight=44];
+		4		 [Weight=5,Start=27,Processor=1];
+		5		 [Weight=5,Start=32,Processor=1];
+		1 -> 2	 [Weight=48];
+		6		 [Weight=7,Start=37,Processor=1];
+		1 -> 5	 [Weight=19];
+		7		 [Weight=8,Start=44,Processor=1];
+		1 -> 6	 [Weight=39];
+		2 -> 3	 [Weight=10];
+		8		 [Weight=3,Start=52,Processor=1];
+		2 -> 7	 [Weight=48];
+		9		 [Weight=8,Start=55,Processor=1];
+		2 -> 8	 [Weight=48];
+		4 -> 6	 [Weight=10];
+		4 -> 7	 [Weight=48];
+		4 -> 8	 [Weight=48];
+		4 -> 9	 [Weight=39];
+		6 -> 7	 [Weight=15];
+		6 -> 8	 [Weight=39];
+		6 -> 9	 [Weight=29];
+		7 -> 8	 [Weight=15];
+		7 -> 9	 [Weight=34];
+		8 -> 9	 [Weight=39];
+}
