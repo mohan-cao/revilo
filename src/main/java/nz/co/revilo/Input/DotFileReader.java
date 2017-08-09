@@ -121,8 +121,10 @@ public class DotFileReader extends DotFileParser {
         int[] nodeWeightsPrimitive = new int[nodeWeights.size()];
         List<String> tempNames = new ArrayList<>(nodeNames.keySet());
         for (int i = 0; i < nodeWeights.size(); i++) {
-            nodeWeightsPrimitive[i] = nodeWeights.get(i);
-            nodeNamesPrimitive[nodeNames.get(tempNames.get(i))] = tempNames.get(i);
+            String tempName = tempNames.get(i);
+            int location = nodeNames.get(tempName);
+            nodeWeightsPrimitive[location] = nodeWeights.get(location);
+            nodeNamesPrimitive[location] = tempName;
         }
 
         boolean[][] arcsPrimitive = new boolean[nodeWeights.size()][nodeWeights.size()];
@@ -132,7 +134,7 @@ public class DotFileReader extends DotFileParser {
                 if (arcs.containsKey(nodeNamesPrimitive[j])) {
                     if (arcs.get(nodeNamesPrimitive[j]).containsKey(nodeNamesPrimitive[k])) {
                         arcsPrimitive[j][k] = true;
-                        arcWeightsPrimitive[j][k] = arcs.get(nodeNamesPrimitive[j]).get(nodeNamesPrimitive[j]);
+                        arcWeightsPrimitive[j][k] = arcs.get(nodeNamesPrimitive[j]).get(nodeNamesPrimitive[k]);
                     }
                 }
             }
