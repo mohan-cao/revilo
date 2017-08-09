@@ -32,7 +32,7 @@ public class App {
     private boolean _visualise;
     private String _outputFilename;
     private static String DEFAULT_FILETYPE = ".dot";
-    private static String DEFAULT_OUTPUT_FILENAME = "-output.dot";
+    private static String DEFAULT_OUTPUT_FILENAME = "output";
 
 
 
@@ -80,8 +80,10 @@ public class App {
 
             if (params.getOutputName() == null) {
                 int fileNameLocation = _inst._inputFilename.toLowerCase().lastIndexOf(DEFAULT_FILETYPE);
-                String fileNameWithoutExtension = _inst._inputFilename.substring(0, fileNameLocation);
-                _inst._outputFilename = fileNameWithoutExtension + DEFAULT_OUTPUT_FILENAME;
+                String fileNameWithoutExtension = _inst._inputFilename.substring(1, fileNameLocation);
+                fileNameWithoutExtension = Character.toUpperCase(_inst._inputFilename.charAt(0))
+                        + fileNameWithoutExtension;
+                _inst._outputFilename = DEFAULT_OUTPUT_FILENAME + fileNameWithoutExtension + DEFAULT_FILETYPE;
             } else {
                 _inst._outputFilename = params.getOutputName();
             }
