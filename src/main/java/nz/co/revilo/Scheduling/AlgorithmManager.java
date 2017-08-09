@@ -1,7 +1,11 @@
 package nz.co.revilo.Scheduling;
 
+import nz.co.revilo.Input.DotFileParser;
 import nz.co.revilo.Input.ParseResultListener;
 import nz.co.revilo.Output.ScheduleResultListener;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class AlgorithmManager implements ParseResultListener {
 
@@ -10,7 +14,8 @@ public abstract class AlgorithmManager implements ParseResultListener {
     int[] _nodeWeights;
     boolean[][] _arcs;
     int[][] _arcWeights;
-
+    List<DotFileParser.GraphObject> _nodeOrder;
+    List<String> _edgeStrings;
 
     public AlgorithmManager(int processingCores) {
         _processingCores = processingCores;
@@ -22,10 +27,13 @@ public abstract class AlgorithmManager implements ParseResultListener {
         _listener = listener;
     }
     
-    public void ParsingResults(int[] nodeWeights, boolean[][] arcs, int[][] arcWeights) {
+    public void ParsingResults(int[] nodeWeights, boolean[][] arcs, int[][] arcWeights,
+                               List<DotFileParser.GraphObject> nodeOrder, List<String> edgeStrings) {
         _arcWeights = arcWeights;
         _arcs = arcs;
         _nodeWeights = nodeWeights;
+        _nodeOrder = nodeOrder;
+        _edgeStrings = edgeStrings;
         execute();
     }
 

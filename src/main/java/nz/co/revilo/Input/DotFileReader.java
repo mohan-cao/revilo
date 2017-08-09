@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -32,6 +33,7 @@ public class DotFileReader extends DotFileParser {
     List<Integer> nodeWeights;
     HashMap<String, HashMap<String, Integer>> arcs;
     List<GraphObject> nodeOrder;
+    List<String> edgeStrings;
 
     private ParseResultListener _listener;
 
@@ -46,7 +48,9 @@ public class DotFileReader extends DotFileParser {
         nodeNames = new HashMap<>();
         nodeWeights = new ArrayList<>();
         arcs = new HashMap<>();
+        List<String> arcStrings = new ArrayList<>();
         nodeOrder = new ArrayList<>();
+        edgeStrings = new ArrayList<>();
 
         try {
         	//TODO Empty file
@@ -57,6 +61,7 @@ public class DotFileReader extends DotFileParser {
                 // arc
                 if (line.matches("[\\s]*[\\p{Alnum}]*[\\s]*.>[\\s]*[\\p{Alnum}]*[\\s]*\\[[\\s]*[Ww]eight[\\s]*[=][\\s]*[\\p{Digit}]*[\\s]*\\][\\s]*;")) {
                     nodeOrder.add(GraphObject.EDGE);
+                    edgeStrings.add(line);
                     Matcher m = arcFrom.matcher(line);
                     m.find();
                     String from = m.group(1);
@@ -85,6 +90,7 @@ public class DotFileReader extends DotFileParser {
                 // node
                 } else if (line.matches("[\\s]*[\\p{Alnum}]*[\\s]*\\[[\\s]*[Ww]eight[\\s]*[=][\\s]*[\\p{Digit}]*[\\s]*\\][\\s]*;")) {
                     nodeOrder.add(GraphObject.NODE);
+                    arcStrings.add(line);
                     Matcher m = nodeName.matcher(line);
                     m.find();
                     String name = m.group(1);
@@ -125,14 +131,14 @@ public class DotFileReader extends DotFileParser {
             for (int k = 0; k < nodeNamesPrimitive.length; k++) {
                 if (arcs.containsKey(nodeNamesPrimitive[j])) {
                     if (arcs.get(nodeNamesPrimitive[j]).containsKey(nodeNamesPrimitive[k])) {
-                        arcsPrimitive[j][k] = true;
-                        arcWeightsPrimitive[j][k] = arcs.get(nodeNamesPrimitive[j]).get(nodeNamesPrimitive[j]);
+//                        arcsPrimitive[j][k] = true;
+//                        arcWeightsPrimitive[j][k] = arcs.get(nodeNamesPrimitive[j]).get(nodeNamesPrimitive[j]);
                     }
                 }
             }
         }
 
-        _listener.ParsingResults(nodeWeightsPrimitive, arcsPrimitive, arcWeightsPrimitive);
+        _listener.ParsingResults(nodeWeightsPrimitive, arcsPrimitive, arcWeightsPrimitive, nodeOrder, edgeStrings);
     }
 
     private BufferedReader openFile() throws FileNotFoundException {
