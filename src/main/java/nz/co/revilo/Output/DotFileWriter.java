@@ -19,12 +19,12 @@ public class DotFileWriter extends DotFileProducer {
         int currentEdge = 0;
         for(DotFileParser.GraphObject o : _inputOrder) {
             if (o == DotFileParser.GraphObject.NODE) {
-                output.println("\t\t" + _nodeNames.get(currentNode) + "\t\t[Weight=" + _nodeWeights.get(currentNode)
+                output.println("\t\t" + _nodeNames.get(currentNode) + "\t\t [Weight=" + _nodeWeights.get(currentNode)
                         + ",Start=" + _nodeStarts.get(currentNode) + ",Processor=" + _nodeProcessor.get(currentNode) + "];");
                 currentNode++;
             } else {
-//                output.println(_edgeLines.get(currentEdge));
-//                currentEdge++;
+                output.println("\t" + _edgeLines.get(currentEdge));
+                currentEdge++;
             }
         }
 
