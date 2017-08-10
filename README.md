@@ -15,11 +15,11 @@ Shared Google Drive folder for resources: [Revilo Project Folder](https://drive.
 For developers, please only merge branches if they pass the unit tests on the build server!
 
 ## The Team
-- Abby Shen / ashe848 / ashe848
-- Aimee Tagle / atag549 / abtagle
-- Michael Kemp / mkem114 / mkem114
-- Mohan Cao / mcao024 / mohan-cao
-- Terran Kroft / tkro003 / itemic
+- Abby Shen / ashe848 / [ashe848](http://www.github.com/ashe848) 
+- Aimee Tagle / atag549 / [abtagle](http://www.github.com/abtagle)
+- Michael Kemp / mkem114 / [mkem114](http://www.github.com/mkem114)
+- Mohan Cao / mcao024 / [mohan-cao](http://www.github.com/mohan-cao)
+- Terran Kroft / tkro003 / [itemic](http://www.github.com/itemic)
 
 ## Quick Startup Guide
 
