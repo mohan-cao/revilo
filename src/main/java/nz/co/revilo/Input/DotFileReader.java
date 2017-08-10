@@ -125,6 +125,8 @@ public class DotFileReader extends DotFileParser {
                     if (arcs.get(nodeNamesPrimitive[j]).containsKey(nodeNamesPrimitive[k])) {
                         arcsPrimitive[j][k] = true;
                         arcWeightsPrimitive[j][k] = arcs.get(nodeNamesPrimitive[j]).get(nodeNamesPrimitive[k]);
+                    } else {
+                        arcWeightsPrimitive[j][k] = -1;
                     }
                 }
             }
