@@ -2,6 +2,7 @@ package nz.co.revilo;
 
 import com.beust.jcommander.JCommander;
 import nz.co.revilo.CommandLine.Parameters;
+import nz.co.revilo.Input.DotFileGraphReader;
 import nz.co.revilo.Input.DotFileReader;
 import nz.co.revilo.Output.DotFileProducer;
 import nz.co.revilo.Output.DotFileWriter;
@@ -29,7 +30,7 @@ public class App {
     private boolean _visualise;
     private String _outputFilename;
     private static String DEFAULT_FILETYPE = ".dot";
-    private static String DEFAULT_OUTPUT_FILENAME = "output";
+    private static String DEFAULT_OUTPUT_FILENAME = "-output.dot";
 
 
 
@@ -77,10 +78,8 @@ public class App {
 
             if (params.getOutputName() == null) {
                 int fileNameLocation = _inst._inputFilename.toLowerCase().lastIndexOf(DEFAULT_FILETYPE);
-                String fileNameWithoutExtension = _inst._inputFilename.substring(1, fileNameLocation);
-                fileNameWithoutExtension = Character.toUpperCase(_inst._inputFilename.charAt(0))
-                        + fileNameWithoutExtension;
-                _inst._outputFilename = DEFAULT_OUTPUT_FILENAME + fileNameWithoutExtension + DEFAULT_FILETYPE;
+                String fileNameWithoutExtension = _inst._inputFilename.substring(0, fileNameLocation);
+                _inst._outputFilename = fileNameWithoutExtension + DEFAULT_OUTPUT_FILENAME;
             } else {
                 _inst._outputFilename = params.getOutputName();
             }
@@ -112,22 +111,22 @@ public class App {
 
 
         //Mohan's stuff
-//        Graph graph = new SingleGraph("Tutorial 1");
-//        graph.addNode("A" );
-//        graph.addNode("B" );
-//        graph.addNode("C" );
-//        graph.addNode("D" );
-//        graph.addNode("E" );
-//        graph.addEdge("AB", "A", "B");
-//        graph.addEdge("BC", "B", "C");
-//        graph.addEdge("CD", "C", "D");
-//        graph.addEdge("DE", "D", "E");
-//        graph.addEdge("EA", "E", "A");
-//        graph.addEdge("AC", "A", "C");
-//        graph.addEdge("AD", "A", "D");
-//        graph.addEdge("BD", "B", "D");
-//        graph.addEdge("BE", "B", "E");
-//        graph.addEdge("CE", "C", "E");
-//        graph.display();
+        //        Graph graph = new SingleGraph("Tutorial 1");
+        //        graph.addNode("A" );
+        //        graph.addNode("B" );
+        //        graph.addNode("C" );
+        //        graph.addNode("D" );
+        //        graph.addNode("E" );
+        //        graph.addEdge("AB", "A", "B");
+        //        graph.addEdge("BC", "B", "C");
+        //        graph.addEdge("CD", "C", "D");
+        //        graph.addEdge("DE", "D", "E");
+        //        graph.addEdge("EA", "E", "A");
+        //        graph.addEdge("AC", "A", "C");
+        //        graph.addEdge("AD", "A", "D");
+        //        graph.addEdge("BD", "B", "D");
+        //        graph.addEdge("BE", "B", "E");
+        //        graph.addEdge("CE", "C", "E");
+        //        graph.display();
     }
 }

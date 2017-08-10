@@ -109,7 +109,7 @@ public class DotFileGraphReader extends DotFileParser {
                 }
             }
 
-            _listener.ParsingResults(primitiveNodeWeights, primitiveArcs, primitiveArcWeights, null, null);
+            _listener.ParsingResults(primitiveNodeWeights, primitiveArcs, primitiveArcWeights);
 
 
             // Create primitive structure for arcs and weights

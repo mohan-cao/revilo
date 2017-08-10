@@ -11,9 +11,6 @@ import java.io.FileNotFoundException;
  */
 public abstract class DotFileParser {
 
-    public enum GraphObject {
-        NODE, EDGE
-    }
 
     private String _filename;
 

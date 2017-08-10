@@ -95,8 +95,6 @@ public class VeryBasicAlgorithmManager extends AlgorithmManager {
 
         getListener().finalSchedule(
                 "new graph",
-                _nodeOrder,
-                _edgeStrings,
                 getToString(allNodes),
                 primToBool(_arcs),
                 primToInt(_arcWeights),
