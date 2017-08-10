@@ -1,6 +1,8 @@
 package nz.co.revilo.Output;
 
 
+import nz.co.revilo.Input.DotFileParser;
+
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
@@ -10,7 +12,7 @@ public abstract class DotFileProducer implements ScheduleResultListener {
 
     public static final String CHAR_SET = "UTF-8";
 
-    private String _outputFilename;
+    protected String _outputFilename;
     protected String _graphName;
     protected List<String> _nodeNames;
     protected List<List<Boolean>> _arcs;

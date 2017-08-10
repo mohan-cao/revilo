@@ -1,7 +1,6 @@
 package nz.co.revilo.Scheduling;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 
 public class VeryBasicAlgorithmManager extends AlgorithmManager {

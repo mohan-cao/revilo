@@ -4,7 +4,9 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -32,6 +34,7 @@ public class DotFileReader extends DotFileParser {
     List<Integer> nodeWeights;
     HashMap<String, HashMap<String, Integer>> arcs;
 
+
     private ParseResultListener _listener;
 
     public DotFileReader(String filename) {
@@ -45,6 +48,7 @@ public class DotFileReader extends DotFileParser {
         nodeNames = new HashMap<>();
         nodeWeights = new ArrayList<>();
         arcs = new HashMap<>();
+
 
         try {
         	//TODO Empty file
@@ -65,9 +69,9 @@ public class DotFileReader extends DotFileParser {
                     int weight = Integer.parseInt(m.group(1));
 
                     if (!nodeNames.containsKey(from)) {
-                        nodeWeights.set(nodeNames.get(from), 0);
+                        nodeWeights.set(nodeNames.get(from), -1);
                     } if (!nodeNames.containsKey(to)) {
-                        nodeWeights.set(nodeNames.get(to), 0);
+                        nodeWeights.set(nodeNames.get(to), -1);
                     }
                     if (!arcs.containsKey(from)) {
                         arcs.put(from, new HashMap<>());
@@ -111,18 +115,23 @@ public class DotFileReader extends DotFileParser {
         int[] nodeWeightsPrimitive = new int[nodeWeights.size()];
         List<String> tempNames = new ArrayList<>(nodeNames.keySet());
         for (int i = 0; i < nodeWeights.size(); i++) {
-            nodeWeightsPrimitive[i] = nodeWeights.get(i);
-            nodeNamesPrimitive[nodeNames.get(tempNames.get(i))] = tempNames.get(i);
+            String tempName = tempNames.get(i);
+            int location = nodeNames.get(tempName);
+            nodeWeightsPrimitive[location] = nodeWeights.get(location);
+            nodeNamesPrimitive[location] = tempName;
         }
 
         boolean[][] arcsPrimitive = new boolean[nodeWeights.size()][nodeWeights.size()];
         int[][] arcWeightsPrimitive = new int[nodeWeights.size()][nodeWeights.size()];
         for (int j = 0; j < nodeNamesPrimitive.length; j++) {
+            Arrays.fill(arcWeightsPrimitive[j], -1);
             for (int k = 0; k < nodeNamesPrimitive.length; k++) {
                 if (arcs.containsKey(nodeNamesPrimitive[j])) {
                     if (arcs.get(nodeNamesPrimitive[j]).containsKey(nodeNamesPrimitive[k])) {
                         arcsPrimitive[j][k] = true;
-                        arcWeightsPrimitive[j][k] = arcs.get(nodeNamesPrimitive[j]).get(nodeNamesPrimitive[j]);
+                        arcWeightsPrimitive[j][k] = arcs.get(nodeNamesPrimitive[j]).get(nodeNamesPrimitive[k]);
+                    } else {
+                        arcWeightsPrimitive[j][k] = -1;
                     }
                 }
             }
