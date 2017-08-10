@@ -6,12 +6,18 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+/**
+ * AlgorithmManager inplementation using a topological sort. All resultant schedules use only one processor.
+ */
 public class TopologicalSort extends AlgorithmManager {
 
     public TopologicalSort(int processingCores) {
         super(processingCores);
     }
 
+    /**
+     * Executes the implemented sorting algorithm (topological sort)
+     */
     @Override
     protected void execute() {
         Queue<Integer> sources = new LinkedList<>();
@@ -61,6 +67,13 @@ public class TopologicalSort extends AlgorithmManager {
                 new ArrayList<>(Collections.nCopies(size, 0))
         );
     }
+
+    /**
+     * Converts the input adjacency matrix (2D boolean array) into a List of Lists
+     *
+     * @param b boolean 2D array representing the graph's adjacency matrix
+     * @return the adjacency matrix as a List of Lists
+     */
     private List<List<Boolean>> arcsToBoolList(boolean[][] b){
         List<List<Boolean>> output = new ArrayList<>();
         for(int i=0;i<b.length;i++){
@@ -74,6 +87,13 @@ public class TopologicalSort extends AlgorithmManager {
         }
         return output;
     }
+
+    /**
+     * Converts the input adjacency matrix (2D int array of weights) into a List of Lists
+     *
+     * @param b 2D int array representing the graph's adjacency matrix with weights
+     * @return the adjacency matrix weights as a List of Lists
+     */
     private List<List<Integer>> arcsToIntList(int[][] b){
         List<List<Integer>> output = new ArrayList<>();
         for(int i=0;i<b.length;i++){
@@ -87,6 +107,13 @@ public class TopologicalSort extends AlgorithmManager {
         }
         return output;
     }
+
+    /**
+     * Converts the node weights represented as an int array into an Integer List
+     *
+     * @param weights int array representing the weights of nodes in the graph
+     * @return List representation of the weights
+     */
     private List<Integer> arrayToWeights(int[] weights){
         List<Integer> arr = new ArrayList<Integer>();
         for(int i=0;i<weights.length;i++){
