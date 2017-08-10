@@ -15,6 +15,9 @@ import org.graphstream.graph.implementations.DefaultGraph;
 import org.graphstream.stream.file.FileSource;
 import org.graphstream.stream.file.FileSourceFactory;
 
+/**
+ * Implementation of DotFileParser based on using GraphStream to represent graphs and read in input.
+ */
 public class DotFileGraphReader extends DotFileParser {
 
     HashMap<String, Integer> nodeNames;
@@ -122,6 +125,12 @@ public class DotFileGraphReader extends DotFileParser {
         }
     }
 
+    /**
+     * Method created a BufferedReader for the input file, to be used to read in the graph from the dot file.
+     *
+     * @return BufferedReader for the file needing to be parsed
+     * @throws FileNotFoundException
+     */
     private BufferedReader openFile() throws FileNotFoundException {
         return new BufferedReader(new FileReader(getFilename()));
     }
