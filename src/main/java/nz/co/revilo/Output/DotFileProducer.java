@@ -6,6 +6,10 @@ import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 
+/**
+ * Abstract class for reading in information from the final schedule which is required in producing an output file. The
+ * actual creation of the output is left to child classes.
+ */
 public abstract class DotFileProducer implements ScheduleResultListener {
 
     public static final String CHAR_SET = "UTF-8";
@@ -41,9 +45,17 @@ public abstract class DotFileProducer implements ScheduleResultListener {
         }
     }
 
+    /**
+     * DotFileProducer constructor which sets the file name of the output schedule DOT file.
+     * @param outputFilename
+     */
     public DotFileProducer(String outputFilename) {
         _outputFilename = outputFilename;
     }
 
+    /**
+     *  Abstract method for producing an output file in DOT file format (to be implemented by child classes).
+     * @param output PrintWriter set up and used to create the new DOT file, and print output to it
+     */
     protected abstract void produceOutput(PrintWriter output);
 }
