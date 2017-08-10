@@ -65,9 +65,9 @@ public class DotFileReader extends DotFileParser {
                     int weight = Integer.parseInt(m.group(1));
 
                     if (!nodeNames.containsKey(from)) {
-                        nodeWeights.set(nodeNames.get(from), 0);
+                        nodeWeights.set(nodeNames.get(from), -1);
                     } if (!nodeNames.containsKey(to)) {
-                        nodeWeights.set(nodeNames.get(to), 0);
+                        nodeWeights.set(nodeNames.get(to), -1);
                     }
                     if (!arcs.containsKey(from)) {
                         arcs.put(from, new HashMap<>());
