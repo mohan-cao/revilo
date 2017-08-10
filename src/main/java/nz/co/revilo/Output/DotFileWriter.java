@@ -6,14 +6,13 @@ import org.graphstream.graph.Graph;
 import java.io.PrintWriter;
 
 public class DotFileWriter extends DotFileProducer {
-
     public DotFileWriter(String filename) {
         super(filename);
     }
 
     protected void produceOutput(PrintWriter output) {
         // Name and start
-        output.println("digraph \"" + _graphName + "\" {");
+        output.println("digraph \"" + _outputFilename + "\" {");
 
         // Arcs
 //        for (int from = 0; from < _arcs.size(); from++) {
