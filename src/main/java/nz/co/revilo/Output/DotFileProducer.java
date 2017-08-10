@@ -1,6 +1,8 @@
 package nz.co.revilo.Output;
 
 
+import nz.co.revilo.Input.DotFileParser;
+
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
@@ -12,6 +14,8 @@ public abstract class DotFileProducer implements ScheduleResultListener {
 
     private String _outputFilename;
     protected String _graphName;
+    protected List<DotFileParser.GraphObject> _inputOrder;
+    protected List<String> _edgeLines;
     protected List<String> _nodeNames;
     protected List<List<Boolean>> _arcs;
     protected List<List<Integer>> _arcWeights;
@@ -20,8 +24,10 @@ public abstract class DotFileProducer implements ScheduleResultListener {
     protected List<Integer> _nodeProcessor;
 
     @Override
-    final public void finalSchedule(String graphName, List<String> nodeNames, List<List<Boolean>> arcs, List<List<Integer>> arcWeights, List<Integer> nodeWeights, List<Integer> nodeStarts, List<Integer> nodeProcessor) {
+    final public void finalSchedule(String graphName, List<DotFileParser.GraphObject> inputOrder, List<String> edgeLines, List<String> nodeNames, List<List<Boolean>> arcs, List<List<Integer>> arcWeights, List<Integer> nodeWeights, List<Integer> nodeStarts, List<Integer> nodeProcessor) {
         _graphName = graphName;
+        _inputOrder = inputOrder;
+        _edgeLines = edgeLines;
         _nodeNames = nodeNames;
         _arcs = arcs;
         _arcWeights = arcWeights;

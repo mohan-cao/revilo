@@ -53,6 +53,8 @@ public class TopologicalSort extends AlgorithmManager {
         _arcs = trackedEdges;
         getListener().finalSchedule(
                 "output",
+                _nodeOrder,
+                _edgeStrings,
                 IntStream.range(0, size).boxed().map(c->String.valueOf(c)).collect(Collectors.toList()),
                 arcsToBoolList(_arcs),
                 arcsToIntList(_arcWeights),

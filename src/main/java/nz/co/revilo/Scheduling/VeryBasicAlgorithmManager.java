@@ -1,7 +1,6 @@
 package nz.co.revilo.Scheduling;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 
 public class VeryBasicAlgorithmManager extends AlgorithmManager {
@@ -96,6 +95,8 @@ public class VeryBasicAlgorithmManager extends AlgorithmManager {
 
         getListener().finalSchedule(
                 "new graph",
+                _nodeOrder,
+                _edgeStrings,
                 getToString(allNodes),
                 primToBool(_arcs),
                 primToInt(_arcWeights),
