@@ -6,6 +6,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -73,9 +74,9 @@ public class DotFileReader extends DotFileParser {
                     int weight = Integer.parseInt(m.group(1));
 
                     if (!nodeNames.containsKey(from)) {
-                        nodeWeights.set(nodeNames.get(from), 0);
+                        nodeWeights.set(nodeNames.get(from), -1);
                     } if (!nodeNames.containsKey(to)) {
-                        nodeWeights.set(nodeNames.get(to), 0);
+                        nodeWeights.set(nodeNames.get(to), -1);
                     }
                     if (!arcs.containsKey(from)) {
                         arcs.put(from, new HashMap<>());
@@ -129,11 +130,14 @@ public class DotFileReader extends DotFileParser {
         boolean[][] arcsPrimitive = new boolean[nodeWeights.size()][nodeWeights.size()];
         int[][] arcWeightsPrimitive = new int[nodeWeights.size()][nodeWeights.size()];
         for (int j = 0; j < nodeNamesPrimitive.length; j++) {
+            Arrays.fill(arcWeightsPrimitive[j], -1);
             for (int k = 0; k < nodeNamesPrimitive.length; k++) {
                 if (arcs.containsKey(nodeNamesPrimitive[j])) {
                     if (arcs.get(nodeNamesPrimitive[j]).containsKey(nodeNamesPrimitive[k])) {
                         arcsPrimitive[j][k] = true;
                         arcWeightsPrimitive[j][k] = arcs.get(nodeNamesPrimitive[j]).get(nodeNamesPrimitive[k]);
+                    } else {
+                        arcWeightsPrimitive[j][k] = -1;
                     }
                 }
             }

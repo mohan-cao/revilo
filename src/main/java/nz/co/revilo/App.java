@@ -2,7 +2,6 @@ package nz.co.revilo;
 
 import com.beust.jcommander.JCommander;
 import nz.co.revilo.CommandLine.Parameters;
-import nz.co.revilo.Input.DotFileGraphReader;
 import nz.co.revilo.Input.DotFileReader;
 import nz.co.revilo.Output.DotFileProducer;
 import nz.co.revilo.Output.DotFileWriter;
