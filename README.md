@@ -15,12 +15,11 @@ Shared Google Drive folder for resources: [Revilo Project Folder](https://drive.
 For developers, please only merge branches if they pass the unit tests on the build server!
 
 ## The Team
-
-- Abby Shen ashe848@aucklanduni.ac.nz
-- Aimee Tagle atag549@aucklanduni.ac.nz
-- Michael Kemp mkem114@aucklanduni.ac.nz
-- Mohan Cao mcao024@aucklanduni.ac.nz
-- Terran Kroft tkro003@aucklanduni.ac.nz
+- Abby Shen / ashe848 / ashe848
+- Aimee Tagle / atag549 / abtagle
+- Michael Kemp / mkem114 / mkem114
+- Mohan Cao / mcao024 / mohan-cao
+- Terran Kroft / tkro003 / itemic
 
 ## Quick Startup Guide
 
