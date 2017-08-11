@@ -49,22 +49,6 @@ public class App {
         Parameters params = new Parameters();
         JCommander jc = new JCommander();
 
-        if(params.getHelp()) {
-            try {
-                BufferedReader in = new BufferedReader(new FileReader("help"));
-                String line = in.readLine();
-                while(line != null) {
-                    System.out.println(line);
-                    line = in.readLine();
-                }
-                in.close();
-            } catch (FileNotFoundException e) {
-                System.out.println("Sorry, no help file found");
-            } catch (IOException e) {
-                System.out.println("Error reading help file");
-            }
-        }
-
         //Section to display the consumed args
         int i = 0;
         for (String s: args) {
@@ -84,6 +68,23 @@ public class App {
 
 
             _inst._inputFilename = args[0];
+
+            if(params.getHelp()) {
+                System.out.println(
+                        "\n Welcome to Revilo Task Scheduler. " +
+                                "\n\n To use our scheduler, please provide the arguments [input file] [# processors to " +
+                                "schedule on] " +
+                                "\n \n Optional Flags: " +
+                                "\n\t\"--parallel\", \"-p\" allows the specification of the number of processors " +
+                                "to use to when running our scheduler " +
+                                "\n\t \"--visualise\", \"--visualize\", \"-v\" specifies if visualisation of current " +
+                                "progress should be shown" +
+                                "\n\t \"--output\", \"-o\" allows for the specification of a custom name for the output " +
+                                "file" +
+                                "\n\t \"--help\", \"-h\" specifies that this help message should be displayed."
+                );
+            }
+
             try {
                 _inst._numExecutionCores = Integer.parseInt(args[1]);
             }catch(NumberFormatException nfe){
