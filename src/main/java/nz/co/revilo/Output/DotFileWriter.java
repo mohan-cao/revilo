@@ -9,17 +9,18 @@ public class DotFileWriter extends DotFileProducer {
 
     protected void produceOutput(PrintWriter output) {
         // Name and start
-        output.println("digraph \"" + _graphName + "\" {");
+        String temp;
+        if (_graphName != null) {
+            if (_graphName.length() > 1) {
+                temp = _graphName.substring(0, 1).toUpperCase() + _graphName.substring(1);
+            } else {
+                temp = _graphName.toUpperCase();
+            }
+        } else {
+            temp = "";
+        }
 
-        // Arcs
-//        for (int from = 0; from < _arcs.size(); from++) {
-//            for (int to = 0; to < _arcs.get(from).size(); to++) {
-//                if (_arcs.get(from).get(to)) {
-//                    output.println("\t\t" + _nodeNames.get(from) + " -> " + _nodeNames.get(to) + "\t[Weight=" + _arcWeights.get(from).get(to) + "];");
-//                }
-//            }
-//        }
-
+        output.println("digraph \"output" + temp + "\" {");
 
         // Arcs
         for (int from = 0; from < _arcs.size(); from++) {

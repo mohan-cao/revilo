@@ -102,7 +102,7 @@ public class DotFileReader extends DotFileParser {
                 } else if (line.matches("[\\s]*digraph[\\s]*\".*\"[\\s]*\\{[\\s]*")) {
                     Matcher m = graphNameMatch.matcher(line);
                     m.find();
-                    String name = m.group(1);
+                    graphName = m.group(1);
                 }
                 line = reader.readLine();
             }
