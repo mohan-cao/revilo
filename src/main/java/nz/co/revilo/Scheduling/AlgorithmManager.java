@@ -11,6 +11,7 @@ public abstract class AlgorithmManager implements ParseResultListener {
     boolean[][] _arcs;
     int[][] _arcWeights;
     String[] _nodeNames;
+    String _graphName;
 
 
     public AlgorithmManager(int processingCores) {
@@ -23,7 +24,7 @@ public abstract class AlgorithmManager implements ParseResultListener {
         _listener = listener;
     }
 
-    public void ParsingResults(String[] nodeNames, int[] nodeWeights, boolean[][] arcs, int[][] arcWeights) {
+    public void ParsingResults(String _graphName, String[] nodeNames, int[] nodeWeights, boolean[][] arcs, int[][] arcWeights) {
 
         _arcWeights = arcWeights;
         _arcs = arcs;
