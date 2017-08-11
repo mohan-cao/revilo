@@ -10,9 +10,12 @@ import static org.junit.Assert.fail;
 public class VeryBasicAlgorithmManagerTest {
 
     /**
-     * Serial
+     * Serial schedule integration test
      */
+    @Test
+    public void SerialScheduleTest(){
 
+    }
 
     /**
      * One on each processor
