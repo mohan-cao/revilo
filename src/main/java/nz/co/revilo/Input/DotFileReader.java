@@ -32,7 +32,7 @@ public class DotFileReader extends DotFileParser {
     HashMap<String, Integer> nodeNames;
     List<Integer> nodeWeights;
     HashMap<String, HashMap<String, Integer>> arcs;
-    List<String> nodeNamesList;
+    String[] nodeNamesList;
 
 
     private ParseResultListener _listener;
@@ -48,7 +48,6 @@ public class DotFileReader extends DotFileParser {
         nodeNames = new HashMap<>();
         nodeWeights = new ArrayList<>();
         arcs = new HashMap<>();
-        nodeNamesList = new ArrayList<>();
 
         try {
         	//TODO Empty file
@@ -114,10 +113,11 @@ public class DotFileReader extends DotFileParser {
         String[] nodeNamesPrimitive = new String[nodeWeights.size()];
         int[] nodeWeightsPrimitive = new int[nodeWeights.size()];
         List<String> tempNames = new ArrayList<>(nodeNames.keySet());
+        nodeNamesList = new String[nodeWeights.size()];
         for (int i = 0; i < nodeWeights.size(); i++) {
             String tempName = tempNames.get(i);
             int location = nodeNames.get(tempName);
-            nodeNamesList.add(tempName);
+            nodeNamesList[location] = tempName;
             nodeWeightsPrimitive[location] = nodeWeights.get(location);
             nodeNamesPrimitive[location] = tempName;
         }

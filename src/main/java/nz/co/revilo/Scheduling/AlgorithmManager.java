@@ -3,8 +3,6 @@ package nz.co.revilo.Scheduling;
 import nz.co.revilo.Input.ParseResultListener;
 import nz.co.revilo.Output.ScheduleResultListener;
 
-import java.util.List;
-
 public abstract class AlgorithmManager implements ParseResultListener {
 
     private int _processingCores;
@@ -12,7 +10,7 @@ public abstract class AlgorithmManager implements ParseResultListener {
     int[] _nodeWeights;
     boolean[][] _arcs;
     int[][] _arcWeights;
-    List<String> _nodeNames;
+    String[] _nodeNames;
 
 
     public AlgorithmManager(int processingCores) {
@@ -25,7 +23,7 @@ public abstract class AlgorithmManager implements ParseResultListener {
         _listener = listener;
     }
 
-    public void ParsingResults(int[] nodeWeights, boolean[][] arcs, int[][] arcWeights, List<String> nodeNames) {
+    public void ParsingResults(int[] nodeWeights, boolean[][] arcs, int[][] arcWeights, String[] nodeNames) {
 
         _arcWeights = arcWeights;
         _arcs = arcs;
