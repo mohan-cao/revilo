@@ -138,7 +138,7 @@ public class DotFileReader extends DotFileParser {
             }
         }
 
-        _listener.ParsingResults(nodeWeightsPrimitive, arcsPrimitive, arcWeightsPrimitive, nodeNamesList);
+        _listener.ParsingResults(nodeNamesList, nodeWeightsPrimitive, arcsPrimitive, arcWeightsPrimitive);
     }
 
     private BufferedReader openFile() throws FileNotFoundException {

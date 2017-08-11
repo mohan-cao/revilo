@@ -23,7 +23,7 @@ public abstract class AlgorithmManager implements ParseResultListener {
         _listener = listener;
     }
 
-    public void ParsingResults(int[] nodeWeights, boolean[][] arcs, int[][] arcWeights, String[] nodeNames) {
+    public void ParsingResults(String[] nodeNames, int[] nodeWeights, boolean[][] arcs, int[][] arcWeights) {
 
         _arcWeights = arcWeights;
         _arcs = arcs;

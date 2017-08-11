@@ -1,8 +1,5 @@
 package nz.co.revilo.Output;
 
-import nz.co.revilo.Input.DotFileParser;
-import org.graphstream.graph.Graph;
-
 import java.io.PrintWriter;
 
 public class DotFileWriter extends DotFileProducer {
@@ -34,8 +31,8 @@ public class DotFileWriter extends DotFileProducer {
         }
 
         // Nodes
-        for (int arc = 0; arc < _arcs.size(); arc++) {
-            output.println("\t\t" + _nodeNames.get(arc) + "\t\t[Weight=" + _nodeWeights.get(arc) + ",Start=" + _nodeStarts.get(arc) + ",Processor=" + _nodeProcessor.get(arc) + "];");
+        for (int node = 0; node < _arcs.size(); node++) {
+            output.println("\t\t" + _nodeNames.get(node) + "\t\t[Weight=" + _nodeWeights.get(node) + ",Start=" + _nodeStarts.get(node) + ",Processor=" + _nodeProcessor.get(node) + "];");
         }
 
         // End
