@@ -1,4 +1,4 @@
-digraph "null" {
+digraph "output" {
 		0 -> 3	[Weight=34];
 		0 -> 4	[Weight=24];
 		0 -> 9	[Weight=44];
