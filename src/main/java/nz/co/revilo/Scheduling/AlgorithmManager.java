@@ -24,12 +24,13 @@ public abstract class AlgorithmManager implements ParseResultListener {
         _listener = listener;
     }
 
-    public void ParsingResults(String _graphName, String[] nodeNames, int[] nodeWeights, boolean[][] arcs, int[][] arcWeights) {
+    public void ParsingResults(String graphName, String[] nodeNames, int[] nodeWeights, boolean[][] arcs, int[][] arcWeights) {
 
         _arcWeights = arcWeights;
         _arcs = arcs;
         _nodeWeights = nodeWeights;
         _nodeNames = nodeNames;
+        _graphName = graphName;
 
         execute();
     }
