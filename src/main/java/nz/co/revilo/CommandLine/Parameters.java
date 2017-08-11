@@ -19,7 +19,7 @@ public class Parameters {
     @Parameter(names={"--output", "-o"})
     private String _outputName = null; //should get input name actually
     @Parameter(names={"--help", "-h"}, help = true)
-    private boolean _help;
+    private boolean help;
 
     public int getParallelCores() {
         return _parallelCores;
@@ -34,7 +34,7 @@ public class Parameters {
     }
 
     public boolean getHelp() {
-        return _help;
+        return help;
     }
 
     public void setDefaultOutputName(String outputFileName) {
