@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -23,7 +22,7 @@ import java.util.regex.Pattern;
  */
 public class DotFileReader extends DotFileParser {
 
-    public static final Pattern graphName = Pattern.compile("[\\s]*digraph[\\s]*\"(.*)\"[\\s]*\\{[\\s]*");
+    public static final Pattern graphNameMatch = Pattern.compile("[\\s]*digraph[\\s]*\"(.*)\"[\\s]*\\{[\\s]*");
     public static final Pattern arcFrom = Pattern.compile("[\\s]*([\\p{Alnum}]*)[\\s]*.>[\\s]*[\\p{Alnum}]*[\\s]*\\[[\\s]*[Ww]eight[\\s]*[=][\\s]*[\\p{Digit}]*[\\s]*\\][\\s]*;");
     public static final Pattern arcTo =  Pattern.compile("[\\s]*[\\p{Alnum}]*[\\s]*.>[\\s]*([\\p{Alnum}]*)[\\s]*\\[[\\s]*[Ww]eight[\\s]*[=][\\s]*[\\p{Digit}]*[\\s]*\\][\\s]*;");
     public static final Pattern arcWeight = Pattern.compile("[\\s]*[\\p{Alnum}]*[\\s]*.>[\\s]*[\\p{Alnum}]*[\\s]*\\[[\\s]*[Ww]eight[\\s]*[=][\\s]*([\\p{Digit}]*)[\\s]*\\][\\s]*;");
@@ -33,7 +32,8 @@ public class DotFileReader extends DotFileParser {
     HashMap<String, Integer> nodeNames;
     List<Integer> nodeWeights;
     HashMap<String, HashMap<String, Integer>> arcs;
-
+    String[] nodeNamesList;
+    String graphName;
 
     private ParseResultListener _listener;
 
@@ -48,7 +48,6 @@ public class DotFileReader extends DotFileParser {
         nodeNames = new HashMap<>();
         nodeWeights = new ArrayList<>();
         arcs = new HashMap<>();
-
 
         try {
         	//TODO Empty file
@@ -101,7 +100,7 @@ public class DotFileReader extends DotFileParser {
                 //[\s]*digraph[\s]*".*"[\s]*\{[\s]*
                 // graph name
                 } else if (line.matches("[\\s]*digraph[\\s]*\".*\"[\\s]*\\{[\\s]*")) {
-                    Matcher m = graphName.matcher(line);
+                    Matcher m = graphNameMatch.matcher(line);
                     m.find();
                     String name = m.group(1);
                 }
@@ -114,9 +113,11 @@ public class DotFileReader extends DotFileParser {
         String[] nodeNamesPrimitive = new String[nodeWeights.size()];
         int[] nodeWeightsPrimitive = new int[nodeWeights.size()];
         List<String> tempNames = new ArrayList<>(nodeNames.keySet());
+        nodeNamesList = new String[nodeWeights.size()];
         for (int i = 0; i < nodeWeights.size(); i++) {
             String tempName = tempNames.get(i);
             int location = nodeNames.get(tempName);
+            nodeNamesList[location] = tempName;
             nodeWeightsPrimitive[location] = nodeWeights.get(location);
             nodeNamesPrimitive[location] = tempName;
         }
@@ -137,7 +138,7 @@ public class DotFileReader extends DotFileParser {
             }
         }
 
-        _listener.ParsingResults(nodeWeightsPrimitive, arcsPrimitive, arcWeightsPrimitive);
+        _listener.ParsingResults(graphName, nodeNamesList, nodeWeightsPrimitive, arcsPrimitive, arcWeightsPrimitive);
     }
 
     private BufferedReader openFile() throws FileNotFoundException {
