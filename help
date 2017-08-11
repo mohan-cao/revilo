@@ -1,0 +1,16 @@
+=============================
+=   REVILO TASK SCHEDULER   =
+=============================
+Welcome to the Revilo task scheduler.
+
+To specify the number of processors, use --parallel or -p
+e.g.
+
+To enable task scheduling visualisation, use --visualise or -v
+e.g.
+
+To specify the number of specify the __please change__ file, use --output or -o
+e.g.
+
+To view help, use --help or -h
+e.g.
