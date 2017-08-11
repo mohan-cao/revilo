@@ -18,6 +18,8 @@ public class Parameters {
     private boolean _visualise = false;
     @Parameter(names={"--output", "-o"})
     private String _outputName = null; //should get input name actually
+    @Parameter(names={"--help", "-h"}, help = true)
+    private boolean _help;
 
     public int getParallelCores() {
         return _parallelCores;
@@ -29,6 +31,10 @@ public class Parameters {
 
     public String getOutputName() {
         return _outputName;
+    }
+
+    public boolean getHelp() {
+        return _help;
     }
 
     public void setDefaultOutputName(String outputFileName) {
