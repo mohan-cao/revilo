@@ -49,6 +49,10 @@ public class App {
         Parameters params = new Parameters();
         JCommander jc = new JCommander();
 
+        if(params.getHelp()) {
+            System.out.println("Hello this is help");
+        }
+
         //Section to display the consumed args
         int i = 0;
         for (String s: args) {
