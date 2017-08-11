@@ -9,7 +9,7 @@ import nz.co.revilo.Output.DotFileWriter;
 import nz.co.revilo.Scheduling.AlgorithmManager;
 import nz.co.revilo.Scheduling.VeryBasicAlgorithmManager;
 
-import java.io.FileNotFoundException;
+import java.io.*;
 import java.util.Arrays;
 
 /**
@@ -50,7 +50,19 @@ public class App {
         JCommander jc = new JCommander();
 
         if(params.getHelp()) {
-            System.out.println("Hello this is help");
+            try {
+                BufferedReader in = new BufferedReader(new FileReader("help"));
+                String line = in.readLine();
+                while(line != null) {
+                    System.out.println(line);
+                    line = in.readLine();
+                }
+                in.close();
+            } catch (FileNotFoundException e) {
+                System.out.println("Sorry, no help file found");
+            } catch (IOException e) {
+                System.out.println("Error reading help file");
+            }
         }
 
         //Section to display the consumed args
