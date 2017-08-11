@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -33,6 +32,7 @@ public class DotFileReader extends DotFileParser {
     HashMap<String, Integer> nodeNames;
     List<Integer> nodeWeights;
     HashMap<String, HashMap<String, Integer>> arcs;
+    List<String> nodeNamesList;
 
 
     private ParseResultListener _listener;
@@ -48,7 +48,7 @@ public class DotFileReader extends DotFileParser {
         nodeNames = new HashMap<>();
         nodeWeights = new ArrayList<>();
         arcs = new HashMap<>();
-
+        nodeNamesList = new ArrayList<>();
 
         try {
         	//TODO Empty file
@@ -117,6 +117,7 @@ public class DotFileReader extends DotFileParser {
         for (int i = 0; i < nodeWeights.size(); i++) {
             String tempName = tempNames.get(i);
             int location = nodeNames.get(tempName);
+            nodeNamesList.add(tempName);
             nodeWeightsPrimitive[location] = nodeWeights.get(location);
             nodeNamesPrimitive[location] = tempName;
         }
@@ -137,7 +138,7 @@ public class DotFileReader extends DotFileParser {
             }
         }
 
-        _listener.ParsingResults(nodeWeightsPrimitive, arcsPrimitive, arcWeightsPrimitive);
+        _listener.ParsingResults(nodeWeightsPrimitive, arcsPrimitive, arcWeightsPrimitive, nodeNamesList);
     }
 
     private BufferedReader openFile() throws FileNotFoundException {
