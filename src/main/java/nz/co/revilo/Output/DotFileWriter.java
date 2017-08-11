@@ -12,7 +12,7 @@ public class DotFileWriter extends DotFileProducer {
         String temp;
         if (_graphName != null) {
             if (_graphName.length() > 1) {
-                temp = _graphName.substring(0, 0).toUpperCase() + _graphName.substring(1);
+                temp = _graphName.substring(0, 1).toUpperCase() + _graphName.substring(1);
             } else {
                 temp = _graphName.toUpperCase();
             }
