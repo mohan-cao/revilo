@@ -1,4 +1,4 @@
-digraph "input-output.dot" {
+digraph "null" {
 		0 -> 1	[Weight=34];
 		0 -> 2	[Weight=24];
 		0 -> 3	[Weight=44];
