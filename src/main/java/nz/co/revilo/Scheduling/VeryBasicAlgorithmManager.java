@@ -10,6 +10,7 @@ public class VeryBasicAlgorithmManager extends AlgorithmManager {
     ArrayList<Integer> visited = new ArrayList<>();
     ArrayList<Integer> depths = new ArrayList<>();
     ArrayList<Integer> toProcess = new ArrayList<>();
+    ArrayList<String> nodeNames = new ArrayList<>();
 
     public VeryBasicAlgorithmManager(int processingCores) {
         super(processingCores);
@@ -41,6 +42,7 @@ public class VeryBasicAlgorithmManager extends AlgorithmManager {
 
         for (int row = 0; row < _arcWeights.length; row++) {
             allNodes.add(row);
+            nodeNames.add(_nodeNames[row]);
         }
 
         //and after that we will start looking for things?
