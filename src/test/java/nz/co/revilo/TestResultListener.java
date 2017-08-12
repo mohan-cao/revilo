@@ -60,10 +60,9 @@ public class TestResultListener implements ScheduleResultListener {
     private List<String> _nodeNames;
     private List<List<Boolean>> _arcs;
     private List<List<Integer>> _arcWeights;
-    private List<Integer> _nodeWeights;
-    private List<Integer> _nodeStarts;
-    private List<Integer> _nodeProcessor;
     private List<Node> _nodes;
+    private List<List<Node>> _processors;
+    private int _nProcessors;
 
     @Override
     public void finalSchedule(String graphName,
@@ -76,21 +75,34 @@ public class TestResultListener implements ScheduleResultListener {
         _nodeNames = nodeNames;
         _arcs = arcs;
         _arcWeights = arcWeights;
-        _nodeWeights = nodeWeights;
-        _nodeStarts = nodeStarts;
-        _nodeProcessor = nodeProcessor;
-        processNodes();
+        processNodes(nodeNames, nodeStarts, nodeWeights, nodeProcessor);
     }
-    private void processNodes() {
-        _nodes =  new ArrayList<>(_nodeWeights.size());
-        for (int i = 0; i < _nodeWeights.size(); i++) {
-            ArrayList<Integer> dependencies =  new ArrayList<>(_nodeWeights.size());
-            for(int j = 0; j < _nodeWeights.size(); j++) {
+    private void processNodes(List<String> nodeNames, List <Integer> nodeStarts, List<Integer> nodeWeights
+            , List<Integer> nodeProcessor) {
+        _nProcessors = 1;
+        _nodes =  new ArrayList<>(nodeWeights.size());
+        for (int i = 0; i < nodeWeights.size(); i++) {
+            ArrayList<Integer> dependencies =  new ArrayList<>(nodeWeights.size());
+            for(int j = 0; j < nodeWeights.size(); j++) {
                 if(_arcs.get(i).get(j)) {
                     dependencies.add(j);
                 }
             }
-            _nodes.add(new Node(_nodeNames.get(i), dependencies, _nodeStarts.get(i),_nodeWeights.get(i), _nodeProcessor.get(i)));
+            _nodes.add(new Node(_nodeNames.get(i), dependencies, nodeStarts.get(i),nodeWeights.get(i)
+                    , nodeProcessor.get(i)));
+            if (nodeProcessor.get(i) >  _nProcessors) {
+                _nProcessors = nodeProcessor.get(i);
+            }
+        }
+
+        // Initialise the ArrayList to store the nodes in processors
+        _processors = new ArrayList<>(_nProcessors);
+        for (int i = 0; i < _nProcessors; i++) {
+            _processors.add(new ArrayList<Node>());
+        }
+
+        for(Node node : _nodes) {
+            _processors.get(node.getCore()).add(node);
         }
     }
     public List<Node> getNodes() {
@@ -100,4 +112,6 @@ public class TestResultListener implements ScheduleResultListener {
     public List<Integer> getArcWeights(int nodeIndex) {
         return _arcWeights.get(nodeIndex);
     }
+
+    public List<List<Node>> getProcessors() { return _processors; }
 }
