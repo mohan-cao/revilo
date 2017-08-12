@@ -44,7 +44,7 @@ public class TopologicalTest extends ValidityTest {
      */
     @Test
     public void test10NodesRandom() {
-        TestResultListener t = schedule(TEST_PATH + "input.dot");
+        TestResultListener t = schedule(AppTest.TEST_PATH + "input.dot");
         assertTrue(satisfiesDependencies(t));
         assertTrue(validStartTimeForTasks(t));
     }
@@ -54,7 +54,7 @@ public class TopologicalTest extends ValidityTest {
      */
     @Test
     public void test7NodeOutTree() {
-        TestResultListener t = schedule(TEST_PATH + "Nodes_7_OutTree.dot");
+        TestResultListener t = schedule(AppTest.TEST_PATH + "Nodes_7_OutTree.dot");
         assertTrue(satisfiesDependencies(t));
         assertTrue(validStartTimeForTasks(t));
     }
@@ -64,7 +64,7 @@ public class TopologicalTest extends ValidityTest {
      */
     @Test
     public void test8NodeRandom() {
-        TestResultListener t = schedule(TEST_PATH + "Nodes_7_OutTree.dot");
+        TestResultListener t = schedule(AppTest.TEST_PATH + "Nodes_7_OutTree.dot");
         assertTrue(satisfiesDependencies(t));
         assertTrue(validStartTimeForTasks(t));
     }
@@ -74,7 +74,7 @@ public class TopologicalTest extends ValidityTest {
      */
     @Test
     public void test9NodeSeriesParallel() {
-        TestResultListener t = schedule(TEST_PATH + "Nodes_7_OutTree.dot");
+        TestResultListener t = schedule(AppTest.TEST_PATH + "Nodes_7_OutTree.dot");
         assertTrue(satisfiesDependencies(t));
         assertTrue(validStartTimeForTasks(t));
     }
