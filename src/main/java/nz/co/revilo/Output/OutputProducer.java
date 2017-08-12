@@ -6,6 +6,12 @@ import nz.co.revilo.Input.DotFileParser;
 import java.io.*;
 import java.util.List;
 
+/**
+ * Abstract class where child classes will implement some form of output createion based on the final schedule
+ * received from an AlgorithmManager.
+ * @author Michael
+ * @version alpha
+ */
 public abstract class OutputProducer implements ScheduleResultListener {
 
     public static final String CHAR_SET = "UTF-8";
