@@ -64,11 +64,23 @@ public class BranchAndBound {
 	}
 
 	/**
+	 * Calculates the buttom levels for all nodes in graph
 	 * @author Abby S
 	 * 
 	 */
 	private void calculateBottomLevels() {
-		
+		while(!buttomUpSinks.isEmpty()){
+			BnbNode node = buttomUpSinks.remove(0);
+			
+			for(BnbNode inneighbour:node.inneighboursClone){
+				inneighbour.bottomLevel=Math.max(inneighbour.bottomLevel, node.bottomLevel+node.distTo(inneighbour));
+				node.inneighboursClone.remove(inneighbour);
+				inneighbour.outneighboursClone.remove(node);
+				if(inneighbour.outneighboursClone.isEmpty()){
+					buttomUpSinks.add(inneighbour);//become a sink now that child is removed
+				}
+			}
+		}
 	}
 
 	/**

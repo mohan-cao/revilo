@@ -2,7 +2,6 @@ package nz.co.revilo.Algorithms;
 
 import java.util.List;
 
-
 /**
  * Represents a node
  * Will be represented in a matrix by the i,j position
