@@ -31,21 +31,17 @@ public abstract class DotFileProducer implements ScheduleResultListener {
         _nodeStarts = nodeStarts;
         _nodeProcessor = nodeProcessor;
 
-        try {
-            PrintWriter pw = new PrintWriter(_outputFilename, CHAR_SET);
-            produceOutput(pw);
-            pw.flush();
-            pw.close();
-        } catch (UnsupportedEncodingException e) {
-            //TODO
-        } catch (FileNotFoundException e) {
-            //TODO
-        }
+        PrintWriter pw = createPrintWriter();
+        produceOutput(pw);
+        pw.flush();
+        pw.close();
     }
 
-    public DotFileProducer(String outputFilename) {
+    protected DotFileProducer(String outputFilename) {
         _outputFilename = outputFilename;
     }
+
+    public abstract PrintWriter createPrintWriter();
 
     protected abstract void produceOutput(PrintWriter output);
 }

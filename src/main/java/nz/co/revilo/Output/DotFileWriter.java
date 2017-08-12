@@ -1,10 +1,25 @@
 package nz.co.revilo.Output;
 
+import java.io.FileNotFoundException;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 
 public class DotFileWriter extends DotFileProducer {
     public DotFileWriter(String filename) {
         super(filename);
+    }
+
+    @Override
+    public PrintWriter createPrintWriter() {
+        PrintWriter pw = null;
+        try {
+            pw = new PrintWriter(_outputFilename, CHAR_SET);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        return pw;
     }
 
     protected void produceOutput(PrintWriter output) {
