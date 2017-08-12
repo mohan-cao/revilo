@@ -16,6 +16,8 @@ import static org.junit.Assert.assertTrue;
  * Test cases designed for use with the topological sort implementation(s) of AlgorithmManager. These tests only ensure
  * that schedules are valid, NOT optimal. This is done by ensuring all dependencies are satisfied (i.e. arcs correctly
  * acknowledged) in scheduling, and that is no more than one process running on a processor at once.
+ * @author Aimee
+ * @version alpha
  */
 public class TopologicalTest {
     private AlgorithmManager _algorithmManager;
