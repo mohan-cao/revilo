@@ -1,7 +1,9 @@
 package nz.co.revilo;
 
 import com.beust.jcommander.JCommander;
+import javafx.application.Application;
 import nz.co.revilo.CommandLine.CLIParameters;
+import nz.co.revilo.Gui.MainLauncher;
 import nz.co.revilo.Input.DotFileReader;
 import nz.co.revilo.Output.DotFileProducer;
 import nz.co.revilo.Output.DotFileWriter;
@@ -19,7 +21,7 @@ import java.util.Arrays;
  * @author Mohan Cao (original), Michael Kemp, Terran Kroft
  * @version alpha
  */
-public class App {
+public class App{
 
     private static App _inst = null;
 
@@ -42,6 +44,7 @@ public class App {
 
     public static void main( String[] args ) {
         new App();
+        Application.launch(MainLauncher.class);
         CLIParameters params = new CLIParameters();
         JCommander jc = new JCommander();
 
