@@ -47,7 +47,7 @@ public class TopologicalTest extends ValidityTest {
     @Test
     public void test10NodesRandom() {
        // Test is dependencies are all satisfied
-        TestResultListener t = schedule("input.dot");
+        TestResultListener t = schedule(TEST_PATH + "input.dot");
         assertTrue(satisfiesDependencies(t));
         assertTrue(validStartTimeForTasks(t));
     }
