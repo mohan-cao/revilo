@@ -120,18 +120,23 @@ public class TopologicalTest {
      * @return boolean true if it satisfies that no processor has two tasks starting at the same time
      */
     public boolean validStartTimeForTasks(TestResultListener listener){
+        // Iterate through all processors
         List<TestResultListener.Node> nodes = listener.getNodes();
-        Map<Pair<Integer,Integer>,TestResultListener.Node> nodeProcessMap = new HashMap<>();
-        int nNodes = nodes.size();
-        // Iterate through all nodes
-        for(TestResultListener.Node n : nodes){
-            // Check for pairs of start times + processor cores for a node, and put them in a map.
-            Pair<Integer,Integer> startAndCore = new Pair<>(n.getStartTime(),n.getCore());
-            if(nodeProcessMap.get(startAndCore)!=null){
-                // Found a node in the map that was already starting at that time + processor number
-                return false;
+        for(List<TestResultListener.Node> processor : listener.getProcessors()) {
+            // Iterate through tasks on the current processor
+            for (int i = 0; i < processor.size() - 1; i++) {
+                int start = nodes.get(i).getStartTime();
+                int end = nodes.get(i).getStartTime() + nodes.get(i).getWeight();
+                // Iterate through all tasks listed after that task in the processor to avoid redundancy
+                for (int j = i + 1; j < processor.size(); j++) {
+                    // If the node at index j has a start time between the start and end times of the task at index j,
+                    // there is overlap, and the start time is not valid i.e. the start time of the task at index j is
+                    // in the range [start, end)
+                    if ((nodes.get(j).getStartTime() >= start) && (nodes.get(j).getStartTime() < end)) {
+                        return false;
+                    }
+                }
             }
-            nodeProcessMap.put(new Pair<>(n.getStartTime(),n.getCore()),n);
         }
         return true;
     }
