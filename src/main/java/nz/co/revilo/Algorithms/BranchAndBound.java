@@ -9,6 +9,7 @@ import java.util.Set;
 
 /**
  * Branch and Bound solution using objects
+ * DFS based
  * 
  * @author Abby S
  *
@@ -64,25 +65,6 @@ public class BranchAndBound {
 	}
 
 	/**
-	 * @author Abby S
-	 * 
-	 */
-	private void calculateBottomLevels() {
-		while(!buttomUpSinks.isEmpty()){
-			BnbNode node = buttomUpSinks.remove(0);
-			
-			for(BnbNode inneighbour:node.inneighboursClone){
-				inneighbour.bottomLevel=Math.max(inneighbour.bottomLevel, node.bottomLevel+node.distTo(inneighbour));
-				node.inneighboursClone.remove(inneighbour);
-				inneighbour.outneighboursClone.remove(node);
-				if(inneighbour.outneighboursClone.isEmpty()){
-					buttomUpSinks.add(inneighbour);//become a sink now that child is removed
-				}
-			}
-		}
-	}
-
-	/**
 	 * bnb based on the current schedule s
 	 * @param s
 	 * @author Abby S
@@ -116,6 +98,26 @@ public class BranchAndBound {
 		}
 	}
 
+	/**
+	 * Calculates bottom level of each node in the graph
+	 * 
+	 * @author Abby S
+	 * 
+	 */
+	private void calculateBottomLevels() {
+		while(!buttomUpSinks.isEmpty()){
+			BnbNode node = buttomUpSinks.remove(0);
+			
+			for(BnbNode inneighbour:node.inneighboursClone){
+				inneighbour.bottomLevel=Math.max(inneighbour.bottomLevel, node.bottomLevel+node.distTo(inneighbour));
+				node.inneighboursClone.remove(inneighbour);
+				inneighbour.outneighboursClone.remove(node);
+				if(inneighbour.outneighboursClone.isEmpty()){
+					buttomUpSinks.add(inneighbour);//become a sink now that child is removed
+				}
+			}
+		}
+	}
 
 	/**
 	 * Represents a node
@@ -147,10 +149,9 @@ public class BranchAndBound {
 		int idleTime=0;
 		int bestFinishTime;
 		Set<BnbNode> openSet=new HashSet<>(); //need to assign to processor
-		Map<BnbNode,Tuple> closedSet=new HashMap<>(); //done
+		Map<BnbNode,Tuple> closedSet=new HashMap<>(); //done nodes
 		Set<BnbNode> independentSet=new HashSet<>(); //nodes it depends on are done
 
-		
 		/**
 		 * Create new schedule
 		 * @author Abby S
@@ -158,9 +159,73 @@ public class BranchAndBound {
 		 * @param processor
 		 */
 		public Schedule(Schedule baseSchedule, BnbNode node, int processor){
-			
+			//scheduling on a root node
+			if(baseSchedule==null){
+				finishTimes = new int[numProcessors];
+				finishTimes[processor]=node.nodeWeight;
+				bestFinishTime=node.bottomLevel;
+				
+				closedSet.put(node, new Tuple(0, processor)); //assign root info
+				//keep rest for later
+				openSet.addAll(nodes);
+				openSet.remove(node);
+				
+				independentSet.addAll(sources);
+				independentSet.remove(node);
+				addIndependentChildren(node);
+			} else { //adding to a schedule
+				cloneBaseSchedule(baseSchedule);
+				
+				//Actually add to base
+			}
+		}
+
+		/**
+		 * Clones the base schedule for this next schedule
+		 * @author Abby S
+		 * 
+		 * @param baseSchedule
+		 */
+		private void cloneBaseSchedule(Schedule baseSchedule) {
+			for(int i=0; i<numProcessors;i++){
+				finishTimes[i]=baseSchedule.finishTimes[i];
+			}
+			idleTime=baseSchedule.idleTime;
+			openSet=(Set<BnbNode>) bnbClone(baseSchedule.openSet);
+			closedSet=(Map<BnbNode, Tuple>) bnbClone(baseSchedule.closedSet);
+			independentSet=(Set<BnbNode>) bnbClone(baseSchedule.independentSet);
 		}
 		
+		/**
+		 * Disgusting stub method so compiler doesn't screen at me
+		 * Hope cloning issue to be solved by using primitives
+		 * 
+		 * @author Abby S
+		 * 
+		 * @param toCloneBaseScheduleObject
+		 * @return
+		 */
+		private Object bnbClone(Object toCloneBaseScheduleObject) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		/**
+		 * Adds any children that don't have any other parents
+		 * 
+		 * @author Abby S
+		 * 
+		 * @param parent
+		 */
+		private void addIndependentChildren(BnbNode parent) {
+			for(BnbNode child:parent.outneighbours){
+				for(BnbNode p:child.inneighbours){
+					if(openSet.contains(p));
+					break; //still waiting on a parent
+				}
+				independentSet.add(child); //not waiting on any parents
+			}
+		}
 
 		/**
 		 * Java does not have a tuple class!! :O

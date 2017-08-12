@@ -8,14 +8,14 @@ import nz.co.revilo.Algorithms.BranchAndBound.Schedule;
 import nz.co.revilo.Algorithms.BranchAndBound.Schedule.Tuple;
 
 public class AddToScheduleHelper {
-	BranchAndBound _bnb;
+	int _np;
 
-	public AddToScheduleHelper(BranchAndBound bnb){
-		_bnb=bnb;
+	public AddToScheduleHelper(int numProcessors){
+		_np=numProcessors;
 	}
 
 	public void addToSchedule(Schedule newSchedule, Schedule baseSchedule){
-		for(int i=0; i<_bnb.numProcessors;i++){
+		for(int i=0; i<_np;i++){
 			newSchedule.finishTimes[i]=baseSchedule.finishTimes[i];
 		}
 		newSchedule.idleTime=baseSchedule.idleTime;
