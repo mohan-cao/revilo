@@ -45,11 +45,24 @@ public abstract class OutputProducer implements ScheduleResultListener {
         }
     }
 
+    /**
+     * Creates the OutputProducer, storing the desired file name
+     * @param outputFilename
+     */
     public OutputProducer(String outputFilename) {
         _outputFilename = outputFilename;
     }
 
+    /**
+     * Abstract hook method to be implemented by child classes, creating the writer required for the implementation and
+     * desired output
+     * @return the Writer which will be used by the implementation
+     */
     protected abstract Writer createWriter();
 
+    /**
+     * Produces the output in the Writer
+     * @param output the Writer which whe output will be written to.
+     */
     protected abstract void produceOutput(Writer output);
 }
