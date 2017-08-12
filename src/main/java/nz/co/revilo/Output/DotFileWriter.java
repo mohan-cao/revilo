@@ -23,16 +23,14 @@ public class DotFileWriter extends DotFileProducer {
         output.println("digraph \"output" + temp + "\" {");
 
         // Arcs
-        for (int from = 0; from < _arcs.size(); from++) {
-            for (int to = 0; to < _arcs.get(from).size(); to++) {
-                if (_arcs.get(from).get(to)) {
-                    output.println("\t\t" + _nodeNames.get(from) + " -> " + _nodeNames.get(to) + "\t[Weight=" + _arcWeights.get(from).get(to) + "];");
-                }
+        for (Integer from : _arcs.keySet()) {
+            for (Integer to : _arcs.get(from).keySet()) {
+                output.println("\t\t" + _nodeNames.get(from) + " -> " + _nodeNames.get(to) + "\t[Weight=" + _arcs.get(from).get(to) + "];");
             }
         }
 
         // Nodes
-        for (int node = 0; node < _arcs.size(); node++) {
+        for (int node = 0; node < _nodeWeights.size(); node++) {
             output.println("\t\t" + _nodeNames.get(node) + "\t\t[Weight=" + _nodeWeights.get(node) + ",Start=" + _nodeStarts.get(node) + ",Processor=" + (_nodeProcessor.get(node) + 1) + "];");
         }
 
