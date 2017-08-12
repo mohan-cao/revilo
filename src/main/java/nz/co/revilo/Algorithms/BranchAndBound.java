@@ -64,7 +64,6 @@ public class BranchAndBound {
 	}
 
 	/**
-	 * Calculates the buttom levels for all nodes in graph
 	 * @author Abby S
 	 * 
 	 */
@@ -84,10 +83,37 @@ public class BranchAndBound {
 	}
 
 	/**
+	 * bnb based on the current schedule s
+	 * @param s
 	 * @author Abby S
 	 */
 	private void bnb(Schedule s) {
+		//not good enough
+		if(s.bestFinishTime>upperBound){
+			return; //break tree at this point
+		}
 		
+		//found optimal
+		if(s.openSet.isEmpty()){
+			//reached end of a valid schedule. Never broke off, so is optimal
+			optimalSchedule=s;
+			upperBound=s.finishTimes[0];
+			for(int i=1; i<numProcessors;i++){
+				if(s.finishTimes[i]>upperBound) upperBound=s.finishTimes[1];
+			}
+			return;
+		}
+		
+		//continue DFS
+		List<Schedule> nextSchedules = new ArrayList<>();
+		for(BnbNode n:s.independentSet){
+			for(int p=0; p<numProcessors; p++){
+				nextSchedules.add(new Schedule(s, n, p));
+			}
+		}
+		for(Schedule nextSchedule:nextSchedules){
+			bnb(nextSchedule);
+		}
 	}
 
 
