@@ -32,6 +32,28 @@ public class TopologicalTest {
     }
 
     /**
+     * Tests if the 10-node random input satisfies the constraints outlines (dependencies, timing)
+     */
+    @Test
+    public void test10NodesRandom() {
+        String filename = "input.dot";
+
+        // Read in the fil
+        DotFileReader reader = new DotFileReader(filename);
+        TestResultListener listener = new TestResultListener();
+        _algorithmManager.inform(listener);
+        try {
+            reader.startParsing(_algorithmManager);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            System.out.println("File " + filename+ " does not exist");
+        }
+
+        // Test is dependencies are all satisfied
+        assertTrue(satisfiesDependencies(listener));
+    }
+
+    /**
      * Check that dependencies (i.e. ordering of tasks based on what tasks must be completed for others to start) are
      * correctly being set.
      * @param listener the test result listener containing the information from
