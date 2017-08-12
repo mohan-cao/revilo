@@ -10,7 +10,7 @@ import java.io.FileNotFoundException;
  * @version 1.0
  */
 public abstract class DotFileParser {
-    
+
     private String _filename;
     private ParseResultListener _listener;
 
@@ -30,7 +30,7 @@ public abstract class DotFileParser {
     }
 
     /**
-     * Returns the name of the filename to be parsed
+     * Returns the name of the listener to inform
      */
     protected final String getListener() {
         return _filename;
@@ -39,5 +39,5 @@ public abstract class DotFileParser {
     /**
      * Initiates the file parsing on another thread and returns the result to the listener
      */
-    public abstract void startParsing(ParseResultListener newListener) throws FileNotFoundException;
+    public abstract void startParsing() throws FileNotFoundException;
 }

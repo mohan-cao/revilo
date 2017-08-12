@@ -35,15 +35,12 @@ public class DotFileReader extends DotFileParser {
     private Set<Integer> _startNodes;
     private Set<Integer> _endNodes;
     private Map<Integer, Map<Integer, Integer>> _arcs;
-    private ParseResultListener _listener;
 
-    public DotFileReader(String filename) {
-        super(filename);
+    public DotFileReader(String filename, ParseResultListener listener) {
+        super(filename, listener);
     }
 
-    public void startParsing(ParseResultListener newListener) throws FileNotFoundException {
-
-        _listener = newListener;
+    public void startParsing() throws FileNotFoundException {
         BufferedReader reader = openFile();
 
         nodeNames = new HashMap<>();

@@ -6,7 +6,7 @@ import nz.co.revilo.Input.DotFileReader;
 import nz.co.revilo.Output.DotFileProducer;
 import nz.co.revilo.Output.DotFileWriter;
 import nz.co.revilo.Scheduling.AlgorithmManager;
-import nz.co.revilo.Scheduling.VeryBasicAlgorithmManager;
+import nz.co.revilo.Scheduling.HybridAlgorithmManager;
 
 import java.io.FileNotFoundException;
 import java.util.Arrays;
@@ -94,38 +94,16 @@ public class App {
 
         // Parse file and give it algorithm manager to give results to. @Michael Kemp
 
-        AlgorithmManager manager = new VeryBasicAlgorithmManager(_inst._numExecutionCores);
+        AlgorithmManager manager = new HybridAlgorithmManager(_inst._numExecutionCores);
         //AlgorithmManager manager = new HybridAlgorithmManager(_inst._numExecutionCores);
-        DotFileReader reader = new DotFileReader(_inst._inputFilename);
+        DotFileReader reader = new DotFileReader(_inst._inputFilename, manager);
         // Output to file @Michael Kemp
         DotFileProducer output = new DotFileWriter(_inst._outputFilename);
         manager.inform(output);
         try {
-            reader.startParsing(manager);
+            reader.startParsing();
         } catch (FileNotFoundException e) {
             throw new RuntimeException("Input file does not exist");
         }
-
-
-
-
-        //Mohan's stuff
-        //        Graph graph = new SingleGraph("Tutorial 1");
-        //        graph.addNode("A" );
-        //        graph.addNode("B" );
-        //        graph.addNode("C" );
-        //        graph.addNode("D" );
-        //        graph.addNode("E" );
-        //        graph.addEdge("AB", "A", "B");
-        //        graph.addEdge("BC", "B", "C");
-        //        graph.addEdge("CD", "C", "D");
-        //        graph.addEdge("DE", "D", "E");
-        //        graph.addEdge("EA", "E", "A");
-        //        graph.addEdge("AC", "A", "C");
-        //        graph.addEdge("AD", "A", "D");
-        //        graph.addEdge("BD", "B", "D");
-        //        graph.addEdge("BE", "B", "E");
-        //        graph.addEdge("CE", "C", "E");
-        //        graph.display();
     }
 }
