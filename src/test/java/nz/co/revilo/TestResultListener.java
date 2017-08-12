@@ -102,7 +102,7 @@ public class TestResultListener implements ScheduleResultListener {
         }
 
         for(Node node : _nodes) {
-            _processors.get(node.getCore()).add(node);
+            _processors.get(node.getCore() - 1).add(node);
         }
     }
     public List<Node> getNodes() {
