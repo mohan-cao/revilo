@@ -122,7 +122,7 @@ public class TopologicalTest {
     public boolean validStartTimeForTasks(TestResultListener listener){
         // Iterate through all processors
         List<TestResultListener.Node> nodes = listener.getNodes();
-        for(List<TestResultListener.Node> processor : listener.getProcessors()) {
+        for(List<TestResultListener.Node> processor : listener.getCores()) {
             // Iterate through tasks on the current processor
             for (int i = 0; i < processor.size() - 1; i++) {
                 int start = nodes.get(i).getStartTime();
@@ -134,7 +134,7 @@ public class TopologicalTest {
                     // in the range [start, end)
                     if ((nodes.get(j).getStartTime() >= start) && (nodes.get(j).getStartTime() < end)) {
                         System.out.print("Error: Tasks " + nodes.get(j) + " and " + nodes.get(i) + "overlap in the " +
-                                "schedule on core" + nodes.get(i).getCore());
+                                "schedule on core " + nodes.get(i).getCore());
                         return false;
                     }
                 }
