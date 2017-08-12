@@ -1,9 +1,8 @@
 package nz.co.revilo.Output;
 
-import nz.co.revilo.Input.DotFileParser;
-
 import java.util.List;
+import java.util.Map;
 
 public interface ScheduleResultListener {
-    public void finalSchedule(String graphName, List<String> nodeNames, List<List<Boolean>> arcs, List<List<Integer>> arcWeights, List<Integer> nodeWeights, List<Integer> nodeStarts, List<Integer> nodeProcessor); //TODO determine data structure to pass
+    void finalSchedule(String graphName, List<String> nodeNames, Map<Integer, Map<Integer, Integer>> arcs, List<Integer> nodeWeights, List<Integer> nodeStarts, List<Integer> nodeProcessor); //TODO determine data structure to pass
 }

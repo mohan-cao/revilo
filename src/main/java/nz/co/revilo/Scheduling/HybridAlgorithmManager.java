@@ -69,9 +69,11 @@ public class HybridAlgorithmManager extends AlgorithmManager {
                 rest.removeAll(readyNodes);
             } while (!rest.isEmpty() || !readyNodes.isEmpty());
 
+            //TODO Cycle detection error
             //TODO Inform output about schedule
         } else {
-
+            //TODO Cycle detection error
+            //TODO Inform output about schedule
         }
     }
 }
