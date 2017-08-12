@@ -8,10 +8,10 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 /**
  * Test cases designed for use with the topological sort implementation(s) of AlgorithmManager. These tests only ensure
@@ -22,6 +22,22 @@ import static org.junit.Assert.assertTrue;
  */
 public class TopologicalTest {
     private AlgorithmManager _algorithmManager;
+
+    class Pair<K,V>{
+        private K _a;
+        private V _b;
+        public Pair(K a, V b){
+            _a = a;
+            _b = b;
+        }
+        @Override
+        public boolean equals(Object o){
+            if(o instanceof Pair){
+                return (this._a == ((Pair)o)._a && this._b == ((Pair)o)._b);
+            }
+            return false;
+        }
+    }
 
     /**
      * Sets up a new AlgorithmManager before each test case. AlgorithmManagerImplementations can be switched out
@@ -37,7 +53,9 @@ public class TopologicalTest {
     @Test
     public void test10NodesRandom() {
        // Test is dependencies are all satisfied
-        assertTrue(satisfiesDependencies(schedule("input.dot")));
+        TestResultListener t = schedule("input.dot");
+        assertTrue(satisfiesDependencies(t));
+        assertTrue(validStartTimeForTasks(t));
     }
 
     /**
@@ -92,6 +110,28 @@ public class TopologicalTest {
                     return false;
                 }
             }
+        }
+        return true;
+    }
+
+    /**
+     * Check that no two tasks start at the same time.
+     * @param listener the test result listener containing the information from
+     * @return boolean true if it satisfies that no processor has two tasks starting at the same time
+     */
+    public boolean validStartTimeForTasks(TestResultListener listener){
+        List<TestResultListener.Node> nodes = listener.getNodes();
+        Map<Pair<Integer,Integer>,TestResultListener.Node> nodeProcessMap = new HashMap<>();
+        int nNodes = nodes.size();
+        // Iterate through all nodes
+        for(TestResultListener.Node n : nodes){
+            // Check for pairs of start times + processor cores for a node, and put them in a map.
+            Pair<Integer,Integer> startAndCore = new Pair<>(n.getStartTime(),n.getCore());
+            if(nodeProcessMap.get(startAndCore)!=null){
+                // Found a node in the map that was already starting at that time + processor number
+                return false;
+            }
+            nodeProcessMap.put(new Pair<>(n.getStartTime(),n.getCore()),n);
         }
         return true;
     }
