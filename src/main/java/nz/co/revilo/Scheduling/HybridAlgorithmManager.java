@@ -1,5 +1,7 @@
 package nz.co.revilo.Scheduling;
 
+import nz.co.revilo.Output.ScheduleResultListener;
+
 import java.util.*;
 
 public class HybridAlgorithmManager extends AlgorithmManager {
@@ -70,7 +72,10 @@ public class HybridAlgorithmManager extends AlgorithmManager {
             } while (!rest.isEmpty() || !readyNodes.isEmpty());
 
             //TODO Cycle detection error
-            //TODO Inform output about schedule
+
+            for (ScheduleResultListener listener : getListener()) {
+                listener.finalSchedule(_graphName, _nodeNames, _arcs, _nodeWeights, nodeStarts, processor);
+            }
         } else {
             //TODO Cycle detection error
             //TODO Inform output about schedule

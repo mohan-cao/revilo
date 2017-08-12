@@ -14,7 +14,7 @@ public abstract class AlgorithmManager implements ParseResultListener {
     private int _processingCores;
     Map<String, Integer> _nodeNums;
     String _graphName;
-    List<String> _nodeNamesList;
+    List<String> _nodeNames;
     List<Integer> _nodeWeights;
     AtomicInteger _nodeCounter;
     Set<Integer> _startNodes;
@@ -38,7 +38,7 @@ public abstract class AlgorithmManager implements ParseResultListener {
     public void ParsingResults(String graphName, Map<String, Integer> nodeNums, List<String> nodeNames, List<Integer> nodeWeights, AtomicInteger nodeCounter, Set<Integer> startNodes, Set<Integer> endNodes, Map<Integer, Map<Integer, Integer>> arcs) {
         _graphName = graphName;
         _nodeNums = nodeNums;
-        _nodeNamesList = nodeNames;
+        _nodeNames = nodeNames;
         _nodeWeights = nodeWeights;
         _nodeCounter = nodeCounter;
         _startNodes = startNodes;
