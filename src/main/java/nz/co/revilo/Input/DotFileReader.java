@@ -82,6 +82,8 @@ public class DotFileReader extends DotFileParser {
             //TODO Exceptions when reading lines
         }
 
+        determineStartAndEndNodes();
+
         getListener().ParsingResults(_graphName, _nodeNums, _nodeNamesList, _nodeWeights, _nodeCounter, _startNodes, _endNodes, _arcs);
     }
 
@@ -114,9 +116,11 @@ public class DotFileReader extends DotFileParser {
         } else {
             toNum = _nodeNums.get(toName);
         }
+
         if (!_arcs.containsKey(fromNum)) {
             _arcs.put(fromNum, new ConcurrentHashMap<>());
         }
+
         if (!_arcs.get(fromNum).containsKey(_nodeNums.get(toName))) {
             _arcs.get(fromNum).put(toNum, weight);
         } else {
@@ -151,5 +155,24 @@ public class DotFileReader extends DotFileParser {
         Matcher m = GRAPH_NAME_MATCH.matcher(line);
         m.find();
         _graphName = m.group(1);
+    }
+
+    private void determineStartAndEndNodes() {
+        for (Integer node : _arcs.keySet()) {
+            _startNodes.add(node);
+        }
+
+        for (Map<Integer, Integer> nodeList : _arcs.values()) {
+            for (Integer node : nodeList.values()) {
+                _endNodes.add(node);
+                _startNodes.remove(node);
+            }
+        }
+
+        for (Integer node : _arcs.keySet()) {
+            if (!_arcs.get(node).isEmpty()) {
+                _endNodes.remove(node);
+            }
+        }
     }
 }
