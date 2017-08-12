@@ -73,18 +73,20 @@ public class DotFileReader extends DotFileParser {
                     m.find();
                     int weight = Integer.parseInt(m.group(1));
 
-                    if (!nodeNames.containsKey(from)) {
-                        nodeWeights.set(nodeNames.get(from), -1);
-                    } if (!nodeNames.containsKey(to)) {
-                        nodeWeights.set(nodeNames.get(to), -1);
+                    if (!_nodeNums.containsKey(from)) {
+                        _nodeWeights.set(_nodeNums.get(from), -1);
                     }
-                    if (!arcs.containsKey(from)) {
-                        arcs.put(from, new HashMap<>());
+                    if (!_nodeNums.containsKey(to)) {
+                        _nodeWeights.set(_nodeNums.get(to), -1);
                     }
-                    if (!arcs.get(from).containsKey(to)) {
-                        arcs.get(from).put(to, weight);
+                    if (!_arcs.containsKey(from)) {
+                        _arcs.put(_nodeNums.get(from), new ConcurrentHashMap<>());
+                    }
+                    if (!_arcs.get(_nodeNums.get(from)).containsKey(_nodeNums.get(to))) {
+                        _arcs.get(_nodeNums.get(from)).put(_nodeNums.get(to), weight);
                     } else {
-                        arcs.get(from).replace(to, weight);
+                        //TODO Should have an error message if arc already has weight
+                        _arcs.get(_nodeNums.get(from)).replace(_nodeNums.get(to), weight);
                     }
 
                     // Node
@@ -95,11 +97,12 @@ public class DotFileReader extends DotFileParser {
                     m = nodeWeight.matcher(line);
                     m.find();
                     int weight = Integer.parseInt(m.group(1));
-                    if (nodeNames.containsKey(name)) {
-                        nodeWeights.set(nodeNames.get(name), weight);
+                    if (_nodeNums.containsKey(name)) {
+                        //TODO Should have an error message if node already has weight other than -1
+                        _nodeWeights.set(_nodeNums.get(name), weight);
                     } else {
-                        nodeNames.put(name, nodeWeights.size());
-                        nodeWeights.add(weight);
+                        _nodeNums.put(name, _nodeCounter.getAndIncrement());
+                        _nodeWeights.add(weight);
                     }
 
                     // Graph Name
