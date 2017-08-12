@@ -23,6 +23,8 @@ public class DotFileGraphReader extends DotFileParser {
     HashMap<String, Integer> nodeNames;
     List<Integer> nodeWeights;
     HashMap<String, HashMap<String, Integer>> arcs;
+    String graphName;
+    String[] nodeNamesList;
 
     private ParseResultListener _listener;
 
@@ -64,11 +66,16 @@ public class DotFileGraphReader extends DotFileParser {
             List<ArrayList<Integer>> weights = new ArrayList<>();
 
 
+            graphName = g.toString();
 
             // initialize the arcweights
 
             for (Node n: g.getEachNode()) {
                 nodes.add(n);
+            }
+
+            for (int i = 0; i < nodes.size(); i++) {
+                nodeNamesList[i] = nodes.get(i).toString();
             }
 
             System.out.println("Node array " + nodes);
@@ -112,7 +119,7 @@ public class DotFileGraphReader extends DotFileParser {
                 }
             }
 
-            _listener.ParsingResults(primitiveNodeWeights, primitiveArcs, primitiveArcWeights);
+            _listener.ParsingResults(graphName, nodeNamesList, primitiveNodeWeights, primitiveArcs, primitiveArcWeights);
 
 
             // Create primitive structure for arcs and weights

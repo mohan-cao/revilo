@@ -1,16 +1,16 @@
 package nz.co.revilo.Scheduling;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 
 public class VeryBasicAlgorithmManager extends AlgorithmManager {
 
-    Set<Integer> sinks = new HashSet<>();
+    Set<Integer> sources = new HashSet<>();
     ArrayList<Integer> allNodes = new ArrayList<>();
     ArrayList<Integer> visited = new ArrayList<>();
     ArrayList<Integer> depths = new ArrayList<>();
     ArrayList<Integer> toProcess = new ArrayList<>();
+    ArrayList<String> nodeNames = new ArrayList<>();
 
     public VeryBasicAlgorithmManager(int processingCores) {
         super(processingCores);
@@ -31,23 +31,25 @@ public class VeryBasicAlgorithmManager extends AlgorithmManager {
             }
 
             //if they only have a single -1 element then it will
-            //be considered a sink
+            //be considered a source
             if (setToTestUniqueElemsInColumn.size() == 1 && setToTestUniqueElemsInColumn.contains(-1)) {
-                sinks.add(row);
+                sources.add(row);
                 int[] thisRow = _arcWeights[row];
             }
         }
+        System.out.println(sources);
 
         //now we want to get ALL the nodes okay?
 
         for (int row = 0; row < _arcWeights.length; row++) {
             allNodes.add(row);
+            nodeNames.add(_nodeNames[row]);
         }
 
         //and after that we will start looking for things?
 
-        toProcess.addAll(sinks); //
-        for (Integer i: sinks) {
+        toProcess.addAll(sources); //
+        for (Integer i: sources) {
             depths.set(i, 0);
         }
 
@@ -76,11 +78,16 @@ public class VeryBasicAlgorithmManager extends AlgorithmManager {
                 depthMap.get(depths.get(i)).add(i);
             }
         }
+
+        ArrayList<Integer> depths = new ArrayList<>();
+        ArrayList<ArrayList<String>> depthArrays = new ArrayList<>();
+
         System.out.println(depthMap);
 
         ArrayList<Integer> nodeInOrder = new ArrayList<>();
 
         for (Integer k: depthMap.keySet()) {
+            System.out.println(k);
             nodeInOrder.addAll(depthMap.get(k));
         }
 
@@ -88,15 +95,18 @@ public class VeryBasicAlgorithmManager extends AlgorithmManager {
         ArrayList<Integer> processorsDummy = new ArrayList<>();
         int currentCost = 0;
         for (Integer node: nodeInOrder) {
+            System.out.println("NODE: " + node);
             nStarts.add(currentCost);
             processorsDummy.add(1);
             currentCost += _nodeWeights[node];
         }
-        System.out.println(nStarts);
 
+        System.out.println("gnodes: " + nodeNames);
+        System.out.println("starttimes: "+ nStarts);
+        System.out.println("nweights: " +getToInteger(_nodeWeights));
         getListener().finalSchedule(
-                "new graph",
-                getToString(allNodes),
+                _graphName,
+                nodeNames,
                 primToBool(_arcs),
                 primToInt(_arcWeights),
                 getToInteger(_nodeWeights),

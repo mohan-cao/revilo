@@ -17,7 +17,18 @@ public class DotFileWriter extends DotFileProducer {
      */
     protected void produceOutput(PrintWriter output) {
         // Name and start
-        output.println("digraph \"" + _graphName + "\" {");
+        String temp;
+        if (_graphName != null) {
+            if (_graphName.length() > 1) {
+                temp = _graphName.substring(0, 1).toUpperCase() + _graphName.substring(1);
+            } else {
+                temp = _graphName.toUpperCase();
+            }
+        } else {
+            temp = "";
+        }
+
+        output.println("digraph \"output" + temp + "\" {");
 
         // Arcs
         for (int from = 0; from < _arcs.size(); from++) {
@@ -29,8 +40,8 @@ public class DotFileWriter extends DotFileProducer {
         }
 
         // Nodes
-        for (int arc = 0; arc < _arcs.size(); arc++) {
-            output.println("\t\t" + _nodeNames.get(arc) + "\t\t[Weight=" + _nodeWeights.get(arc) + ",Start=" + _nodeStarts.get(arc) + ",Processor=" + _nodeProcessor.get(arc) + "];");
+        for (int node = 0; node < _arcs.size(); node++) {
+            output.println("\t\t" + _nodeNames.get(node) + "\t\t[Weight=" + _nodeWeights.get(node) + ",Start=" + _nodeStarts.get(node) + ",Processor=" + _nodeProcessor.get(node) + "];");
         }
 
         // End

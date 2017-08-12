@@ -11,6 +11,7 @@ import java.io.FileNotFoundException;
  */
 public abstract class DotFileParser {
 
+
     private String _filename;
 
     /**

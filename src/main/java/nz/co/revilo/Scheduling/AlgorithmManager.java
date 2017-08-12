@@ -14,6 +14,8 @@ public abstract class AlgorithmManager implements ParseResultListener {
     int[] _nodeWeights;
     boolean[][] _arcs;
     int[][] _arcWeights;
+    String[] _nodeNames;
+    String _graphName;
 
     /**
      * Sets the number of processing cores the tasks must be scheduled on.
@@ -38,6 +40,9 @@ public abstract class AlgorithmManager implements ParseResultListener {
         _listener = listener;
     }
 
+    public void ParsingResults(String graphName, String[] nodeNames, int[] nodeWeights, boolean[][] arcs, int[][] arcWeights) {
+
+
     /**
      * Template method for reading in graph information required to process a schedule, and executes the schedule (using
      * the execute() hook method.
@@ -49,6 +54,9 @@ public abstract class AlgorithmManager implements ParseResultListener {
         _arcWeights = arcWeights;
         _arcs = arcs;
         _nodeWeights = nodeWeights;
+        _nodeNames = nodeNames;
+        _graphName = graphName;
+
         execute();
     }
 
