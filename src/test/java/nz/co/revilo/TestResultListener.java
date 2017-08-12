@@ -49,6 +49,8 @@ public class TestResultListener implements ScheduleResultListener {
             return (n._core == this. _core);
         }
 
+        public int getCore() { return _core; }
+
         @Override
         public String toString() {
             return _name;
