@@ -3,11 +3,10 @@ package nz.co.revilo;
 import com.beust.jcommander.JCommander;
 import nz.co.revilo.CommandLine.Parameters;
 import nz.co.revilo.Input.DotFileReader;
-import nz.co.revilo.Output.DotFileProducer;
+import nz.co.revilo.Output.OutputProducer;
 import nz.co.revilo.Output.DotFileWriter;
 import nz.co.revilo.Scheduling.AlgorithmManager;
 import nz.co.revilo.Scheduling.ImprovedTopologicalAlgorithmManager;
-import nz.co.revilo.Scheduling.VeryBasicAlgorithmManager;
 
 import java.io.FileNotFoundException;
 import java.util.Arrays;
@@ -100,7 +99,7 @@ public class App {
         //AlgorithmManager manager = new SchedulingAlgorithmManager(_inst._numExecutionCores);
         DotFileReader reader = new DotFileReader(_inst._inputFilename);
         // Output to file @Michael Kemp
-        DotFileProducer output = new DotFileWriter(_inst._outputFilename);
+        OutputProducer output = new DotFileWriter(_inst._outputFilename);
         manager.inform(output);
         try {
             reader.startParsing(manager);

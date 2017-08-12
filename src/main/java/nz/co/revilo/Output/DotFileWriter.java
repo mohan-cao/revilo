@@ -2,7 +2,7 @@ package nz.co.revilo.Output;
 
 import java.io.*;
 
-public class DotFileWriter extends DotFileProducer {
+public class DotFileWriter extends OutputProducer {
     public DotFileWriter(String filename) {
         super(filename);
     }
