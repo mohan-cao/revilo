@@ -2,6 +2,10 @@ package nz.co.revilo.Output;
 
 import java.io.*;
 
+/**
+ * Creates the specified DOT file output using the PrintWriter implementation of Writer.
+ * @author Michael, Terran
+ */
 public class DotFileWriter extends OutputProducer {
     public DotFileWriter(String filename) {
         super(filename);
