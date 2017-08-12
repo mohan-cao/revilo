@@ -20,12 +20,12 @@ public class TestResultListener implements ScheduleResultListener {
      */
     public class Node {
         private String _name;
-        private ArrayList<Integer> _dependencies;
+        private List<Integer> _dependencies;
         private int _startTime;
         private int _weight;
         private int _core;
 
-        public Node(String name, ArrayList<Integer> dependencies, int startTime, int weight, int core) {
+        public Node(String name, List<Integer> dependencies, int startTime, int weight, int core) {
             _name = name;
             _dependencies = dependencies;
             _startTime = startTime;
@@ -33,7 +33,7 @@ public class TestResultListener implements ScheduleResultListener {
             _core = core;
         }
 
-        public ArrayList<Integer> getDependencies() {
+        public List<Integer> getDependencies() {
             return _dependencies;
         }
 
@@ -55,13 +55,13 @@ public class TestResultListener implements ScheduleResultListener {
         }
     }
 
-    private ArrayList<String> _nodeNames;
-    private ArrayList<List<Boolean>> _arcs;
-    private ArrayList<List<Integer>> _arcWeights;
-    private ArrayList<Integer> _nodeWeights;
-    private ArrayList<Integer> _nodeStarts;
-    private ArrayList<Integer> _nodeProcessor;
-    private ArrayList<Node> _nodes;
+    private List<String> _nodeNames;
+    private List<List<Boolean>> _arcs;
+    private List<List<Integer>> _arcWeights;
+    private List<Integer> _nodeWeights;
+    private List<Integer> _nodeStarts;
+    private List<Integer> _nodeProcessor;
+    private List<Node> _nodes;
 
     @Override
     public void finalSchedule(String graphName,
@@ -71,12 +71,12 @@ public class TestResultListener implements ScheduleResultListener {
                               List<Integer> nodeWeights,
                               List<Integer> nodeStarts,
                               List<Integer> nodeProcessor) {
-        _nodeNames = (ArrayList) nodeNames;
-        _arcs = (ArrayList) arcs;
-        _arcWeights = (ArrayList) arcWeights;
-        _nodeWeights = (ArrayList) nodeWeights;
-        _nodeStarts = (ArrayList) nodeStarts;
-        _nodeProcessor = (ArrayList) nodeProcessor;
+        _nodeNames = nodeNames;
+        _arcs = arcs;
+        _arcWeights = arcWeights;
+        _nodeWeights = nodeWeights;
+        _nodeStarts = nodeStarts;
+        _nodeProcessor = nodeProcessor;
         processNodes();
     }
     private void processNodes() {
@@ -91,7 +91,7 @@ public class TestResultListener implements ScheduleResultListener {
             _nodes.add(new Node(_nodeNames.get(i), dependencies, _nodeStarts.get(i),_nodeWeights.get(i), _nodeProcessor.get(i)));
         }
     }
-    public ArrayList<Node> getNodes() {
+    public List<Node> getNodes() {
         return _nodes;
     }
 
