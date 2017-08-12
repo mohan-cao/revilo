@@ -21,12 +21,14 @@ import java.util.regex.Pattern;
  */
 public class DotFileReader extends DotFileParser {
 
-    public static final Pattern graphNameMatch = Pattern.compile("[\\s]*digraph[\\s]*\"(.*)\"[\\s]*\\{[\\s]*");
-    public static final Pattern arcFrom = Pattern.compile("[\\s]*([\\p{Alnum}]*)[\\s]*.>[\\s]*[\\p{Alnum}]*[\\s]*\\[[\\s]*[Ww]eight[\\s]*[=][\\s]*[\\p{Digit}]*[\\s]*\\][\\s]*;");
-    public static final Pattern arcTo =  Pattern.compile("[\\s]*[\\p{Alnum}]*[\\s]*.>[\\s]*([\\p{Alnum}]*)[\\s]*\\[[\\s]*[Ww]eight[\\s]*[=][\\s]*[\\p{Digit}]*[\\s]*\\][\\s]*;");
-    public static final Pattern arcWeight = Pattern.compile("[\\s]*[\\p{Alnum}]*[\\s]*.>[\\s]*[\\p{Alnum}]*[\\s]*\\[[\\s]*[Ww]eight[\\s]*[=][\\s]*([\\p{Digit}]*)[\\s]*\\][\\s]*;");
-    public static final Pattern nodeName = Pattern.compile("[\\s]*([\\p{Alnum}]*)[\\s]*\\[[\\s]*[Ww]eight[\\s]*[=][\\s]*[\\p{Digit}]*[\\s]*\\][\\s]*;");
-    public static final Pattern nodeWeight = Pattern.compile("[\\s]*[\\p{Alnum}]*[\\s]*\\[[\\s]*[Ww]eight[\\s]*[=][\\s]*([\\p{Digit}]*)[\\s]*\\][\\s]*;");
+    public static final Pattern GRAPH_NAME_MATCH = Pattern.compile("[\\s]*digraph[\\s]*\"(.*)\"[\\s]*\\{[\\s]*");
+    public static final Pattern ARC_FROM = Pattern.compile("[\\s]*([\\p{Alnum}]*)[\\s]*.>[\\s]*[\\p{Alnum}]*[\\s]*\\[[\\s]*[Ww]eight[\\s]*[=][\\s]*[\\p{Digit}]*[\\s]*\\][\\s]*;");
+    public static final Pattern ARC_TO = Pattern.compile("[\\s]*[\\p{Alnum}]*[\\s]*.>[\\s]*([\\p{Alnum}]*)[\\s]*\\[[\\s]*[Ww]eight[\\s]*[=][\\s]*[\\p{Digit}]*[\\s]*\\][\\s]*;");
+    public static final Pattern ARC_WEIGHT = Pattern.compile("[\\s]*[\\p{Alnum}]*[\\s]*.>[\\s]*[\\p{Alnum}]*[\\s]*\\[[\\s]*[Ww]eight[\\s]*[=][\\s]*([\\p{Digit}]*)[\\s]*\\][\\s]*;");
+    public static final Pattern NODE_NAME = Pattern.compile("[\\s]*([\\p{Alnum}]*)[\\s]*\\[[\\s]*[Ww]eight[\\s]*[=][\\s]*[\\p{Digit}]*[\\s]*\\][\\s]*;");
+    public static final Pattern NODE_WEIGHT = Pattern.compile("[\\s]*[\\p{Alnum}]*[\\s]*\\[[\\s]*[Ww]eight[\\s]*[=][\\s]*([\\p{Digit}]*)[\\s]*\\][\\s]*;");
+
+    public static final int
 
     private String _graphName;
     private Map<String, Integer> _nodeNums;
@@ -67,7 +69,13 @@ public class DotFileReader extends DotFileParser {
 
                     // Node
                 } else if (line.matches("[\\s]*[\\p{Alnum}]*[\\s]*\\[[\\s]*[Ww]eight[\\s]*[=][\\s]*[\\p{Digit}]*[\\s]*\\][\\s]*;")) {
-                    addNode(line);
+                    Matcher m = NODE_NAME.matcher(line);
+                    m.find();
+                    String name = m.group(1);
+                    m = NODE_WEIGHT.matcher(line);
+                    m.find();
+                    Integer weight = Integer.parseInt(m.group(1));
+                    addNode(name, weight);
 
                     // Graph Name
                 } else if (line.matches("[\\s]*digraph[\\s]*\".*\"[\\s]*\\{[\\s]*")) {
@@ -89,13 +97,13 @@ public class DotFileReader extends DotFileParser {
 
     private void addArc(String line) {
         //TODO Refactor such that addNode is used
-        Matcher m = arcFrom.matcher(line);
+        Matcher m = ARC_FROM.matcher(line);
         m.find();
         String from = m.group(1);
-        m = arcTo.matcher(line);
+        m = ARC_TO.matcher(line);
         m.find();
         String to = m.group(1);
-        m = arcWeight.matcher(line);
+        m = ARC_WEIGHT.matcher(line);
         m.find();
         int weight = Integer.parseInt(m.group(1));
 
@@ -114,15 +122,10 @@ public class DotFileReader extends DotFileParser {
             //TODO Should have an error message if arc already has weight
             _arcs.get(_nodeNums.get(from)).replace(_nodeNums.get(to), weight);
         }
+
     }
 
-    private void addNode(String line) {
-        Matcher m = nodeName.matcher(line);
-        m.find();
-        String name = m.group(1);
-        m = nodeWeight.matcher(line);
-        m.find();
-        int weight = Integer.parseInt(m.group(1));
+    private void addNode(String name, Integer weight) {
         if (_nodeNums.containsKey(name)) {
             //TODO Should have an error message if node already has weight other than -1
             _nodeWeights.set(_nodeNums.get(name), weight);
@@ -133,7 +136,7 @@ public class DotFileReader extends DotFileParser {
     }
 
     private void setGraphName(String line) {
-        Matcher m = graphNameMatch.matcher(line);
+        Matcher m = GRAPH_NAME_MATCH.matcher(line);
         m.find();
         _graphName = m.group(1);
     }
