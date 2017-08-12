@@ -6,6 +6,13 @@ import nz.co.revilo.Scheduling.AlgorithmManager;
 import java.io.FileNotFoundException;
 import java.util.List;
 
+/**
+ * Abstract class which can act as a parent for all test classes implementing validity tests. Child classes will inherit
+ * the methods which are necessary to check that dependencies are satisfied, and that there is no overlap of tasks on
+ * the same core.
+ * @author Aimee
+ * @version alpha
+ */
 public abstract class ValidityTest {
     public static String TEST_PATH = "";
     protected AlgorithmManager _algorithmManager;
