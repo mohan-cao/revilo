@@ -39,11 +39,11 @@ public abstract class OutputProducer implements ScheduleResultListener {
         }
     }
 
-    protected OutputProducer(String outputFilename) {
+    public OutputProducer(String outputFilename) {
         _outputFilename = outputFilename;
     }
 
-    public abstract Writer createWriter();
+    protected abstract Writer createWriter();
 
     protected abstract void produceOutput(Writer output);
 }
