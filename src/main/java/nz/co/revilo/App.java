@@ -95,7 +95,7 @@ public class App {
         // Parse file and give it algorithm manager to give results to. @Michael Kemp
 
         AlgorithmManager manager = new VeryBasicAlgorithmManager(_inst._numExecutionCores);
-        //AlgorithmManager manager = new SchedulingAlgorithmManager(_inst._numExecutionCores);
+        //AlgorithmManager manager = new HybridAlgorithmManager(_inst._numExecutionCores);
         DotFileReader reader = new DotFileReader(_inst._inputFilename);
         // Output to file @Michael Kemp
         DotFileProducer output = new DotFileWriter(_inst._outputFilename);
