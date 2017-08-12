@@ -10,7 +10,7 @@ import com.beust.jcommander.Parameter;
  * @author Terran Kroft
  * @version pre-alpha
  */
-public class Parameters {
+public class CLIParameters {
 
     @Parameter(names={"--parallel", "-p"})
     private int _parallelCores = 1; //default one core

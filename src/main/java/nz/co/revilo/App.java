@@ -1,13 +1,12 @@
 package nz.co.revilo;
 
 import com.beust.jcommander.JCommander;
-import nz.co.revilo.CommandLine.Parameters;
+import nz.co.revilo.CommandLine.CLIParameters;
 import nz.co.revilo.Input.DotFileReader;
 import nz.co.revilo.Output.DotFileProducer;
 import nz.co.revilo.Output.DotFileWriter;
 import nz.co.revilo.Scheduling.AlgorithmManager;
 import nz.co.revilo.Scheduling.ImprovedTopologicalAlgorithmManager;
-import nz.co.revilo.Scheduling.VeryBasicAlgorithmManager;
 
 import java.io.FileNotFoundException;
 import java.util.Arrays;
@@ -46,7 +45,7 @@ public class App {
 
     public static void main( String[] args ) {
         new App();
-        Parameters params = new Parameters();
+        CLIParameters params = new CLIParameters();
         JCommander jc = new JCommander();
 
         //Section to display the consumed args
