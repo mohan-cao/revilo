@@ -44,7 +44,7 @@ public class App{
 
     public static void main( String[] args ) {
         new App();
-        Application.launch(MainLauncher.class);
+
         CLIParameters params = new CLIParameters();
         JCommander jc = new JCommander();
 
@@ -72,6 +72,11 @@ public class App{
             } else {
                 _inst._outputFilename = params.getOutputName();
             }
+        }
+
+        if (_inst._visualise) {
+            //RIGHT NOW WE ONLY LAUNCH VISUALIZER/GUI if -v arg
+            Application.launch(MainLauncher.class);
         }
 
         // Parse file and give it algorithm manager to give results to. @Michael Kemp
