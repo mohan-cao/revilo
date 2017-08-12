@@ -14,7 +14,6 @@ import java.util.List;
  * @version alpha
  */
 public abstract class ValidityTest {
-    public static String TEST_PATH = "";
     protected AlgorithmManager _algorithmManager;
 
     /**
