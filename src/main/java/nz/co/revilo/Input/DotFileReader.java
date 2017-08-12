@@ -38,6 +38,7 @@ public class DotFileReader extends DotFileParser {
     private Set<Integer> _startNodes;
     private Set<Integer> _endNodes;
     private Map<Integer, Map<Integer, Integer>> _arcs;
+    private Map<Integer, Set<Integer>> _dependencies;
 
     public DotFileReader(String filename, ParseResultListener listener) {
         super(filename, listener);
@@ -54,6 +55,7 @@ public class DotFileReader extends DotFileParser {
         _startNodes = new HashSet<>();
         _endNodes = new HashSet<>();
         _arcs = new ConcurrentHashMap<>();
+        _dependencies = new ConcurrentHashMap<>();
 
         // Starts at -1 because array indexing begins at 0 and the method incrementAndGet increments before getting
         _nodeCounter.set(-1);
@@ -84,7 +86,9 @@ public class DotFileReader extends DotFileParser {
 
         determineStartAndEndNodes();
 
-        getListener().ParsingResults(_graphName, _nodeNums, _nodeNames, _nodeWeights, _nodeCounter, _startNodes, _endNodes, _arcs);
+        determineDependencies();
+
+        getListener().ParsingResults(_graphName, _nodeNums, _nodeNames, _nodeWeights, _nodeCounter, _startNodes, _endNodes, _arcs, _dependencies);
     }
 
     private BufferedReader openFile() throws FileNotFoundException {
@@ -170,6 +174,17 @@ public class DotFileReader extends DotFileParser {
         for (Integer node : _arcs.keySet()) {
             if (!_arcs.get(node).isEmpty()) {
                 _endNodes.remove(node);
+            }
+        }
+    }
+
+    private void determineDependencies() {
+        for (Integer from : _arcs.keySet()) {
+            for (Integer to : _arcs.get(from).keySet()) {
+                if (!_dependencies.containsKey(to)) {
+                    _dependencies.put(to, new HashSet<>());
+                }
+                _dependencies.get(to).add(from);
             }
         }
     }

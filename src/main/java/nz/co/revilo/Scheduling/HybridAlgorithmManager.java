@@ -76,9 +76,17 @@ public class HybridAlgorithmManager extends AlgorithmManager {
             for (ScheduleResultListener listener : getListener()) {
                 listener.finalSchedule(_graphName, _nodeNames, _arcs, _nodeWeights, nodeStarts, processor);
             }
-        } else {
+        } else if (getProcessingCores() >= _nodeCounter.get()) {
+            int[] scheduleCost = new int[getProcessingCores()];
+
+
+            for ()
+            //page 90 of textbook
             //TODO Cycle detection error
             //TODO Inform output about schedule
+        } else {
+
         }
+
     }
 }

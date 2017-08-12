@@ -20,6 +20,7 @@ public abstract class AlgorithmManager implements ParseResultListener {
     Set<Integer> _startNodes;
     Set<Integer> _endNodes;
     Map<Integer, Map<Integer, Integer>> _arcs;
+    Map<Integer, Set<Integer>> _dependencies;
     private List<ScheduleResultListener> _listeners;
 
 
@@ -35,7 +36,7 @@ public abstract class AlgorithmManager implements ParseResultListener {
     }
 
     @Override
-    public void ParsingResults(String graphName, Map<String, Integer> nodeNums, List<String> nodeNames, List<Integer> nodeWeights, AtomicInteger nodeCounter, Set<Integer> startNodes, Set<Integer> endNodes, Map<Integer, Map<Integer, Integer>> arcs) {
+    public void ParsingResults(String graphName, Map<String, Integer> nodeNums, List<String> nodeNames, List<Integer> nodeWeights, AtomicInteger nodeCounter, Set<Integer> startNodes, Set<Integer> endNodes, Map<Integer, Map<Integer, Integer>> arcs, Map<Integer, Set<Integer>> dependencies) {
         _graphName = graphName;
         _nodeNums = nodeNums;
         _nodeNames = nodeNames;
@@ -44,6 +45,7 @@ public abstract class AlgorithmManager implements ParseResultListener {
         _startNodes = startNodes;
         _endNodes = endNodes;
         _arcs = arcs;
+        _dependencies = dependencies;
     }
 
     protected int getProcessingCores() {

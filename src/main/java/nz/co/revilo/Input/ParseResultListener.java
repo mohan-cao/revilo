@@ -27,7 +27,8 @@ public interface ParseResultListener {
             AtomicInteger nodeCounter,
             Set<Integer> startNodes,
             Set<Integer> endNodes,
-            Map<Integer, Map<Integer, Integer>> arcs
+            Map<Integer, Map<Integer, Integer>> arcs,
+            Map<Integer, Set<Integer>> dependencies
     );
 
 }
