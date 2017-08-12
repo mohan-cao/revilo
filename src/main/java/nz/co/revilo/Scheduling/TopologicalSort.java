@@ -61,37 +61,4 @@ public class TopologicalSort extends AlgorithmManager {
                 new ArrayList<>(Collections.nCopies(size, 0))
         );
     }
-    private List<List<Boolean>> arcsToBoolList(boolean[][] b){
-        List<List<Boolean>> output = new ArrayList<>();
-        for(int i=0;i<b.length;i++){
-            List<Boolean> row = new ArrayList<>();
-            for(int j=0;j<b[i].length;j++){
-                row.add(b[i][j]);
-                System.out.print(b[i][j]+" ");
-            }
-            System.out.print("\n");
-            output.add(row);
-        }
-        return output;
-    }
-    private List<List<Integer>> arcsToIntList(int[][] b){
-        List<List<Integer>> output = new ArrayList<>();
-        for(int i=0;i<b.length;i++){
-            List<Integer> row = new ArrayList<>();
-            for(int j=0;j<b[i].length;j++){
-                row.add(b[i][j]);
-                System.out.print(b[i][j]+" ");
-            }
-            System.out.print("\n");
-            output.add(row);
-        }
-        return output;
-    }
-    private List<Integer> arrayToWeights(int[] weights){
-        List<Integer> arr = new ArrayList<Integer>();
-        for(int i=0;i<weights.length;i++){
-            arr.add(weights[i]);
-        }
-        return arr;
-    }
 }

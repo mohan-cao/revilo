@@ -35,6 +35,40 @@ public abstract class AlgorithmManager implements ParseResultListener {
         execute();
     }
 
+    protected List<List<Boolean>> arcsToBoolList(boolean[][] b){
+        List<List<Boolean>> output = new ArrayList<>();
+        for(int i=0;i<b.length;i++){
+            List<Boolean> row = new ArrayList<>();
+            for(int j=0;j<b[i].length;j++){
+                row.add(b[i][j]);
+                System.out.print(b[i][j]+" ");
+            }
+            System.out.print("\n");
+            output.add(row);
+        }
+        return output;
+    }
+    protected List<List<Integer>> arcsToIntList(int[][] b){
+        List<List<Integer>> output = new ArrayList<>();
+        for(int i=0;i<b.length;i++){
+            List<Integer> row = new ArrayList<>();
+            for(int j=0;j<b[i].length;j++){
+                row.add(b[i][j]);
+                System.out.print(b[i][j]+" ");
+            }
+            System.out.print("\n");
+            output.add(row);
+        }
+        return output;
+    }
+    protected List<Integer> arrayToWeights(int[] weights){
+        List<Integer> arr = new ArrayList<Integer>();
+        for(int i=0;i<weights.length;i++){
+            arr.add(weights[i]);
+        }
+        return arr;
+    }
+
     protected int getProcessingCores() {
         return _processingCores;
     }
