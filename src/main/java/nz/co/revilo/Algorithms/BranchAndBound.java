@@ -17,10 +17,11 @@ import java.util.Set;
 public class BranchAndBound {
 	private List<BnbNode> nodes;
 	private int numProcessors;
-	private List<Schedule> schedules=new ArrayList<>();
+	private List<Schedule> rootSchedules=new ArrayList<>();
 	private List<BnbNode> sources=new ArrayList<>();
 	private List<BnbNode> buttomUpSinks=new ArrayList<>();
-	private int upperBound; //TODO: find one to use
+	private int upperBound;
+	private int totalNodeWeights=0; //time if it was topological sort
 	private Schedule optimalSchedule;
 
 	/**
@@ -30,7 +31,7 @@ public class BranchAndBound {
 	 * 
 	 * @author Abby S
 	 * 
-	 * @param graphPrimitives
+	 * @param graphPrimitives should actually be primitives
 	 * @param np
 	 */
 	public BranchAndBound(List<BnbNode> graphPrimitives, int np){
@@ -45,7 +46,7 @@ public class BranchAndBound {
 				//start a schedule with this node as source on each possible processor
 				for(int p=0; p<numProcessors; p++){
 					Schedule newSchedule = new Schedule(null, node, p); 
-					schedules.add(newSchedule);
+					rootSchedules.add(newSchedule);
 				}
 			}		
 			//sinks
@@ -53,12 +54,15 @@ public class BranchAndBound {
 				buttomUpSinks.add(node);
 				node.bottomLevel=node.nodeWeight;
 			}
+			
+			totalNodeWeights+=node.nodeWeight;
 		}
 		
+		upperBound=totalNodeWeights; //TODO: is this a good upper bound?
 		calculateBottomLevels();
 		
-		while(!schedules.isEmpty()){
-			bnb(schedules.remove(0));
+		while(!rootSchedules.isEmpty()){
+			bnb(rootSchedules.remove(0));
 		}
 		
 		//by here optimalSchedule is the optimal schedule
@@ -71,11 +75,11 @@ public class BranchAndBound {
 	 */
 	private void bnb(Schedule s) {
 		//not good enough
-		if(s.bestFinishTime>upperBound){
+		if(s.lowerBound>upperBound){
 			return; //break tree at this point
 		}
 		
-		//found optimal
+		//found optimal for the root started with
 		if(s.openSet.isEmpty()){
 			//reached end of a valid schedule. Never broke off, so is optimal
 			optimalSchedule=s;
@@ -109,7 +113,7 @@ public class BranchAndBound {
 			BnbNode node = buttomUpSinks.remove(0);
 			
 			for(BnbNode inneighbour:node.inneighboursClone){
-				inneighbour.bottomLevel=Math.max(inneighbour.bottomLevel, node.bottomLevel+node.distTo(inneighbour));
+				inneighbour.bottomLevel=(inneighbour.bottomLevel>(node.bottomLevel+node.distTo(inneighbour)))?inneighbour.bottomLevel:(node.bottomLevel+node.distTo(inneighbour));
 				node.inneighboursClone.remove(inneighbour);
 				inneighbour.outneighboursClone.remove(node);
 				if(inneighbour.outneighboursClone.isEmpty()){
@@ -129,71 +133,89 @@ public class BranchAndBound {
 	class BnbNode {
 		List<BnbNode> outneighbours; //nodes with 1 on this node's row
 		List<BnbNode> inneighbours; //nodes with 1 on this node's column
-		List<BnbNode> outneighboursClone;
+		List<BnbNode> outneighboursClone; //TODO: do something about cloning
 		List<BnbNode> inneighboursClone;
 		int bottomLevel;
 		int nodeWeight;
-//		int rowColNumber; //represents the row/col in matrix this node is on
 
-		//to return distance based on weight matrix
+		//TODO: to return distance based on weight matrix
 		public int distTo(BnbNode neighbour){
 			return -1; //currently returns value for if no edge
 		}
 	}
 
 	/**
+	 * Represents a schedules
+	 * 
 	 * @author Abby S
 	 */
 	class Schedule {
 		int[] finishTimes;
 		int idleTime=0;
-		int bestFinishTime;
+		int lowerBound;
 		Set<BnbNode> openSet=new HashSet<>(); //need to assign to processor
 		Map<BnbNode,Tuple> closedSet=new HashMap<>(); //done nodes
 		Set<BnbNode> independentSet=new HashSet<>(); //nodes it depends on are done
 
 		/**
-		 * Create new schedule
+		 * Create schedule
 		 * @author Abby S
+		 * 
+		 * @param parentSchedule
 		 * @param node
 		 * @param processor
 		 */
-		public Schedule(Schedule baseSchedule, BnbNode node, int processor){
+		public Schedule(Schedule parentSchedule, BnbNode node, int processor){
+			int startTime=0;
+			
 			//scheduling on a root node
-			if(baseSchedule==null){
+			if(parentSchedule==null){
+				//initialise data structures
 				finishTimes = new int[numProcessors];
-				finishTimes[processor]=node.nodeWeight;
-				bestFinishTime=node.bottomLevel;
-				
-				closedSet.put(node, new Tuple(0, processor)); //assign root info
-				//keep rest for later
 				openSet.addAll(nodes);
-				openSet.remove(node);
-				
 				independentSet.addAll(sources);
-				independentSet.remove(node);
-				addIndependentChildren(node);
+				lowerBound=node.bottomLevel;
 			} else { //adding to a schedule
-				cloneBaseSchedule(baseSchedule);
+				cloneParentSchedule(parentSchedule);
 				
-				//Actually add to base
+				//when parents are done
+				for(BnbNode parent:node.inneighbours){
+					Tuple parentAssignment=closedSet.get(parent);
+					int dataReadyTime=parentAssignment._startTime + parent.nodeWeight;
+					if(processor!=parentAssignment._processor) dataReadyTime+=parent.distTo(node);
+					startTime=dataReadyTime>startTime?dataReadyTime:startTime;
+				}
+				//when processor is ready
+				startTime=finishTimes[processor]>startTime?finishTimes[processor]:startTime;
+				
+				idleTime+=startTime-finishTimes[processor];//processor idle time
+
+				int perfectLoadBalancing=(totalNodeWeights+idleTime)/numProcessors;
+				lowerBound=(startTime+node.bottomLevel)>perfectLoadBalancing?(startTime+node.bottomLevel):perfectLoadBalancing;
 			}
+			
+			//update data structures
+			closedSet.put(node, new Tuple(startTime, processor));
+			openSet.remove(node);		
+			independentSet.remove(node);
+			updateIndependentChildren(node);
+			finishTimes[processor]+=startTime+node.nodeWeight;
 		}
 
 		/**
-		 * Clones the base schedule for this next schedule
+		 * Clones the parent schedule for this next schedule
 		 * @author Abby S
 		 * 
-		 * @param baseSchedule
+		 * @param parentSchedule
 		 */
-		private void cloneBaseSchedule(Schedule baseSchedule) {
+		private void cloneParentSchedule(Schedule parentSchedule) {
 			for(int i=0; i<numProcessors;i++){
-				finishTimes[i]=baseSchedule.finishTimes[i];
+				finishTimes[i]=parentSchedule.finishTimes[i];
 			}
-			idleTime=baseSchedule.idleTime;
-			openSet=(Set<BnbNode>) bnbClone(baseSchedule.openSet);
-			closedSet=(Map<BnbNode, Tuple>) bnbClone(baseSchedule.closedSet);
-			independentSet=(Set<BnbNode>) bnbClone(baseSchedule.independentSet);
+			idleTime=parentSchedule.idleTime;
+			openSet=(Set<BnbNode>) bnbClone(parentSchedule.openSet);
+			closedSet=(Map<BnbNode, Tuple>) bnbClone(parentSchedule.closedSet);
+			independentSet=(Set<BnbNode>) bnbClone(parentSchedule.independentSet);
 		}
 		
 		/**
@@ -202,22 +224,22 @@ public class BranchAndBound {
 		 * 
 		 * @author Abby S
 		 * 
-		 * @param toCloneBaseScheduleObject
+		 * @param toCloneparentScheduleObject
 		 * @return
 		 */
-		private Object bnbClone(Object toCloneBaseScheduleObject) {
+		private Object bnbClone(Object toCloneparentScheduleObject) {
 			// TODO Auto-generated method stub
 			return null;
 		}
 
 		/**
-		 * Adds any children that don't have any other parents
+		 * Adds any children that don't have any other parents they're waiting on
 		 * 
 		 * @author Abby S
 		 * 
 		 * @param parent
 		 */
-		private void addIndependentChildren(BnbNode parent) {
+		private void updateIndependentChildren(BnbNode parent) {
 			for(BnbNode child:parent.outneighbours){
 				for(BnbNode p:child.inneighbours){
 					if(openSet.contains(p));
