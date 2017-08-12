@@ -10,22 +10,29 @@ import java.io.FileNotFoundException;
  * @version 1.0
  */
 public abstract class DotFileParser {
-
-
+    
     private String _filename;
     private ParseResultListener _listener;
 
     /**
      * DotFileParser is a constructor for the abstract class which currently does nothing
      */
-     public DotFileParser(String filename) {
+    public DotFileParser(String filename, ParseResultListener listener) {
         _filename = filename;
+        _listener = listener;
     }
 
     /**
      * Returns the name of the filename to be parsed
      */
-    protected String getFilename() {
+    protected final String getFilename() {
+        return _filename;
+    }
+
+    /**
+     * Returns the name of the filename to be parsed
+     */
+    protected final String getListener() {
         return _filename;
     }
 
