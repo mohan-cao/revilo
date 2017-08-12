@@ -1,9 +1,6 @@
 package nz.co.revilo;
 
-import nz.co.revilo.Input.DotFileParser;
 import nz.co.revilo.Input.DotFileReader;
-import nz.co.revilo.Input.ParseResultListener;
-import nz.co.revilo.Output.ScheduleResultListener;
 import nz.co.revilo.Scheduling.AlgorithmManager;
 import nz.co.revilo.Scheduling.VeryBasicAlgorithmManager;
 import org.junit.Before;
