@@ -31,9 +31,6 @@ public class App {
     private static String DEFAULT_FILETYPE = ".dot";
     private static String DEFAULT_OUTPUT_FILENAME = "-output.dot";
 
-
-
-
     private App () {
         if (_inst == null) {
             _inst = this;
@@ -48,14 +45,6 @@ public class App {
         CLIParameters params = new CLIParameters();
         JCommander jc = new JCommander();
 
-        //Section to display the consumed args
-        int i = 0;
-        for (String s: args) {
-            System.out.println(i + ": " + s);
-            i++;
-
-        }
-
         if (args.length < 2) {
             //insufficient arguments
             throw new RuntimeException("Insufficient arguments given. Needs [input file] [# processors]");
@@ -64,8 +53,6 @@ public class App {
             JCommander.newBuilder().addObject(params).build().parse(optionalArgs);
 
             //get file name first
-
-
             _inst._inputFilename = args[0];
             try {
                 _inst._numExecutionCores = Integer.parseInt(args[1]);
@@ -84,21 +71,9 @@ public class App {
             }
         }
 
-        //here we get the actual input name (.dot)
-
-
-        System.out.println("This is the schedule called " + _inst._outputFilename + " processed on " + _inst._numParallelProcessors + " core(s).");
-        if (_inst._visualise) {
-            System.out.println("There is a visualisation outputted.");
-        }
-
         // Parse file and give it algorithm manager to give results to. @Michael Kemp
-
-//        AlgorithmManager manager = new VeryBasicAlgorithmManager(_inst._numExecutionCores);
         AlgorithmManager manager = new ImprovedTopologicalAlgorithmManager(_inst._numExecutionCores);
-        //AlgorithmManager manager = new SchedulingAlgorithmManager(_inst._numExecutionCores);
         DotFileReader reader = new DotFileReader(_inst._inputFilename);
-        // Output to file @Michael Kemp
         DotFileProducer output = new DotFileWriter(_inst._outputFilename);
         manager.inform(output);
         try {
@@ -107,26 +82,5 @@ public class App {
             throw new RuntimeException("Input file does not exist");
         }
 
-
-
-
-        //Mohan's stuff
-        //        Graph graph = new SingleGraph("Tutorial 1");
-        //        graph.addNode("A" );
-        //        graph.addNode("B" );
-        //        graph.addNode("C" );
-        //        graph.addNode("D" );
-        //        graph.addNode("E" );
-        //        graph.addEdge("AB", "A", "B");
-        //        graph.addEdge("BC", "B", "C");
-        //        graph.addEdge("CD", "C", "D");
-        //        graph.addEdge("DE", "D", "E");
-        //        graph.addEdge("EA", "E", "A");
-        //        graph.addEdge("AC", "A", "C");
-        //        graph.addEdge("AD", "A", "D");
-        //        graph.addEdge("BD", "B", "D");
-        //        graph.addEdge("BE", "B", "E");
-        //        graph.addEdge("CE", "C", "E");
-        //        graph.display();
     }
 }
