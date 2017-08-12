@@ -4,9 +4,8 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -28,12 +27,14 @@ public class DotFileReader extends DotFileParser {
     public static final Pattern nodeName = Pattern.compile("[\\s]*([\\p{Alnum}]*)[\\s]*\\[[\\s]*[Ww]eight[\\s]*[=][\\s]*[\\p{Digit}]*[\\s]*\\][\\s]*;");
     public static final Pattern nodeWeight = Pattern.compile("[\\s]*[\\p{Alnum}]*[\\s]*\\[[\\s]*[Ww]eight[\\s]*[=][\\s]*([\\p{Digit}]*)[\\s]*\\][\\s]*;");
 
-    HashMap<String, Integer> nodeNames;
-    List<Integer> nodeWeights;
-    HashMap<String, HashMap<String, Integer>> arcs;
-    ArrayList<String> nodeNamesList;
-    String graphName;
-
+    private String graphName;
+    private Map<String, Integer> _nodeNums;
+    private List<String> _nodeNamesList;
+    private List<Integer> _nodeWeights;
+    private AtomicInteger _nodeCounter;
+    private Set<Integer> _startNodes;
+    private Set<Integer> _endNodes;
+    private Map<Integer, Map<Integer, Integer>> _arcs;
     private ParseResultListener _listener;
 
     public DotFileReader(String filename) {
@@ -41,6 +42,7 @@ public class DotFileReader extends DotFileParser {
     }
 
     public void startParsing(ParseResultListener newListener) throws FileNotFoundException {
+
         _listener = newListener;
         BufferedReader reader = openFile();
 
@@ -50,7 +52,6 @@ public class DotFileReader extends DotFileParser {
 
         try {
         	//TODO Empty file
-        	//Note: regex might not work
             String line = reader.readLine();
             while (!line.contains("}") && (line != null)) {
 

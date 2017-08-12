@@ -13,6 +13,7 @@ public abstract class DotFileParser {
 
 
     private String _filename;
+    private ParseResultListener _listener;
 
     /**
      * DotFileParser is a constructor for the abstract class which currently does nothing
