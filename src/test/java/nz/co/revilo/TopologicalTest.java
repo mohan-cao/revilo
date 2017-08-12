@@ -16,7 +16,6 @@ import static org.junit.Assert.fail;
  */
 public class TopologicalTest extends ValidityTest {
 
-
     class Pair<K,V>{
         private K _a;
         private V _b;
@@ -46,8 +45,37 @@ public class TopologicalTest extends ValidityTest {
      */
     @Test
     public void test10NodesRandom() {
-       // Test is dependencies are all satisfied
         TestResultListener t = schedule(TEST_PATH + "input.dot");
+        assertTrue(satisfiesDependencies(t));
+        assertTrue(validStartTimeForTasks(t));
+    }
+
+    /**
+     * Tests if the 7-node out tree input schedule satisfies the constraints outlines (dependencies, timing)
+     */
+    @Test
+    public void test7NodeOutTree() {
+        TestResultListener t = schedule(TEST_PATH + "Nodes_7_OutTree.dot");
+        assertTrue(satisfiesDependencies(t));
+        assertTrue(validStartTimeForTasks(t));
+    }
+
+    /**
+     * Tests if the 8-node random input satisfies the constraints outlines (dependencies, timing)
+     */
+    @Test
+    public void test8NodeRandom() {
+        TestResultListener t = schedule(TEST_PATH + "Nodes_7_OutTree.dot");
+        assertTrue(satisfiesDependencies(t));
+        assertTrue(validStartTimeForTasks(t));
+    }
+
+    /**
+     * Tests if the 9-node series parallel input satisfies the constraints outlines (dependencies, timing)
+     */
+    @Test
+    public void test9NodeSeriesParallel() {
+        TestResultListener t = schedule(TEST_PATH + "Nodes_7_OutTree.dot");
         assertTrue(satisfiesDependencies(t));
         assertTrue(validStartTimeForTasks(t));
     }
