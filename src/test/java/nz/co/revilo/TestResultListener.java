@@ -8,8 +8,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Output/final schedule listener which allows access to graph properties for testing
- *
+ * Output/final ScheduleResultListener which allows access to graph properties for testing
+ * @author Aimee
+ * @version alpha
  */
 public class TestResultListener implements ScheduleResultListener {
     /**
