@@ -63,59 +63,21 @@ public class DotFileReader extends DotFileParser {
 
                 // Arc
                 if (line.matches("[\\s]*[\\p{Alnum}]*[\\s]*.>[\\s]*[\\p{Alnum}]*[\\s]*\\[[\\s]*[Ww]eight[\\s]*[=][\\s]*[\\p{Digit}]*[\\s]*\\][\\s]*;")) {
-                    Matcher m = arcFrom.matcher(line);
-                    m.find();
-                    String from = m.group(1);
-                    m = arcTo.matcher(line);
-                    m.find();
-                    String to = m.group(1);
-                    m = arcWeight.matcher(line);
-                    m.find();
-                    int weight = Integer.parseInt(m.group(1));
-
-                    if (!_nodeNums.containsKey(from)) {
-                        _nodeWeights.set(_nodeNums.get(from), -1);
-                    }
-                    if (!_nodeNums.containsKey(to)) {
-                        _nodeWeights.set(_nodeNums.get(to), -1);
-                    }
-                    if (!_arcs.containsKey(from)) {
-                        _arcs.put(_nodeNums.get(from), new ConcurrentHashMap<>());
-                    }
-                    if (!_arcs.get(_nodeNums.get(from)).containsKey(_nodeNums.get(to))) {
-                        _arcs.get(_nodeNums.get(from)).put(_nodeNums.get(to), weight);
-                    } else {
-                        //TODO Should have an error message if arc already has weight
-                        _arcs.get(_nodeNums.get(from)).replace(_nodeNums.get(to), weight);
-                    }
+                    addArc(line);
 
                     // Node
                 } else if (line.matches("[\\s]*[\\p{Alnum}]*[\\s]*\\[[\\s]*[Ww]eight[\\s]*[=][\\s]*[\\p{Digit}]*[\\s]*\\][\\s]*;")) {
-                    Matcher m = nodeName.matcher(line);
-                    m.find();
-                    String name = m.group(1);
-                    m = nodeWeight.matcher(line);
-                    m.find();
-                    int weight = Integer.parseInt(m.group(1));
-                    if (_nodeNums.containsKey(name)) {
-                        //TODO Should have an error message if node already has weight other than -1
-                        _nodeWeights.set(_nodeNums.get(name), weight);
-                    } else {
-                        _nodeNums.put(name, _nodeCounter.getAndIncrement());
-                        _nodeWeights.add(weight);
-                    }
+                    addNode(line);
 
                     // Graph Name
                 } else if (line.matches("[\\s]*digraph[\\s]*\".*\"[\\s]*\\{[\\s]*")) {
-                    Matcher m = graphNameMatch.matcher(line);
-                    m.find();
-                    _graphName = m.group(1);
+                    setGraphName(line);
                 }
 
                 line = reader.readLine();
             }
         } catch (IOException e) {
-            //TODO
+            //TODO Exceptions when reading lines
         }
 
         _listener.ParsingResults(_graphName, nodeNamesList, nodeWeights, arcs, arcWeights);
@@ -123,5 +85,56 @@ public class DotFileReader extends DotFileParser {
 
     private BufferedReader openFile() throws FileNotFoundException {
         return new BufferedReader(new FileReader(getFilename()));
+    }
+
+    private void addArc(String line) {
+        //TODO Refactor such that addNode is used
+        Matcher m = arcFrom.matcher(line);
+        m.find();
+        String from = m.group(1);
+        m = arcTo.matcher(line);
+        m.find();
+        String to = m.group(1);
+        m = arcWeight.matcher(line);
+        m.find();
+        int weight = Integer.parseInt(m.group(1));
+
+        if (!_nodeNums.containsKey(from)) {
+            _nodeWeights.set(_nodeNums.get(from), -1);
+        }
+        if (!_nodeNums.containsKey(to)) {
+            _nodeWeights.set(_nodeNums.get(to), -1);
+        }
+        if (!_arcs.containsKey(from)) {
+            _arcs.put(_nodeNums.get(from), new ConcurrentHashMap<>());
+        }
+        if (!_arcs.get(_nodeNums.get(from)).containsKey(_nodeNums.get(to))) {
+            _arcs.get(_nodeNums.get(from)).put(_nodeNums.get(to), weight);
+        } else {
+            //TODO Should have an error message if arc already has weight
+            _arcs.get(_nodeNums.get(from)).replace(_nodeNums.get(to), weight);
+        }
+    }
+
+    private void addNode(String line) {
+        Matcher m = nodeName.matcher(line);
+        m.find();
+        String name = m.group(1);
+        m = nodeWeight.matcher(line);
+        m.find();
+        int weight = Integer.parseInt(m.group(1));
+        if (_nodeNums.containsKey(name)) {
+            //TODO Should have an error message if node already has weight other than -1
+            _nodeWeights.set(_nodeNums.get(name), weight);
+        } else {
+            _nodeNums.put(name, _nodeCounter.getAndIncrement());
+            _nodeWeights.add(weight);
+        }
+    }
+
+    private void setGraphName(String line) {
+        Matcher m = graphNameMatch.matcher(line);
+        m.find();
+        _graphName = m.group(1);
     }
 }
