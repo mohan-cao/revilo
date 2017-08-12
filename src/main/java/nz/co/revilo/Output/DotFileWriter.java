@@ -8,7 +8,7 @@ public class DotFileWriter extends OutputProducer {
     }
 
     @Override
-    public PrintWriter createWriter() {
+    public Writer createWriter() {
         PrintWriter pw = null;
         try {
             pw = new PrintWriter(_outputFilename, CHAR_SET);
