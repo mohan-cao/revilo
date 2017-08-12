@@ -7,7 +7,7 @@ import java.io.FileNotFoundException;
 import java.util.List;
 
 public abstract class ValidityTest {
-    public static String PATH = "";
+    public static String TEST_PATH = "";
     protected AlgorithmManager _algorithmManager;
 
     /**
