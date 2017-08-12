@@ -56,12 +56,12 @@ public class DotFileReader extends DotFileParser {
         _arcs = new ConcurrentHashMap<>();
 
         // Starts at -1 because array indexing begins at 0 and the method incrementAndGet increments before getting
-        //_nodeCounter.set(-1);
+        _nodeCounter.set(-1);
 
         try {
         	//TODO Empty file
             String line = reader.readLine();
-            while (!line.contains("}") && (line != null)) {
+            while ((line != null) && !line.contains("}")) {
 
                 // Arc
                 if (line.matches("[\\s]*[\\p{Alnum}]*[\\s]*.>[\\s]*[\\p{Alnum}]*[\\s]*\\[[\\s]*[Ww]eight[\\s]*[=][\\s]*[\\p{Digit}]*[\\s]*\\][\\s]*;")) {
@@ -158,9 +158,7 @@ public class DotFileReader extends DotFileParser {
     }
 
     private void determineStartAndEndNodes() {
-        for (Integer node : _arcs.keySet()) {
-            _startNodes.add(node);
-        }
+        _startNodes.addAll(_arcs.keySet());
 
         for (Map<Integer, Integer> nodeList : _arcs.values()) {
             for (Integer node : nodeList.values()) {
