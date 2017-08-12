@@ -3,12 +3,10 @@ package nz.co.revilo.Output;
 
 import nz.co.revilo.Input.DotFileParser;
 
-import java.io.FileNotFoundException;
-import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.util.List;
 
-public abstract class DotFileProducer implements ScheduleResultListener {
+public abstract class OutputProducer implements ScheduleResultListener {
 
     public static final String CHAR_SET = "UTF-8";
 
@@ -31,17 +29,21 @@ public abstract class DotFileProducer implements ScheduleResultListener {
         _nodeStarts = nodeStarts;
         _nodeProcessor = nodeProcessor;
 
-        PrintWriter pw = createPrintWriter();
+        Writer pw = createWriter();
         produceOutput(pw);
-        pw.flush();
-        pw.close();
+        try {
+            pw.flush();
+            pw.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
-    protected DotFileProducer(String outputFilename) {
+    protected OutputProducer(String outputFilename) {
         _outputFilename = outputFilename;
     }
 
-    public abstract PrintWriter createPrintWriter();
+    public abstract Writer createWriter();
 
-    protected abstract void produceOutput(PrintWriter output);
+    protected abstract void produceOutput(Writer output);
 }
