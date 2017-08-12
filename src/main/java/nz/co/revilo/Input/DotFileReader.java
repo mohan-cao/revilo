@@ -28,7 +28,7 @@ public class DotFileReader extends DotFileParser {
     public static final Pattern NODE_NAME = Pattern.compile("[\\s]*([\\p{Alnum}]*)[\\s]*\\[[\\s]*[Ww]eight[\\s]*[=][\\s]*[\\p{Digit}]*[\\s]*\\][\\s]*;");
     public static final Pattern NODE_WEIGHT = Pattern.compile("[\\s]*[\\p{Alnum}]*[\\s]*\\[[\\s]*[Ww]eight[\\s]*[=][\\s]*([\\p{Digit}]*)[\\s]*\\][\\s]*;");
 
-    public static final int
+    public static final Integer DEFAULT_NODE_WEIGHT = -1;
 
     private String _graphName;
     private Map<String, Integer> _nodeNums;
@@ -69,13 +69,7 @@ public class DotFileReader extends DotFileParser {
 
                     // Node
                 } else if (line.matches("[\\s]*[\\p{Alnum}]*[\\s]*\\[[\\s]*[Ww]eight[\\s]*[=][\\s]*[\\p{Digit}]*[\\s]*\\][\\s]*;")) {
-                    Matcher m = NODE_NAME.matcher(line);
-                    m.find();
-                    String name = m.group(1);
-                    m = NODE_WEIGHT.matcher(line);
-                    m.find();
-                    Integer weight = Integer.parseInt(m.group(1));
-                    addNode(name, weight);
+                    addNode(line);
 
                     // Graph Name
                 } else if (line.matches("[\\s]*digraph[\\s]*\".*\"[\\s]*\\{[\\s]*")) {
@@ -99,33 +93,50 @@ public class DotFileReader extends DotFileParser {
         //TODO Refactor such that addNode is used
         Matcher m = ARC_FROM.matcher(line);
         m.find();
-        String from = m.group(1);
+        String fromName = m.group(1);
         m = ARC_TO.matcher(line);
         m.find();
-        String to = m.group(1);
+        String toName = m.group(1);
         m = ARC_WEIGHT.matcher(line);
         m.find();
-        int weight = Integer.parseInt(m.group(1));
+        Integer weight = Integer.parseInt(m.group(1));
 
-        if (!_nodeNums.containsKey(from)) {
-            _nodeWeights.set(_nodeNums.get(from), -1);
+        Integer fromNum;
+        Integer toNum;
+
+        if (!_nodeNums.containsKey(fromName)) {
+            fromNum = addNode(fromName, DEFAULT_NODE_WEIGHT);
+        } else {
+            fromNum = _nodeNums.get(fromName);
         }
-        if (!_nodeNums.containsKey(to)) {
-            _nodeWeights.set(_nodeNums.get(to), -1);
+        if (!_nodeNums.containsKey(toName)) {
+            toNum = addNode(toName, DEFAULT_NODE_WEIGHT);
+        } else {
+            toNum = _nodeNums.get(toName);
         }
-        if (!_arcs.containsKey(from)) {
-            _arcs.put(_nodeNums.get(from), new ConcurrentHashMap<>());
+        if (!_arcs.containsKey(fromNum)) {
+            _arcs.put(fromNum, new ConcurrentHashMap<>());
         }
-        if (!_arcs.get(_nodeNums.get(from)).containsKey(_nodeNums.get(to))) {
-            _arcs.get(_nodeNums.get(from)).put(_nodeNums.get(to), weight);
+        if (!_arcs.get(fromNum).containsKey(_nodeNums.get(toName))) {
+            _arcs.get(fromNum).put(toNum, weight);
         } else {
             //TODO Should have an error message if arc already has weight
-            _arcs.get(_nodeNums.get(from)).replace(_nodeNums.get(to), weight);
+            _arcs.get(fromNum).replace(toNum, weight);
         }
 
     }
 
-    private void addNode(String name, Integer weight) {
+    private void addNode(String line) {
+        Matcher m = NODE_NAME.matcher(line);
+        m.find();
+        String name = m.group(1);
+        m = NODE_WEIGHT.matcher(line);
+        m.find();
+        Integer weight = Integer.parseInt(m.group(1));
+        addNode(name, weight);
+    }
+
+    private Integer addNode(String name, Integer weight) {
         if (_nodeNums.containsKey(name)) {
             //TODO Should have an error message if node already has weight other than -1
             _nodeWeights.set(_nodeNums.get(name), weight);
@@ -133,6 +144,7 @@ public class DotFileReader extends DotFileParser {
             _nodeNums.put(name, _nodeCounter.getAndIncrement());
             _nodeWeights.add(weight);
         }
+        return _nodeNums.get(name);
     }
 
     private void setGraphName(String line) {
