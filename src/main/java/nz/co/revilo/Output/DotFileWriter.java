@@ -33,7 +33,7 @@ public class DotFileWriter extends DotFileProducer {
 
         // Nodes
         for (int node = 0; node < _arcs.size(); node++) {
-            output.println("\t\t" + _nodeNames.get(node) + "\t\t[Weight=" + _nodeWeights.get(node) + ",Start=" + _nodeStarts.get(node) + ",Processor=" + _nodeProcessor.get(node) + "];");
+            output.println("\t\t" + _nodeNames.get(node) + "\t\t[Weight=" + _nodeWeights.get(node) + ",Start=" + _nodeStarts.get(node) + ",Processor=" + (_nodeProcessor.get(node) + 1) + "];");
         }
 
         // End

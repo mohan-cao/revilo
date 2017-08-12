@@ -32,7 +32,7 @@ public class DotFileReader extends DotFileParser {
 
     private String _graphName;
     private Map<String, Integer> _nodeNums;
-    private List<String> _nodeNamesList;
+    private List<String> _nodeNames;
     private List<Integer> _nodeWeights;
     private AtomicInteger _nodeCounter;
     private Set<Integer> _startNodes;
@@ -48,7 +48,7 @@ public class DotFileReader extends DotFileParser {
 
         _graphName = null;
         _nodeNums = new ConcurrentHashMap<>();
-        _nodeNamesList = new ArrayList<>();
+        _nodeNames = new ArrayList<>();
         _nodeWeights = new ArrayList<>();
         _nodeCounter = new AtomicInteger();
         _startNodes = new HashSet<>();
@@ -84,7 +84,7 @@ public class DotFileReader extends DotFileParser {
 
         determineStartAndEndNodes();
 
-        getListener().ParsingResults(_graphName, _nodeNums, _nodeNamesList, _nodeWeights, _nodeCounter, _startNodes, _endNodes, _arcs);
+        getListener().ParsingResults(_graphName, _nodeNums, _nodeNames, _nodeWeights, _nodeCounter, _startNodes, _endNodes, _arcs);
     }
 
     private BufferedReader openFile() throws FileNotFoundException {

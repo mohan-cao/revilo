@@ -22,7 +22,7 @@ public interface ParseResultListener {
     void ParsingResults(
             String graphName,
             Map<String, Integer> nodeNums,
-            List<String> nodeNamesList,
+            List<String> nodeNames,
             List<Integer> nodeWeights,
             AtomicInteger nodeCounter,
             Set<Integer> startNodes,
