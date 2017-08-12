@@ -1,8 +1,6 @@
 package nz.co.revilo.Output;
 
-import java.io.FileNotFoundException;
-import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 
 public class DotFileWriter extends DotFileProducer {
     public DotFileWriter(String filename) {
@@ -10,7 +8,7 @@ public class DotFileWriter extends DotFileProducer {
     }
 
     @Override
-    public PrintWriter createPrintWriter() {
+    public PrintWriter createWriter() {
         PrintWriter pw = null;
         try {
             pw = new PrintWriter(_outputFilename, CHAR_SET);
@@ -22,7 +20,7 @@ public class DotFileWriter extends DotFileProducer {
         return pw;
     }
 
-    protected void produceOutput(PrintWriter output) {
+    protected void produceOutput(Writer output) {
         // Name and start
         String temp;
         if (_graphName != null) {
@@ -35,23 +33,39 @@ public class DotFileWriter extends DotFileProducer {
             temp = "";
         }
 
-        output.println("digraph \"output" + temp + "\" {");
+        try {
+            output.write("digraph \"output" + temp + "\" {");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         // Arcs
         for (int from = 0; from < _arcs.size(); from++) {
             for (int to = 0; to < _arcs.get(from).size(); to++) {
                 if (_arcs.get(from).get(to)) {
-                    output.println("\t\t" + _nodeNames.get(from) + " -> " + _nodeNames.get(to) + "\t[Weight=" + _arcWeights.get(from).get(to) + "];");
+                    try {
+                        output.write("\n\t\t" + _nodeNames.get(from) + " -> " + _nodeNames.get(to) + "\t[Weight=" + _arcWeights.get(from).get(to) + "];");
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         }
 
         // Nodes
         for (int node = 0; node < _arcs.size(); node++) {
-            output.println("\t\t" + _nodeNames.get(node) + "\t\t[Weight=" + _nodeWeights.get(node) + ",Start=" + _nodeStarts.get(node) + ",Processor=" + _nodeProcessor.get(node) + "];");
+            try {
+                output.write("\n\t\t" + _nodeNames.get(node) + "\t\t[Weight=" + _nodeWeights.get(node) + ",Start=" + _nodeStarts.get(node) + ",Processor=" + _nodeProcessor.get(node) + "];");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 
         // End
-        output.println("}");
+        try {
+            output.write("\n}");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
