@@ -87,8 +87,8 @@ public class TopologicalTest {
         List<TestResultListener.Node> nodes = listener.getNodes();
         int nNodes = nodes.size();
 
-        // Iterate through all nodes checking their dependies start at least as late as necessary by node and arc weight
-        // constraints.
+        // Iterate through all nodes checking their dependencies start at least as late as necessary by node and arc
+        // weight constraints.
         for(int i = 0; i < nNodes; i++) {
             TestResultListener.Node currentNode = nodes.get(i);
             List<Integer> dependencies = currentNode.getDependencies();
