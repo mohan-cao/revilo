@@ -11,6 +11,10 @@ public class DotFileWriter extends OutputProducer {
         super(filename);
     }
 
+    /**
+     * Creates a PrintWriter for use as the writer when producing output
+     * @return
+     */
     @Override
     protected Writer createWriter() {
         PrintWriter pw = null;
@@ -24,6 +28,10 @@ public class DotFileWriter extends OutputProducer {
         return pw;
     }
 
+    /**
+     * Produces the output final schedule, which is written to the output Writer
+     * @param output the Writer which whe output will be written to.
+     */
     protected void produceOutput(Writer output) {
         // Name and start
         String temp;
