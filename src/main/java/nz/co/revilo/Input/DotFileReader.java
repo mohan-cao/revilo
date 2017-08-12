@@ -80,7 +80,7 @@ public class DotFileReader extends DotFileParser {
             //TODO Exceptions when reading lines
         }
 
-        _listener.ParsingResults(_graphName, nodeNamesList, nodeWeights, arcs, arcWeights);
+        getListener().ParsingResults(_graphName, _nodeNums, _nodeNamesList, _nodeWeights, _nodeCounter, _startNodes, _endNodes, _arcs);
     }
 
     private BufferedReader openFile() throws FileNotFoundException {

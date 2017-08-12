@@ -32,8 +32,8 @@ public abstract class DotFileParser {
     /**
      * Returns the name of the listener to inform
      */
-    protected final String getListener() {
-        return _filename;
+    protected final ParseResultListener getListener() {
+        return _listener;
     }
 
     /**
