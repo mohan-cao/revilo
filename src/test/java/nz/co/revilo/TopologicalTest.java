@@ -2,6 +2,7 @@ package nz.co.revilo;
 
 import nz.co.revilo.Input.DotFileReader;
 import nz.co.revilo.Scheduling.AlgorithmManager;
+import nz.co.revilo.Scheduling.ImprovedTopologicalAlgorithmManager;
 import nz.co.revilo.Scheduling.VeryBasicAlgorithmManager;
 import org.junit.Before;
 import org.junit.Test;
@@ -27,7 +28,7 @@ public class TopologicalTest {
      */
     @Before
     public void setUp() {
-        _algorithmManager = new VeryBasicAlgorithmManager(1);
+        _algorithmManager = new ImprovedTopologicalAlgorithmManager(1);
     }
 
     /**
@@ -65,7 +66,7 @@ public class TopologicalTest {
      * @return boolean representing if dependencies are satisfied
      */
     public boolean satisfiesDependencies(TestResultListener listener) {
-        ArrayList<TestResultListener.Node> nodes = listener.getNodes();
+        List<TestResultListener.Node> nodes = listener.getNodes();
         int nNodes = nodes.size();
 
         // Iterate through all nodes checking their dependies start at least as late as necessary by node and arc weight
