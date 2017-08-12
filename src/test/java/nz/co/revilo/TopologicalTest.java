@@ -21,6 +21,16 @@ import static org.junit.Assert.assertTrue;
  * acknowledged) in scheduling, and that is no more than one process running on a processor at once.
  */
 public class TopologicalTest {
+    private AlgorithmManager _algorithmManager;
+
+    /**
+     * Sets up a new AlgorithmManager before each test case. AlgorithmManagerImplementations can be switched out
+     */
+    @Before
+    public void setUp() {
+        _algorithmManager = new VeryBasicAlgorithmManager(1);
+    }
+
     /**
      * Check that dependencies (i.e. ordering of tasks based on what tasks must be completed for others to start) are
      * correctly being set.
