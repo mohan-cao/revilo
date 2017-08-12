@@ -36,9 +36,17 @@ public class TopologicalTest {
      */
     @Test
     public void test10NodesRandom() {
-        String filename = "input.dot";
+       // Test is dependencies are all satisfied
+        assertTrue(satisfiesDependencies(schedule("input.dot")));
+    }
 
-        // Read in the fil
+    /**
+     * Reads in the graph's DOT file, and finds the schedule based on the supplied AlgorithmManager. The final schedule
+     * is provided to the output TestResultListener
+     * @param filename name of the file containing the graph we want schedule, and then test the schedule of
+     * @return a TestResultListener containing the information about the final schedule
+     */
+    public TestResultListener schedule(String filename) {
         DotFileReader reader = new DotFileReader(filename);
         TestResultListener listener = new TestResultListener();
         _algorithmManager.inform(listener);
@@ -48,9 +56,7 @@ public class TopologicalTest {
             e.printStackTrace();
             System.out.println("File " + filename+ " does not exist");
         }
-
-        // Test is dependencies are all satisfied
-        assertTrue(satisfiesDependencies(listener));
+        return listener;
     }
 
     /**
