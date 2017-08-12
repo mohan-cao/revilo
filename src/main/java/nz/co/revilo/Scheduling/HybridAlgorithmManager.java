@@ -77,15 +77,34 @@ public class HybridAlgorithmManager extends AlgorithmManager {
                 listener.finalSchedule(_graphName, _nodeNames, _arcs, _nodeWeights, nodeStarts, processor);
             }
         } else if (getProcessingCores() >= _nodeCounter.get()) {
-            int[] scheduleCost = new int[getProcessingCores()];
-
-
-            for ()
             //page 90 of textbook
             //TODO Cycle detection error
             //TODO Inform output about schedule
         } else {
+            int[] scheduleCost = new int[getProcessingCores()];
 
+            //TODO Greedy run straight down tree for upper-bound
+
+            List<List<List<Integer>>> options = new ArrayList<>(); //decision, option, node/processor/starttime/totaltime
+            List<List<Integer>> choices = new ArrayList<>();
+
+            options.add(new ArrayList<>());
+            for (Integer startNode : _startNodes) {
+                List<Integer> temp = new ArrayList<>(3);
+                temp.add(startNode);
+                temp.add(0);
+                temp.add(0);
+                temp.add(_nodeWeights.get(startNode));
+                options.get(0).add(temp);
+            }
+
+            //TODO In-order tree traversal of "options" tree which uses "choices" to keep track of where in the tree you are, need to break out as it will be in a forever loop to traverse the tree
+            for (List<Integer> option : options.get(0)) { //every start option
+                while (true) {
+                    break;
+                }
+
+            }
         }
 
     }
