@@ -7,7 +7,7 @@ import java.io.FileNotFoundException;
  * then load the DAG into a data structure which is yet to be determined.
  *
  * @author Michael Kemp
- * @version 1.0
+ * @version Beta
  */
 public abstract class DotFileParser {
 

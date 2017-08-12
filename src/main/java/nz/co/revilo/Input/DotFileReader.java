@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -15,7 +16,7 @@ import java.util.regex.Pattern;
  *
  *  At the moment this is just a skeleton and needs to be fleshed out but a data structure needs to be determined
  *
- *  @version alpha
+ *  @version Beta
  *  @author Michael Kemp
  */
 public class DotFileReader extends DotFileParser {
@@ -27,7 +28,7 @@ public class DotFileReader extends DotFileParser {
     public static final Pattern nodeName = Pattern.compile("[\\s]*([\\p{Alnum}]*)[\\s]*\\[[\\s]*[Ww]eight[\\s]*[=][\\s]*[\\p{Digit}]*[\\s]*\\][\\s]*;");
     public static final Pattern nodeWeight = Pattern.compile("[\\s]*[\\p{Alnum}]*[\\s]*\\[[\\s]*[Ww]eight[\\s]*[=][\\s]*([\\p{Digit}]*)[\\s]*\\][\\s]*;");
 
-    private String graphName;
+    private String _graphName;
     private Map<String, Integer> _nodeNums;
     private List<String> _nodeNamesList;
     private List<Integer> _nodeWeights;
@@ -43,9 +44,17 @@ public class DotFileReader extends DotFileParser {
     public void startParsing() throws FileNotFoundException {
         BufferedReader reader = openFile();
 
-        nodeNames = new HashMap<>();
-        nodeWeights = new ArrayList<>();
-        arcs = new HashMap<>();
+        _graphName = null;
+        _nodeNums = new ConcurrentHashMap<>();
+        _nodeNamesList = new ArrayList<>();
+        _nodeWeights = new ArrayList<>();
+        _nodeCounter = new AtomicInteger();
+        _startNodes = new HashSet<>();
+        _endNodes = new HashSet<>();
+        _arcs = new ConcurrentHashMap<>();
+
+        // Starts at -1 because array indexing begins at 0 and the method incrementAndGet increments before getting
+        //_nodeCounter.set(-1);
 
         try {
         	//TODO Empty file
@@ -97,7 +106,7 @@ public class DotFileReader extends DotFileParser {
                 } else if (line.matches("[\\s]*digraph[\\s]*\".*\"[\\s]*\\{[\\s]*")) {
                     Matcher m = graphNameMatch.matcher(line);
                     m.find();
-                    graphName = m.group(1);
+                    _graphName = m.group(1);
                 }
 
                 line = reader.readLine();
@@ -106,7 +115,7 @@ public class DotFileReader extends DotFileParser {
             //TODO
         }
 
-        _listener.ParsingResults(graphName, nodeNamesList, nodeWeights, arcs, arcWeights);
+        _listener.ParsingResults(_graphName, nodeNamesList, nodeWeights, arcs, arcWeights);
     }
 
     private BufferedReader openFile() throws FileNotFoundException {
