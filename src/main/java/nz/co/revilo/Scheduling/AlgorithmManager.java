@@ -40,17 +40,16 @@ public abstract class AlgorithmManager implements ParseResultListener {
         _listener = listener;
     }
 
-    public void ParsingResults(String graphName, String[] nodeNames, int[] nodeWeights, boolean[][] arcs, int[][] arcWeights) {
-
-
     /**
      * Template method for reading in graph information required to process a schedule, and executes the schedule (using
      * the execute() hook method.
+     * @param graphName
+     * @param nodeNames
      * @param nodeWeights
      * @param arcs
      * @param arcWeights
      */
-    public void ParsingResults(int[] nodeWeights, boolean[][] arcs, int[][] arcWeights) {
+    public void ParsingResults(String graphName, String[] nodeNames, int[] nodeWeights, boolean[][] arcs, int[][] arcWeights) {
         _arcWeights = arcWeights;
         _arcs = arcs;
         _nodeWeights = nodeWeights;
