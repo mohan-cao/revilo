@@ -61,8 +61,8 @@ public class TestResultListener implements ScheduleResultListener {
     private List<List<Boolean>> _arcs;
     private List<List<Integer>> _arcWeights;
     private List<Node> _nodes;
-    private List<List<Node>> _processors;
-    private int _nProcessors;
+    private List<List<Node>> _cores;
+    private int _nCores;
 
     @Override
     public void finalSchedule(String graphName,
@@ -71,15 +71,15 @@ public class TestResultListener implements ScheduleResultListener {
                               List<List<Integer>> arcWeights,
                               List<Integer> nodeWeights,
                               List<Integer> nodeStarts,
-                              List<Integer> nodeProcessor) {
+                              List<Integer> nodeCore) {
         _nodeNames = nodeNames;
         _arcs = arcs;
         _arcWeights = arcWeights;
-        processNodes(nodeNames, nodeStarts, nodeWeights, nodeProcessor);
+        processNodes(nodeNames, nodeStarts, nodeWeights, nodeCore);
     }
     private void processNodes(List<String> nodeNames, List <Integer> nodeStarts, List<Integer> nodeWeights
-            , List<Integer> nodeProcessor) {
-        _nProcessors = 1;
+            , List<Integer> nodeCore) {
+        _nCores = 1;
         _nodes =  new ArrayList<>(nodeWeights.size());
         for (int i = 0; i < nodeWeights.size(); i++) {
             ArrayList<Integer> dependencies =  new ArrayList<>(nodeWeights.size());
@@ -88,21 +88,21 @@ public class TestResultListener implements ScheduleResultListener {
                     dependencies.add(j);
                 }
             }
-            _nodes.add(new Node(_nodeNames.get(i), dependencies, nodeStarts.get(i),nodeWeights.get(i)
-                    , nodeProcessor.get(i)));
-            if (nodeProcessor.get(i) >  _nProcessors) {
-                _nProcessors = nodeProcessor.get(i);
+            _nodes.add(new Node(nodeNames.get(i), dependencies, nodeStarts.get(i),nodeWeights.get(i)
+                    , nodeCore.get(i)));
+            if (nodeCore.get(i) >  _nCores) {
+                _nCores = nodeCore.get(i);
             }
         }
 
-        // Initialise the ArrayList to store the nodes in processors
-        _processors = new ArrayList<>(_nProcessors);
-        for (int i = 0; i < _nProcessors; i++) {
-            _processors.add(new ArrayList<Node>());
+        // Initialise the ArrayList to store the nodes in cores
+        _cores = new ArrayList<>(_nCores);
+        for (int i = 0; i < _nCores; i++) {
+            _cores.add(new ArrayList<Node>());
         }
 
         for(Node node : _nodes) {
-            _processors.get(node.getCore() - 1).add(node);
+            _cores.get(node.getCore() - 1).add(node);
         }
     }
     public List<Node> getNodes() {
@@ -113,5 +113,5 @@ public class TestResultListener implements ScheduleResultListener {
         return _arcWeights.get(nodeIndex);
     }
 
-    public List<List<Node>> getProcessors() { return _processors; }
+    public List<List<Node>> getCores() { return _cores; }
 }

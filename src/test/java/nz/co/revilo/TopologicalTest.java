@@ -133,6 +133,8 @@ public class TopologicalTest {
                     // there is overlap, and the start time is not valid i.e. the start time of the task at index j is
                     // in the range [start, end)
                     if ((nodes.get(j).getStartTime() >= start) && (nodes.get(j).getStartTime() < end)) {
+                        System.out.print("Error: Tasks " + nodes.get(j) + " and " + nodes.get(i) + "overlap in the " +
+                                "schedule on core" + nodes.get(i).getCore());
                         return false;
                     }
                 }
