@@ -49,13 +49,14 @@ public class App {
         Parameters params = new Parameters();
         JCommander jc = new JCommander();
 
-        //Section to display the consumed args
-        int i = 0;
-        for (String s: args) {
-            System.out.println(i + ": " + s);
-            i++;
-
-        }
+        // TODO:  slf4j would be nice here
+//        //Section to display the consumed args
+//        int i = 0;
+//        for (String s: args) {
+//            System.out.println(i + ": " + s);
+//            i++;
+//
+//        }
 
         if (args.length < 2) {
             //insufficient arguments
