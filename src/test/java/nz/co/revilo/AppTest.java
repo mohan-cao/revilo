@@ -1,7 +1,10 @@
 package nz.co.revilo;
 
+import org.junit.AfterClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
+
+import java.io.File;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -12,6 +15,11 @@ import static org.junit.Assert.fail;
  */
 public class AppTest {
     public static String TEST_PATH = "test_inputs/";
+
+    @AfterClass
+    public static void cleanup(){
+        new File(TEST_PATH + "input-output.dot").delete();
+    }
 
     /**
      * Test for no valid params
