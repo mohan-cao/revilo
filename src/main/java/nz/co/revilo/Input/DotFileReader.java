@@ -17,23 +17,25 @@ import java.util.regex.Pattern;
  *
  *  At the moment this is just a skeleton and needs to be fleshed out but a data structure needs to be determined
  *
- *  @version alpha
+ *  @version Beta
  *  @author Michael Kemp
  */
 public class DotFileReader extends DotFileParser {
 
-    public static final Pattern graphNameMatch = Pattern.compile("[\\s]*digraph[\\s]*\"(.*)\"[\\s]*\\{[\\s]*");
-    public static final Pattern arcFrom = Pattern.compile("[\\s]*([\\p{Alnum}]*)[\\s]*.>[\\s]*[\\p{Alnum}]*[\\s]*\\[[\\s]*[Ww]eight[\\s]*[=][\\s]*[\\p{Digit}]*[\\s]*\\][\\s]*;");
-    public static final Pattern arcTo =  Pattern.compile("[\\s]*[\\p{Alnum}]*[\\s]*.>[\\s]*([\\p{Alnum}]*)[\\s]*\\[[\\s]*[Ww]eight[\\s]*[=][\\s]*[\\p{Digit}]*[\\s]*\\][\\s]*;");
-    public static final Pattern arcWeight = Pattern.compile("[\\s]*[\\p{Alnum}]*[\\s]*.>[\\s]*[\\p{Alnum}]*[\\s]*\\[[\\s]*[Ww]eight[\\s]*[=][\\s]*([\\p{Digit}]*)[\\s]*\\][\\s]*;");
-    public static final Pattern nodeName = Pattern.compile("[\\s]*([\\p{Alnum}]*)[\\s]*\\[[\\s]*[Ww]eight[\\s]*[=][\\s]*[\\p{Digit}]*[\\s]*\\][\\s]*;");
-    public static final Pattern nodeWeight = Pattern.compile("[\\s]*[\\p{Alnum}]*[\\s]*\\[[\\s]*[Ww]eight[\\s]*[=][\\s]*([\\p{Digit}]*)[\\s]*\\][\\s]*;");
+    // Regex for string matchers that will extract the required information from the string
+    public static final Pattern GRAPH_NAME_MATCH = Pattern.compile("[\\s]*digraph[\\s]*\"(.*)\"[\\s]*\\{[\\s]*");
+    public static final Pattern ARC_FROM_MATCH = Pattern.compile("[\\s]*([\\p{Alnum}]*)[\\s]*.>[\\s]*[\\p{Alnum}]*[\\s]*\\[[\\s]*[Ww]eight[\\s]*[=][\\s]*[\\p{Digit}]*[\\s]*\\][\\s]*;");
+    public static final Pattern ARC_TO_MATCH = Pattern.compile("[\\s]*[\\p{Alnum}]*[\\s]*.>[\\s]*([\\p{Alnum}]*)[\\s]*\\[[\\s]*[Ww]eight[\\s]*[=][\\s]*[\\p{Digit}]*[\\s]*\\][\\s]*;");
+    public static final Pattern ARC_WEIGHT_MATCH = Pattern.compile("[\\s]*[\\p{Alnum}]*[\\s]*.>[\\s]*[\\p{Alnum}]*[\\s]*\\[[\\s]*[Ww]eight[\\s]*[=][\\s]*([\\p{Digit}]*)[\\s]*\\][\\s]*;");
+    public static final Pattern NODE_NAME_MATCH = Pattern.compile("[\\s]*([\\p{Alnum}]*)[\\s]*\\[[\\s]*[Ww]eight[\\s]*[=][\\s]*[\\p{Digit}]*[\\s]*\\][\\s]*;");
+    public static final Pattern NODE_WEIGHT_MATCH = Pattern.compile("[\\s]*[\\p{Alnum}]*[\\s]*\\[[\\s]*[Ww]eight[\\s]*[=][\\s]*([\\p{Digit}]*)[\\s]*\\][\\s]*;");
 
-    HashMap<String, Integer> nodeNames;
-    List<Integer> nodeWeights;
-    HashMap<String, HashMap<String, Integer>> arcs;
-    String[] nodeNamesList;
-    String graphName;
+    //
+    HashMap<String, Integer> _nodeNames;
+    List<Integer> _nodeWeights;
+    HashMap<String, HashMap<String, Integer>> _arcs;
+    String[] _nodeNamesList;
+    String _graphName;
 
     private ParseResultListener _listener;
 
@@ -45,9 +47,9 @@ public class DotFileReader extends DotFileParser {
         _listener = newListener;
         BufferedReader reader = openFile();
 
-        nodeNames = new HashMap<>();
-        nodeWeights = new ArrayList<>();
-        arcs = new HashMap<>();
+        _nodeNames = new HashMap<>();
+        _nodeWeights = new ArrayList<>();
+        _arcs = new HashMap<>();
 
         try {
         	//TODO Empty file
@@ -57,52 +59,53 @@ public class DotFileReader extends DotFileParser {
                 //[\s]*[\p{Alnum}]*[\s]*.>[\s]*[\p{Alnum}]*[\s]*\[[\s]*[Ww]eight[\s]*[=][\s]*[\p{Digit}]*[\s]*\][\s]*;
                 // arc
                 if (line.matches("[\\s]*[\\p{Alnum}]*[\\s]*.>[\\s]*[\\p{Alnum}]*[\\s]*\\[[\\s]*[Ww]eight[\\s]*[=][\\s]*[\\p{Digit}]*[\\s]*\\][\\s]*;")) {
-                    Matcher m = arcFrom.matcher(line);
+                    Matcher m = ARC_FROM_MATCH.matcher(line);
                     m.find();
                     String from = m.group(1);
-                    m = arcTo.matcher(line);
+                    m = ARC_TO_MATCH.matcher(line);
                     m.find();
                     String to = m.group(1);
-                    m = arcWeight.matcher(line);
+                    m = ARC_WEIGHT.matcher(line);
                     m.find();
                     int weight = Integer.parseInt(m.group(1));
 
-                    if (!nodeNames.containsKey(from)) {
-                        nodeWeights.set(nodeNames.get(from), -1);
-                    } if (!nodeNames.containsKey(to)) {
-                        nodeWeights.set(nodeNames.get(to), -1);
+                    if (!_nodeNames.containsKey(from)) {
+                        _nodeWeights.set(_nodeNames.get(from), -1);
                     }
-                    if (!arcs.containsKey(from)) {
-                        arcs.put(from, new HashMap<>());
+                    if (!_nodeNames.containsKey(to)) {
+                        _nodeWeights.set(_nodeNames.get(to), -1);
                     }
-                    if (!arcs.get(from).containsKey(to)) {
-                        arcs.get(from).put(to, weight);
+                    if (!_arcs.containsKey(from)) {
+                        _arcs.put(from, new HashMap<>());
+                    }
+                    if (!_arcs.get(from).containsKey(to)) {
+                        _arcs.get(from).put(to, weight);
                     } else {
-                        arcs.get(from).replace(to, weight);
+                        _arcs.get(from).replace(to, weight);
                     }
 
                 //[\s]*[\p{Alnum}]*[\s]*\[[\s]*[Ww]eight[\s]*[=][\s]*[\p{Digit}]*[\s]*\][\s]*;
                 // node
                 } else if (line.matches("[\\s]*[\\p{Alnum}]*[\\s]*\\[[\\s]*[Ww]eight[\\s]*[=][\\s]*[\\p{Digit}]*[\\s]*\\][\\s]*;")) {
-                    Matcher m = nodeName.matcher(line);
+                    Matcher m = NODE_NAME.matcher(line);
                     m.find();
                     String name = m.group(1);
-                    m = nodeWeight.matcher(line);
+                    m = NODE_WEIGHT.matcher(line);
                     m.find();
                     int weight = Integer.parseInt(m.group(1));
-                    if (nodeNames.containsKey(name)) {
-                        nodeWeights.set(nodeNames.get(name), weight);
+                    if (_nodeNames.containsKey(name)) {
+                        _nodeWeights.set(_nodeNames.get(name), weight);
                     } else {
-                        nodeNames.put(name, nodeWeights.size());
-                        nodeWeights.add(weight);
+                        _nodeNames.put(name, _nodeWeights.size());
+                        _nodeWeights.add(weight);
                     }
 
                 //[\s]*digraph[\s]*".*"[\s]*\{[\s]*
                 // graph name
                 } else if (line.matches("[\\s]*digraph[\\s]*\".*\"[\\s]*\\{[\\s]*")) {
-                    Matcher m = graphNameMatch.matcher(line);
+                    Matcher m = GRAPH_NAME_MATCH.matcher(line);
                     m.find();
-                    graphName = m.group(1);
+                    _graphName = m.group(1);
                 }
                 line = reader.readLine();
             }
@@ -110,27 +113,27 @@ public class DotFileReader extends DotFileParser {
             //TODO
         }
 
-        String[] nodeNamesPrimitive = new String[nodeWeights.size()];
-        int[] nodeWeightsPrimitive = new int[nodeWeights.size()];
-        List<String> tempNames = new ArrayList<>(nodeNames.keySet());
-        nodeNamesList = new String[nodeWeights.size()];
-        for (int i = 0; i < nodeWeights.size(); i++) {
+        String[] nodeNamesPrimitive = new String[_nodeWeights.size()];
+        int[] nodeWeightsPrimitive = new int[_nodeWeights.size()];
+        List<String> tempNames = new ArrayList<>(_nodeNames.keySet());
+        _nodeNamesList = new String[_nodeWeights.size()];
+        for (int i = 0; i < _nodeWeights.size(); i++) {
             String tempName = tempNames.get(i);
-            int location = nodeNames.get(tempName);
-            nodeNamesList[location] = tempName;
-            nodeWeightsPrimitive[location] = nodeWeights.get(location);
+            int location = _nodeNames.get(tempName);
+            _nodeNamesList[location] = tempName;
+            nodeWeightsPrimitive[location] = _nodeWeights.get(location);
             nodeNamesPrimitive[location] = tempName;
         }
 
-        boolean[][] arcsPrimitive = new boolean[nodeWeights.size()][nodeWeights.size()];
-        int[][] arcWeightsPrimitive = new int[nodeWeights.size()][nodeWeights.size()];
+        boolean[][] arcsPrimitive = new boolean[_nodeWeights.size()][_nodeWeights.size()];
+        int[][] arcWeightsPrimitive = new int[_nodeWeights.size()][_nodeWeights.size()];
         for (int j = 0; j < nodeNamesPrimitive.length; j++) {
             Arrays.fill(arcWeightsPrimitive[j], -1);
             for (int k = 0; k < nodeNamesPrimitive.length; k++) {
-                if (arcs.containsKey(nodeNamesPrimitive[j])) {
-                    if (arcs.get(nodeNamesPrimitive[j]).containsKey(nodeNamesPrimitive[k])) {
+                if (_arcs.containsKey(nodeNamesPrimitive[j])) {
+                    if (_arcs.get(nodeNamesPrimitive[j]).containsKey(nodeNamesPrimitive[k])) {
                         arcsPrimitive[j][k] = true;
-                        arcWeightsPrimitive[j][k] = arcs.get(nodeNamesPrimitive[j]).get(nodeNamesPrimitive[k]);
+                        arcWeightsPrimitive[j][k] = _arcs.get(nodeNamesPrimitive[j]).get(nodeNamesPrimitive[k]);
                     } else {
                         arcWeightsPrimitive[j][k] = -1;
                     }
@@ -138,7 +141,7 @@ public class DotFileReader extends DotFileParser {
             }
         }
 
-        _listener.ParsingResults(graphName, nodeNamesList, nodeWeightsPrimitive, arcsPrimitive, arcWeightsPrimitive);
+        _listener.ParsingResults(_graphName, _nodeNamesList, nodeWeightsPrimitive, arcsPrimitive, arcWeightsPrimitive);
     }
 
     private BufferedReader openFile() throws FileNotFoundException {
