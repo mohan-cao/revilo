@@ -56,6 +56,10 @@ public class AppTest {
             assertEquals(re.getMessage(),"Invalid number of processors");
         }
     }
+    
+    /**
+     * TODO: test passing in 0 or negative number of processors
+     */
 
     /**
      * SMOKE TEST. Runs automatically with Maven build. Disable with -DexcludedGroups=SlowTest.class
