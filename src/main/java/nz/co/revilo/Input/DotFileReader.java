@@ -12,13 +12,13 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- *  DotFileReader is a class that extends DotFileParser it's purpose is to read the file and place the digraph in to a
- *  data-structure and give it to a ParseResultListener.
+ * DotFileReader is a class that extends DotFileParser it's purpose is to read the file and place the digraph in to a
+ * data-structure and give it to a ParseResultListener.
+ * <p>
+ * At the moment this is just a skeleton and needs to be fleshed out but a data structure needs to be determined
  *
- *  At the moment this is just a skeleton and needs to be fleshed out but a data structure needs to be determined
- *
- *  @version Beta
- *  @author Michael Kemp
+ * @author Michael Kemp
+ * @version Beta
  */
 public class DotFileReader extends DotFileParser {
 

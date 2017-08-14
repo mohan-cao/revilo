@@ -5,8 +5,9 @@ import java.io.PrintWriter;
 /**
  * Implementation of DotFileProducer which uses produced output by iterating through the nodes and edges of the graph,
  * and printing details in the required format.
- * @version Beta
+ *
  * @author Michael Kemp
+ * @version Beta
  */
 public class DotFileWriter extends DotFileProducer {
     public DotFileWriter(String filename) {
@@ -15,6 +16,7 @@ public class DotFileWriter extends DotFileProducer {
 
     /**
      * Iterates through all the nodes and edges to create a scheduling results DOT file
+     *
      * @param output PrintWriter set up and used to create the new DOT file, and print output to it
      */
     protected void produceOutput(PrintWriter output) {

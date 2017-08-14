@@ -8,8 +8,9 @@ import java.util.List;
 /**
  * Abstract class for reading in information from the final schedule which is required in producing an output file. The
  * actual creation of the output is left to child classes.
- * @version 1.0
+ *
  * @author Michael Kemp
+ * @version 1.0
  */
 public abstract class DotFileProducer implements ScheduleResultListener {
 
@@ -63,6 +64,7 @@ public abstract class DotFileProducer implements ScheduleResultListener {
 
     /**
      * DotFileProducer constructor which sets the file name of the output schedule DOT file.
+     *
      * @param outputFilename
      */
     public DotFileProducer(String outputFilename) {
@@ -70,7 +72,8 @@ public abstract class DotFileProducer implements ScheduleResultListener {
     }
 
     /**
-     *  Abstract method for producing an output file in DOT file format (to be implemented by child classes).
+     * Abstract method for producing an output file in DOT file format (to be implemented by child classes).
+     *
      * @param output PrintWriter set up and used to create the new DOT file, and print output to it
      */
     protected abstract void produceOutput(PrintWriter output);

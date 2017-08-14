@@ -5,6 +5,7 @@ import java.util.List;
 /**
  * Interface implemented by classes which need to make use of scheduling results. It allows those classes to receive
  * key information about the schedule, particularly those in relation to producing output.
+ *
  * @author Michael Kemp
  * @version 1.0
  */
