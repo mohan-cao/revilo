@@ -1,0 +1,9 @@
+---
+engines:
+  fixme:
+    enabled: true
+  pmd:
+    enabled: true
+ratings:
+  paths: []
+exclude_paths: []
