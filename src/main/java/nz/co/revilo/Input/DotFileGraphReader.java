@@ -1,5 +1,12 @@
 package nz.co.revilo.Input;
 
+import org.graphstream.graph.Edge;
+import org.graphstream.graph.Graph;
+import org.graphstream.graph.Node;
+import org.graphstream.graph.implementations.DefaultGraph;
+import org.graphstream.stream.file.FileSource;
+import org.graphstream.stream.file.FileSourceFactory;
+
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -8,14 +15,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import org.graphstream.graph.Edge;
-import org.graphstream.graph.Graph;
-import org.graphstream.graph.Node;
-import org.graphstream.graph.implementations.DefaultGraph;
-import org.graphstream.stream.file.FileSource;
-import org.graphstream.stream.file.FileSourceFactory;
-
 /**
+ * DotFileGraphReader is an adaptor pattern for using the
+ *
  * Implementation of DotFileParser based on using GraphStream to represent graphs and read in input.
  */
 public class DotFileGraphReader extends DotFileParser {

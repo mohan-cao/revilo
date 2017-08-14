@@ -16,50 +16,80 @@ import java.util.Arrays;
  * everything. It's not a final class name nor implementation, it purely exists to be a starting point in the program.
  * We should investigate a argument input library and output library.
  *
- * @author Mohan Cao (original), Michael Kemp, Terran Kroft, Abby Shen
+ * @author Mohan Cao (file created by), Michael Kemp (pattern and fleshed out), Terran Kroft (Modified for CLI library), Abby Shen
  * @version alpha
  */
 public class App {
+    public static final String DEFAULT_FILETYPE = ".dot";
+    public static final String DEFAULT_OUTPUT_FILENAME = "-output.dot";
+
+    // Instance of the singleton pattern
     private static App _inst = null;
 
+    // Command line interface arguments
     private String _inputFilename;
     private int _numExecutionCores;
     private int _numParallelProcessors; //for parallelisation
     private boolean _visualise;
     private String _outputFilename;
-    private static String DEFAULT_FILETYPE = ".dot";
-    private static String DEFAULT_OUTPUT_FILENAME = "-output.dot";
 
-    private App () {
+    /**
+     * The one and only constructor which allows for the singleton pattern by never overriding the current instance
+     *
+     * @author Michael Kemp
+     */
+    private App() {
+        // If there's no current instance then it's instantiated
         if (_inst == null) {
             _inst = this;
+            // If there is then throw a warning
         } else {
             System.out.println("App was instantiated more than once");
             //TODO throw an informative exception to indicate error
         }
     }
 
-    public static void main( String[] args ) {
+    /**
+     * The entry point for the program, the only arguments are those from the CLI
+     * <p>
+     * Creates an instance
+     * Parses the arguments
+     * Starts visualisation
+     * Starts parsing the input file
+     * Instantiates an algorithm manager to be informed of read graph
+     * Instantiates an output file writer to be informed of schedule
+     *
+     * @param args CLI args
+     */
+    public static void main(String[] args) {
+        // Creates the singleton instance
         new App();
+
+        // Instantiates a new parameters container
         Parameters params = new Parameters();
 
+        // Checks for an insufficient number of arguments
         if (args.length < 2) {
-            //insufficient arguments
             throw new RuntimeException("Insufficient arguments given. Needs [input file] [# processors]");
         } else {
+            // Parses the arguments
             String[] optionalArgs = Arrays.copyOfRange(args, 2, args.length);
             JCommander.newBuilder().addObject(params).build().parse(optionalArgs);
 
-            //get file name first
+            // Set the input filename
             _inst._inputFilename = args[0];
             try {
+                // Set the number of cores the problem has
                 _inst._numExecutionCores = Integer.parseInt(args[1]);
-            }catch(NumberFormatException nfe){
+            } catch (NumberFormatException nfe) {
                 throw new RuntimeException("Invalid number of processors");
             }
+            // Sets the number of cores to do the scheduling on
             _inst._numParallelProcessors = params.getParallelCores();
+            // Sets the visualisation switch
             _inst._visualise = params.getVisualise();
 
+            // Sets the output filename if one is given, otherwise uses default
             if (params.getOutputName() == null) {
                 int fileNameLocation = _inst._inputFilename.toLowerCase().lastIndexOf(DEFAULT_FILETYPE);
                 String fileNameWithoutExtension = _inst._inputFilename.substring(0, fileNameLocation);
@@ -69,9 +99,7 @@ public class App {
             }
         }
 
-        //here we get the actual input name (.dot)
-
-
+        // Starts visualisation if requested
 //        System.out.println("This is the schedule called " + _inst._outputFilename + " processed on " + _inst._numParallelProcessors + " core(s).");
         if (_inst._visualise) {
 //            System.out.println("There is a visualisation outputted.");
@@ -80,7 +108,7 @@ public class App {
         // Parse file and give it algorithm manager to give results to. @Michael Kemp
         AlgorithmManager manager = new ImprovedTopologicalAlgorithmManager(_inst._numExecutionCores);
         DotFileReader reader = new DotFileReader(_inst._inputFilename);
-        
+
         // Output to file @Michael Kemp
         DotFileProducer output = new DotFileWriter(_inst._outputFilename);
         manager.inform(output);
@@ -88,6 +116,6 @@ public class App {
             reader.startParsing(manager);
         } catch (FileNotFoundException e) {
             throw new RuntimeException("Input file does not exist");
-        }    
+        }
     }
 }
