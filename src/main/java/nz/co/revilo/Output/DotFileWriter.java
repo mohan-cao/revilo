@@ -2,11 +2,19 @@ package nz.co.revilo.Output;
 
 import java.io.PrintWriter;
 
+/**
+ * Implementation of DotFileProducer which uses produced output by iterating through the nodes and edges of the graph,
+ * and printing details in the required format.
+ */
 public class DotFileWriter extends DotFileProducer {
     public DotFileWriter(String filename) {
         super(filename);
     }
 
+    /**
+     * Iterates through all the nodes and edges to create a scheduling results DOT file
+     * @param output PrintWriter set up and used to create the new DOT file, and print output to it
+     */
     protected void produceOutput(PrintWriter output) {
         // Name and start
         String temp;
