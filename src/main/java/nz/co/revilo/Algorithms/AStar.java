@@ -8,7 +8,7 @@ import java.util.Set;
 
 /**
  * This algorithm stores all states in memory
- * Memory issue!
+ * Memory issues!
  * A* explores the least number of states, but may run out of memory before it finishes
  * 
  * IDA* and BBA* have a much smaller memory footprint
@@ -19,6 +19,8 @@ import java.util.Set;
  * 
  * A* threads have to share the priority queue, and thus requires synchronisation
  * IDA* and BBA* can also be explored for parallelisation.
+ * 
+ * TODO: delete!
  * 
  * @author Abby S
  *

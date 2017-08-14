@@ -5,8 +5,7 @@ package nz.co.revilo.Input;
  * parsing a DOT file is complete.
  *
  * @author Michael Kemp (mkem114)
- * @version 1.0
- * @since Alpha 1.0
+ * @version Beta
  */
 public interface ParseResultListener {
 
