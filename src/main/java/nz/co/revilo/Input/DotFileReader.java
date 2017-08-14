@@ -26,11 +26,10 @@ public class DotFileReader extends DotFileParser {
     public static final Pattern GRAPH_NAME_MATCH = Pattern.compile("[\\s]*digraph[\\s]*\"(.*)\"[\\s]*\\{[\\s]*");
     public static final Pattern ARC_FROM_MATCH = Pattern.compile("[\\s]*([\\p{Alnum}]*)[\\s]*.>[\\s]*[\\p{Alnum}]*[\\s]*\\[[\\s]*[Ww]eight[\\s]*[=][\\s]*[\\p{Digit}]*[\\s]*\\][\\s]*;");
     public static final Pattern ARC_TO_MATCH = Pattern.compile("[\\s]*[\\p{Alnum}]*[\\s]*.>[\\s]*([\\p{Alnum}]*)[\\s]*\\[[\\s]*[Ww]eight[\\s]*[=][\\s]*[\\p{Digit}]*[\\s]*\\][\\s]*;");
-    public static final Pattern ARC_WEIGHT = Pattern.compile("[\\s]*[\\p{Alnum}]*[\\s]*.>[\\s]*[\\p{Alnum}]*[\\s]*\\[[\\s]*[Ww]eight[\\s]*[=][\\s]*([\\p{Digit}]*)[\\s]*\\][\\s]*;");
-    public static final Pattern NODE_NAME = Pattern.compile("[\\s]*([\\p{Alnum}]*)[\\s]*\\[[\\s]*[Ww]eight[\\s]*[=][\\s]*[\\p{Digit}]*[\\s]*\\][\\s]*;");
-    public static final Pattern NODE_WEIGHT = Pattern.compile("[\\s]*[\\p{Alnum}]*[\\s]*\\[[\\s]*[Ww]eight[\\s]*[=][\\s]*([\\p{Digit}]*)[\\s]*\\][\\s]*;");
+    public static final Pattern ARC_WEIGHT_MATCH = Pattern.compile("[\\s]*[\\p{Alnum}]*[\\s]*.>[\\s]*[\\p{Alnum}]*[\\s]*\\[[\\s]*[Ww]eight[\\s]*[=][\\s]*([\\p{Digit}]*)[\\s]*\\][\\s]*;");
+    public static final Pattern NODE_NAME_MATCH = Pattern.compile("[\\s]*([\\p{Alnum}]*)[\\s]*\\[[\\s]*[Ww]eight[\\s]*[=][\\s]*[\\p{Digit}]*[\\s]*\\][\\s]*;");
+    public static final Pattern NODE_WEIGHT_MATCH = Pattern.compile("[\\s]*[\\p{Alnum}]*[\\s]*\\[[\\s]*[Ww]eight[\\s]*[=][\\s]*([\\p{Digit}]*)[\\s]*\\][\\s]*;");
 
-    //
     HashMap<String, Integer> _nodeNames;
     List<Integer> _nodeWeights;
     HashMap<String, HashMap<String, Integer>> _arcs;
@@ -39,60 +38,87 @@ public class DotFileReader extends DotFileParser {
 
     private ParseResultListener _listener;
 
+    /**
+     * Constructs a DotFileReader with the filename to read
+     *
+     * @param filename is the name of the file to open
+     */
     public DotFileReader(String filename) {
         super(filename);
     }
 
+    /**
+     * Initiates reading the file and interpreting it as a DAG then informs the listener of the read graph data.
+     *
+     * @param newListener To inform of parsing results
+     * @throws FileNotFoundException Thrown if the file name given doesn't exist
+     */
     public void startParsing(ParseResultListener newListener) throws FileNotFoundException {
+        // Sets fields
         _listener = newListener;
         BufferedReader reader = openFile();
 
+        // Initialises the data structures
         _nodeNames = new HashMap<>();
         _nodeWeights = new ArrayList<>();
         _arcs = new HashMap<>();
 
+        /*
+         Reads the file using regex by checking the line is of an expected format then extracts information from the lines by matching with regex
+          */
         try {
-        	//TODO Empty file
-        	//Note: regex might not work
+            //TODO Handle an empty file
+            //Note: regex might not work
             String line = reader.readLine();
-            while (!line.contains("}") && (line != null)) {
-                //[\s]*[\p{Alnum}]*[\s]*.>[\s]*[\p{Alnum}]*[\s]*\[[\s]*[Ww]eight[\s]*[=][\s]*[\p{Digit}]*[\s]*\][\s]*;
-                // arc
+            // Continue reading the file if there's a next line and the current line isn't a closing line
+            while ((line != null) && !line.contains("}")) {
+                // Arcs
                 if (line.matches("[\\s]*[\\p{Alnum}]*[\\s]*.>[\\s]*[\\p{Alnum}]*[\\s]*\\[[\\s]*[Ww]eight[\\s]*[=][\\s]*[\\p{Digit}]*[\\s]*\\][\\s]*;")) {
+                    // Extracts information about the arc (from, to and weight)
+                    // Extracts which node the arc is from
                     Matcher m = ARC_FROM_MATCH.matcher(line);
                     m.find();
                     String from = m.group(1);
+                    // Extracts which node the arc is to
                     m = ARC_TO_MATCH.matcher(line);
                     m.find();
                     String to = m.group(1);
-                    m = ARC_WEIGHT.matcher(line);
+                    // Extracts the weight of the arc
+                    m = ARC_WEIGHT_MATCH.matcher(line);
                     m.find();
                     int weight = Integer.parseInt(m.group(1));
 
+                    // Places information about the arc into data structures
+                    // If the from node isn't defined yet then it is temporarily created with a negative weight
                     if (!_nodeNames.containsKey(from)) {
                         _nodeWeights.set(_nodeNames.get(from), -1);
                     }
+                    // If the to node isn't defined yet then it is temporarily created with a negative weight
                     if (!_nodeNames.containsKey(to)) {
                         _nodeWeights.set(_nodeNames.get(to), -1);
                     }
+                    // If the from node doesn't have an arc list then one is made
                     if (!_arcs.containsKey(from)) {
                         _arcs.put(from, new HashMap<>());
                     }
+                    // Replaces the weight information in the arc if it already exists otherwise creates the arc
                     if (!_arcs.get(from).containsKey(to)) {
                         _arcs.get(from).put(to, weight);
                     } else {
                         _arcs.get(from).replace(to, weight);
                     }
 
-                //[\s]*[\p{Alnum}]*[\s]*\[[\s]*[Ww]eight[\s]*[=][\s]*[\p{Digit}]*[\s]*\][\s]*;
-                // node
+                    // Nodes
                 } else if (line.matches("[\\s]*[\\p{Alnum}]*[\\s]*\\[[\\s]*[Ww]eight[\\s]*[=][\\s]*[\\p{Digit}]*[\\s]*\\][\\s]*;")) {
-                    Matcher m = NODE_NAME.matcher(line);
+                    // Extracts the node name from the line
+                    Matcher m = NODE_NAME_MATCH.matcher(line);
                     m.find();
                     String name = m.group(1);
-                    m = NODE_WEIGHT.matcher(line);
+                    // Extracts the node weight from the line
+                    m = NODE_WEIGHT_MATCH.matcher(line);
                     m.find();
                     int weight = Integer.parseInt(m.group(1));
+                    // If the node exists the weight is updated else it is created and weight is recorded
                     if (_nodeNames.containsKey(name)) {
                         _nodeWeights.set(_nodeNames.get(name), weight);
                     } else {
@@ -100,17 +126,20 @@ public class DotFileReader extends DotFileParser {
                         _nodeWeights.add(weight);
                     }
 
-                //[\s]*digraph[\s]*".*"[\s]*\{[\s]*
-                // graph name
+                    // Graph name
                 } else if (line.matches("[\\s]*digraph[\\s]*\".*\"[\\s]*\\{[\\s]*")) {
+                    // Extracts the graph name from the line
                     Matcher m = GRAPH_NAME_MATCH.matcher(line);
                     m.find();
+                    // Sets the graph name
                     _graphName = m.group(1);
                 }
+
+                // Reads the next line in the file
                 line = reader.readLine();
             }
         } catch (IOException e) {
-            //TODO
+            //TODO Error handling
         }
 
         String[] nodeNamesPrimitive = new String[_nodeWeights.size()];
@@ -144,6 +173,12 @@ public class DotFileReader extends DotFileParser {
         _listener.ParsingResults(_graphName, _nodeNamesList, nodeWeightsPrimitive, arcsPrimitive, arcWeightsPrimitive);
     }
 
+    /**
+     * Opens the file given in the filename
+     *
+     * @return BufferedReader of the file
+     * @throws FileNotFoundException
+     */
     private BufferedReader openFile() throws FileNotFoundException {
         return new BufferedReader(new FileReader(getFilename()));
     }
