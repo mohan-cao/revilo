@@ -1,6 +1,7 @@
 package nz.co.revilo.Algorithms;
 
 /**
+ * To represent the start time and processor number pair a node is assigned to
  * Java does not have a tuple class!! :O
  * 
  * Currently unused, as copied into BranchAndBound class
