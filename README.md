@@ -15,13 +15,13 @@ Shared Google Drive folder for resources: [Revilo Project Folder](https://drive.
 For developers, please only merge branches if they pass the unit tests on the build server!
 
 ## The Team
-| Name         | UPI     | GitHub    |
-| ------------ | ------- | --------- |
-| Abby Shen    | [ashe848](mailto:ashe848@aucklanduni.ac.nz) | [ashe848](http://www.github.com/ashe848)   |
-| Aimee Tagle  | [atag549](mailto:atag549@aucklanduni.ac.nz) | [abtagle](http://www.github.com/abtagle)   |
-| Mohan Cao    | [mcao024](mailto:mcao024@aucklanduni.ac.nz) | [mohan-cao](http://www.github.com/mohan-cao) |
-| Michael Kemp | [mkem114](mailto:mkem114@aucklanduni.ac.nz) | [mkem114](http://www.github.com/mkem114)   |
-| Terran Kroft | [tkro003](mailto:tkro003@aucklanduni.ac.nz) | [itemic](http://www.github.com/itemic)    |
+| Name         | UPI     | Uni ID | GitHub    |
+| ------------ | ------- | ------ | --------- |
+| Abby Shen    | [ashe848](mailto:ashe848@aucklanduni.ac.nz) | | [ashe848](http://www.github.com/ashe848)   |
+| Aimee Tagle  | [atag549](mailto:atag549@aucklanduni.ac.nz) | 8194348 | [abtagle](http://www.github.com/abtagle)   |
+| Mohan Cao    | [mcao024](mailto:mcao024@aucklanduni.ac.nz) | | [mohan-cao](http://www.github.com/mohan-cao) |
+| Michael Kemp | [mkem114](mailto:mkem114@aucklanduni.ac.nz) | | [mkem114](http://www.github.com/mkem114)   |
+| Terran Kroft | [tkro003](mailto:tkro003@aucklanduni.ac.nz) | | [itemic](http://www.github.com/itemic)    |
 
 ## Quick Startup Guide
 
