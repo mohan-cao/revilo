@@ -4,6 +4,14 @@ import java.util.List;
 
 import nz.co.revilo.Algorithms.BranchAndBound.BnbNode;
 
+/**
+ * Helper class for calculating bottom level for nodes
+ * 
+ * Currently unused, as copied into BranchAndBound class
+ * 
+ * @author Abby S
+ *
+ */
 public class ButtomLevelHelper {
 	BranchAndBound _bnb;
 	private List<BnbNode> _buttomUpSinks;

@@ -6,6 +6,8 @@ package nz.co.revilo.Algorithms;
  * Progressively searches and updates the currently optimum (upper bound)
  * Decrements bound, approaching the optimal solution from above
  * 
+ * TODO: delete
+ * 
  * @author Abby S
  *
  */

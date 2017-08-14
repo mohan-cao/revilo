@@ -11,6 +11,8 @@ import java.util.Set;
  * Branch and Bound solution using objects
  * DFS based
  * 
+ * TODO: write to latest interface, use primitives?
+ * 
  * @author Abby S
  *
  */
