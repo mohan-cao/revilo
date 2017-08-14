@@ -13,24 +13,26 @@ import nz.co.revilo.Algorithms.BranchAndBound.BnbNode;
  *
  */
 public class BottomLevelHelper {
-	BranchAndBound _bnb;
-	private List<BnbNode> _bottomUpSinks;
 	
-	public BottomLevelHelper(BranchAndBound bnb, List<BnbNode> buttomUpSinks){
-		_bnb=bnb;
-		_bottomUpSinks=buttomUpSinks;
-	}
-	
-	public void calculateBottomLevels() {
-		while(!_bottomUpSinks.isEmpty()){
-			BnbNode node = _bottomUpSinks.remove(0);
+	/**
+	 * Set the bottom level for each node
+	 * Starts from sinks then bottom up
+	 * Eventually covers all nodes in graph
+	 * 
+	 * @author Abby S
+	 * 
+	 * @param bottomUpSinks
+	 */
+	public void calculateBottomLevels(List<BnbNode> bottomUpSinks) {
+		while(!bottomUpSinks.isEmpty()){
+			BnbNode node = bottomUpSinks.remove(0);
 			
 			for(BnbNode inneighbour:node.inneighboursClone){
 				inneighbour.bottomLevel=Math.max(inneighbour.bottomLevel, node.bottomLevel+node.distTo(inneighbour));
 				node.inneighboursClone.remove(inneighbour);
 				inneighbour.outneighboursClone.remove(node);
 				if(inneighbour.outneighboursClone.isEmpty()){
-					_bottomUpSinks.add(inneighbour);//become a sink now that child is removed
+					bottomUpSinks.add(inneighbour);//become a sink now that child is removed
 				}
 			}
 		}

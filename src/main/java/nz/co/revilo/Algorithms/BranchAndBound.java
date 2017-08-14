@@ -24,7 +24,7 @@ public class BranchAndBound {
 	private List<BnbNode> bottomUpSinks=new ArrayList<>();
 	private int upperBound;
 	private int totalNodeWeights=0; //time if it was topological sort
-	private Schedule optimalSchedule;
+	private Schedule optimalSchedule; //value unused currently. To be returned as optimal schedule
 
 	/**
 	 * To use:
