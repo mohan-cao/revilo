@@ -7,7 +7,6 @@ import nz.co.revilo.Output.DotFileProducer;
 import nz.co.revilo.Output.DotFileWriter;
 import nz.co.revilo.Scheduling.AlgorithmManager;
 import nz.co.revilo.Scheduling.ImprovedTopologicalAlgorithmManager;
-import nz.co.revilo.Scheduling.VeryBasicAlgorithmManager;
 
 import java.io.FileNotFoundException;
 import java.util.Arrays;
@@ -17,39 +16,32 @@ import java.util.Arrays;
  * everything. It's not a final class name nor implementation, it purely exists to be a starting point in the program.
  * We should investigate a argument input library and output library.
  *
- * @author Mohan Cao (original), Michael Kemp, Terran Kroft
+ * @author Mohan Cao (original), Michael Kemp, Terran Kroft, Abby Shen
  * @version alpha
  */
 public class App {
-
     private static App _inst = null;
 
     private String _inputFilename;
     private int _numExecutionCores;
-    private int _numParallelProcessors;
+    private int _numParallelProcessors; //for parallelisation
     private boolean _visualise;
     private String _outputFilename;
     private static String DEFAULT_FILETYPE = ".dot";
     private static String DEFAULT_OUTPUT_FILENAME = "-output.dot";
-
-
-
 
     private App () {
         if (_inst == null) {
             _inst = this;
         } else {
             System.out.println("App was instantiated more than once");
-            //TODO
+            //TODO throw an informative exception to indicate error
         }
     }
 
     public static void main( String[] args ) {
         new App();
         Parameters params = new Parameters();
-        JCommander jc = new JCommander();
-
-
 
         if (args.length < 2) {
             //insufficient arguments
@@ -59,8 +51,6 @@ public class App {
             JCommander.newBuilder().addObject(params).build().parse(optionalArgs);
 
             //get file name first
-
-
             _inst._inputFilename = args[0];
             try {
                 _inst._numExecutionCores = Integer.parseInt(args[1]);
@@ -88,11 +78,9 @@ public class App {
         }
 
         // Parse file and give it algorithm manager to give results to. @Michael Kemp
-
-//        AlgorithmManager manager = new VeryBasicAlgorithmManager(_inst._numExecutionCores);
         AlgorithmManager manager = new ImprovedTopologicalAlgorithmManager(_inst._numExecutionCores);
-        //AlgorithmManager manager = new SchedulingAlgorithmManager(_inst._numExecutionCores);
         DotFileReader reader = new DotFileReader(_inst._inputFilename);
+        
         // Output to file @Michael Kemp
         DotFileProducer output = new DotFileWriter(_inst._outputFilename);
         manager.inform(output);
@@ -100,7 +88,6 @@ public class App {
             reader.startParsing(manager);
         } catch (FileNotFoundException e) {
             throw new RuntimeException("Input file does not exist");
-        }
-        
+        }    
     }
 }
