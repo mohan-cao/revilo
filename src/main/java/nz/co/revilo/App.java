@@ -50,12 +50,12 @@ public class App {
         JCommander jc = new JCommander();
 
         //Section to display the consumed args
-        int i = 0;
-        for (String s: args) {
-            System.out.println(i + ": " + s);
-            i++;
-
-        }
+//        int i = 0;
+//        for (String s: args) {
+//            System.out.println(i + ": " + s);
+//            i++;
+//
+//        }
 
         if (args.length < 2) {
             //insufficient arguments
@@ -88,9 +88,9 @@ public class App {
         //here we get the actual input name (.dot)
 
 
-        System.out.println("This is the schedule called " + _inst._outputFilename + " processed on " + _inst._numParallelProcessors + " core(s).");
+//        System.out.println("This is the schedule called " + _inst._outputFilename + " processed on " + _inst._numParallelProcessors + " core(s).");
         if (_inst._visualise) {
-            System.out.println("There is a visualisation outputted.");
+//            System.out.println("There is a visualisation outputted.");
         }
 
         // Parse file and give it algorithm manager to give results to. @Michael Kemp
