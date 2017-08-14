@@ -8,6 +8,8 @@ import java.util.List;
 /**
  * Abstract class for reading in information from the final schedule which is required in producing an output file. The
  * actual creation of the output is left to child classes.
+ * @version 1.0
+ * @author Michael Kemp
  */
 public abstract class DotFileProducer implements ScheduleResultListener {
 

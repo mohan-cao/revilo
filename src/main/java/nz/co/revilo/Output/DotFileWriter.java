@@ -5,6 +5,8 @@ import java.io.PrintWriter;
 /**
  * Implementation of DotFileProducer which uses produced output by iterating through the nodes and edges of the graph,
  * and printing details in the required format.
+ * @version Beta
+ * @author Michael Kemp
  */
 public class DotFileWriter extends DotFileProducer {
     public DotFileWriter(String filename) {
