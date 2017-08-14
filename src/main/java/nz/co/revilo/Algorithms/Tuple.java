@@ -2,6 +2,9 @@ package nz.co.revilo.Algorithms;
 
 /**
  * Java does not have a tuple class!! :O
+ * 
+ * Currently unused, as copied into BranchAndBound class
+ * 
  * @author Abby S
  *
  */
