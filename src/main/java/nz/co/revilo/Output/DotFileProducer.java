@@ -1,8 +1,5 @@
 package nz.co.revilo.Output;
 
-
-import nz.co.revilo.Input.DotFileParser;
-
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
@@ -14,8 +11,10 @@ import java.util.List;
  */
 public abstract class DotFileProducer implements ScheduleResultListener {
 
+    // Character set to write the file in
     public static final String CHAR_SET = "UTF-8";
 
+    // Data structure to accept and write from scheduling manager
     protected String _outputFilename;
     protected String _graphName;
     protected List<String> _nodeNames;
@@ -25,8 +24,20 @@ public abstract class DotFileProducer implements ScheduleResultListener {
     protected List<Integer> _nodeStarts;
     protected List<Integer> _nodeProcessor;
 
+    /**
+     * Accepts data about how tasks are going to be run on each processor and at what time then calls produceOutput()
+     *
+     * @param graphName     Name of graph
+     * @param nodeNames     Name of each task
+     * @param arcs          The existence of arcs
+     * @param arcWeights    How long to transfer results of task completion to another processor
+     * @param nodeWeights   How long each task takes
+     * @param nodeStarts    When each task starts
+     * @param nodeProcessor What processor each task is on
+     */
     @Override
     final public void finalSchedule(String graphName, List<String> nodeNames, List<List<Boolean>> arcs, List<List<Integer>> arcWeights, List<Integer> nodeWeights, List<Integer> nodeStarts, List<Integer> nodeProcessor) {
+        // Sets data structure
         _graphName = graphName;
         _nodeNames = nodeNames;
         _arcs = arcs;
@@ -35,15 +46,16 @@ public abstract class DotFileProducer implements ScheduleResultListener {
         _nodeStarts = nodeStarts;
         _nodeProcessor = nodeProcessor;
 
+        // Attempts to print the graph to a file
         try {
             PrintWriter pw = new PrintWriter(_outputFilename, CHAR_SET);
             produceOutput(pw);
             pw.flush();
             pw.close();
         } catch (UnsupportedEncodingException e) {
-            //TODO
+            //TODO Error handling
         } catch (FileNotFoundException e) {
-            //TODO
+            //TODO Error handling
         }
     }
 
