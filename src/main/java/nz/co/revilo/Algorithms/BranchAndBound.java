@@ -21,7 +21,7 @@ public class BranchAndBound {
 	private int numProcessors;
 	private List<Schedule> rootSchedules=new ArrayList<>();
 	private List<BnbNode> sources=new ArrayList<>();
-	private List<BnbNode> buttomUpSinks=new ArrayList<>();
+	private List<BnbNode> bottomUpSinks=new ArrayList<>();
 	private int upperBound;
 	private int totalNodeWeights=0; //time if it was topological sort
 	private Schedule optimalSchedule;
@@ -53,7 +53,7 @@ public class BranchAndBound {
 			}		
 			//sinks
 			else if(node.outneighboursClone.size()==0){
-				buttomUpSinks.add(node);
+				bottomUpSinks.add(node);
 				node.bottomLevel=node.nodeWeight;
 			}
 			
@@ -111,15 +111,15 @@ public class BranchAndBound {
 	 * 
 	 */
 	private void calculateBottomLevels() {
-		while(!buttomUpSinks.isEmpty()){
-			BnbNode node = buttomUpSinks.remove(0);
+		while(!bottomUpSinks.isEmpty()){
+			BnbNode node = bottomUpSinks.remove(0);
 			
 			for(BnbNode inneighbour:node.inneighboursClone){
 				inneighbour.bottomLevel=(inneighbour.bottomLevel>(node.bottomLevel+node.distTo(inneighbour)))?inneighbour.bottomLevel:(node.bottomLevel+node.distTo(inneighbour));
 				node.inneighboursClone.remove(inneighbour);
 				inneighbour.outneighboursClone.remove(node);
 				if(inneighbour.outneighboursClone.isEmpty()){
-					buttomUpSinks.add(inneighbour);//become a sink now that child is removed
+					bottomUpSinks.add(inneighbour);//become a sink now that child is removed
 				}
 			}
 		}
