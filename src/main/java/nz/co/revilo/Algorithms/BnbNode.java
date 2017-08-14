@@ -6,6 +6,8 @@ import java.util.List;
  * Represents a node
  * Will be represented in a matrix by the i,j position
  * 
+ * Currently unused, as copied into BranchAndBound class
+ * 
  * @author Abby S
  *
  */
