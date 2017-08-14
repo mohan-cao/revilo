@@ -142,10 +142,13 @@ public class DotFileReader extends DotFileParser {
             //TODO Error handling
         }
 
+        // Converts nodes from the generic type data structures to a primitive form
+        // Primitive data structure
         String[] nodeNamesPrimitive = new String[_nodeWeights.size()];
         int[] nodeWeightsPrimitive = new int[_nodeWeights.size()];
         List<String> tempNames = new ArrayList<>(_nodeNames.keySet());
         _nodeNamesList = new String[_nodeWeights.size()];
+        // For every node copies information into new structure
         for (int i = 0; i < _nodeWeights.size(); i++) {
             String tempName = tempNames.get(i);
             int location = _nodeNames.get(tempName);
@@ -154,22 +157,27 @@ public class DotFileReader extends DotFileParser {
             nodeNamesPrimitive[location] = tempName;
         }
 
+        // Converts arcs from the generic type data structures to a primitive form
         boolean[][] arcsPrimitive = new boolean[_nodeWeights.size()][_nodeWeights.size()];
         int[][] arcWeightsPrimitive = new int[_nodeWeights.size()][_nodeWeights.size()];
+        // From every node to every node (self included) copies the weights and if it doesn't exist -1 is used
         for (int j = 0; j < nodeNamesPrimitive.length; j++) {
+            // Any arc that doesn't exist has a -1 default weight
             Arrays.fill(arcWeightsPrimitive[j], -1);
             for (int k = 0; k < nodeNamesPrimitive.length; k++) {
+                // If the from node
                 if (_arcs.containsKey(nodeNamesPrimitive[j])) {
+                    // Goes to the to node
                     if (_arcs.get(nodeNamesPrimitive[j]).containsKey(nodeNamesPrimitive[k])) {
+                        // Copy the weight
                         arcsPrimitive[j][k] = true;
                         arcWeightsPrimitive[j][k] = _arcs.get(nodeNamesPrimitive[j]).get(nodeNamesPrimitive[k]);
-                    } else {
-                        arcWeightsPrimitive[j][k] = -1;
                     }
                 }
             }
         }
 
+        // Informs the listener about the freshly read graph
         _listener.ParsingResults(_graphName, _nodeNamesList, nodeWeightsPrimitive, arcsPrimitive, arcWeightsPrimitive);
     }
 
