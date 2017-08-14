@@ -6,6 +6,7 @@ import nz.co.revilo.Input.DotFileReader;
 import nz.co.revilo.Output.DotFileProducer;
 import nz.co.revilo.Output.DotFileWriter;
 import nz.co.revilo.Scheduling.AlgorithmManager;
+import nz.co.revilo.Scheduling.ImprovedTopologicalAlgorithmManager;
 import nz.co.revilo.Scheduling.VeryBasicAlgorithmManager;
 
 import java.io.FileNotFoundException;
@@ -48,13 +49,7 @@ public class App {
         Parameters params = new Parameters();
         JCommander jc = new JCommander();
 
-        //Section to display the consumed args
-        int i = 0;
-        for (String s: args) {
-            System.out.println(i + ": " + s);
-            i++;
 
-        }
 
         if (args.length < 2) {
             //insufficient arguments
@@ -87,14 +82,15 @@ public class App {
         //here we get the actual input name (.dot)
 
 
-        System.out.println("This is the schedule called " + _inst._outputFilename + " processed on " + _inst._numParallelProcessors + " core(s).");
+//        System.out.println("This is the schedule called " + _inst._outputFilename + " processed on " + _inst._numParallelProcessors + " core(s).");
         if (_inst._visualise) {
-            System.out.println("There is a visualisation outputted.");
+//            System.out.println("There is a visualisation outputted.");
         }
 
         // Parse file and give it algorithm manager to give results to. @Michael Kemp
 
-        AlgorithmManager manager = new VeryBasicAlgorithmManager(_inst._numExecutionCores);
+//        AlgorithmManager manager = new VeryBasicAlgorithmManager(_inst._numExecutionCores);
+        AlgorithmManager manager = new ImprovedTopologicalAlgorithmManager(_inst._numExecutionCores);
         //AlgorithmManager manager = new SchedulingAlgorithmManager(_inst._numExecutionCores);
         DotFileReader reader = new DotFileReader(_inst._inputFilename);
         // Output to file @Michael Kemp
@@ -105,27 +101,6 @@ public class App {
         } catch (FileNotFoundException e) {
             throw new RuntimeException("Input file does not exist");
         }
-
-
-
-
-        //Mohan's stuff
-        //        Graph graph = new SingleGraph("Tutorial 1");
-        //        graph.addNode("A" );
-        //        graph.addNode("B" );
-        //        graph.addNode("C" );
-        //        graph.addNode("D" );
-        //        graph.addNode("E" );
-        //        graph.addEdge("AB", "A", "B");
-        //        graph.addEdge("BC", "B", "C");
-        //        graph.addEdge("CD", "C", "D");
-        //        graph.addEdge("DE", "D", "E");
-        //        graph.addEdge("EA", "E", "A");
-        //        graph.addEdge("AC", "A", "C");
-        //        graph.addEdge("AD", "A", "D");
-        //        graph.addEdge("BD", "B", "D");
-        //        graph.addEdge("BE", "B", "E");
-        //        graph.addEdge("CE", "C", "E");
-        //        graph.display();
+        
     }
 }

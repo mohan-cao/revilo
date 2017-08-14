@@ -15,11 +15,16 @@ import org.graphstream.graph.implementations.DefaultGraph;
 import org.graphstream.stream.file.FileSource;
 import org.graphstream.stream.file.FileSourceFactory;
 
+/**
+ * Implementation of DotFileParser based on using GraphStream to represent graphs and read in input.
+ */
 public class DotFileGraphReader extends DotFileParser {
 
     HashMap<String, Integer> nodeNames;
     List<Integer> nodeWeights;
     HashMap<String, HashMap<String, Integer>> arcs;
+    String graphName;
+    String[] nodeNamesList;
 
     private ParseResultListener _listener;
 
@@ -61,11 +66,16 @@ public class DotFileGraphReader extends DotFileParser {
             List<ArrayList<Integer>> weights = new ArrayList<>();
 
 
+            graphName = g.toString();
 
             // initialize the arcweights
 
             for (Node n: g.getEachNode()) {
                 nodes.add(n);
+            }
+
+            for (int i = 0; i < nodes.size(); i++) {
+                nodeNamesList[i] = nodes.get(i).toString();
             }
 
             System.out.println("Node array " + nodes);
@@ -109,7 +119,7 @@ public class DotFileGraphReader extends DotFileParser {
                 }
             }
 
-            _listener.ParsingResults(primitiveNodeWeights, primitiveArcs, primitiveArcWeights);
+            _listener.ParsingResults(graphName, nodeNamesList, primitiveNodeWeights, primitiveArcs, primitiveArcWeights);
 
 
             // Create primitive structure for arcs and weights
@@ -122,6 +132,12 @@ public class DotFileGraphReader extends DotFileParser {
         }
     }
 
+    /**
+     * Method created a BufferedReader for the input file, to be used to read in the graph from the dot file.
+     *
+     * @return BufferedReader for the file needing to be parsed
+     * @throws FileNotFoundException
+     */
     private BufferedReader openFile() throws FileNotFoundException {
         return new BufferedReader(new FileReader(getFilename()));
     }
