@@ -15,7 +15,7 @@ public abstract class DotFileParser {
     private String _filename;
 
     /**
-     * Constructur for the class which sets the file name
+     * Constructor for the class which sets the file name
      * @param filename
      */
      public DotFileParser(String filename) {
