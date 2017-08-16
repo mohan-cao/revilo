@@ -5,11 +5,11 @@ import java.util.List;
 
 public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
 
-	private List<Integer> sources=new ArrayList<>();
+	static List<Integer> sources=new ArrayList<>();
 	private List<Integer> bottomUpSinks=new ArrayList<>();
 	private List<Schedule> rootSchedules=new ArrayList<>();
-	private int[] bottomLevels;
-	private int numNodes;
+	static int[] bottomLevels;
+	static int numNodes;
 	private int totalNodeWeights;
 	private int upperBound;
 
@@ -24,16 +24,16 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
 		//get sources
 		for(int nodeId=0; nodeId<numNodes; nodeId++){
 			//sources
-			if (!hasInneighbours(nodeId)) {
+			if (!NeighbourManagerHelper.hasInneighbours(nodeId)) {
 				sources.add(nodeId);
 				//start a schedule with this node as source on each possible processor
 				for(int p=0; p<_processingCores; p++){
-					Schedule newSchedule = new Schedule(null, nodeId, p); 
+					Schedule newSchedule = new Schedule(null, nodeId, p, _processingCores); 
 					rootSchedules.add(newSchedule);
 				}
 			}		
 			//sinks
-			else if(!hasOutneighbours(nodeId)){
+			else if(!NeighbourManagerHelper.hasOutneighbours(nodeId)){
 				bottomUpSinks.add(nodeId);
 				bottomLevels[nodeId]=_nodeWeights[nodeId];
 			}
@@ -49,9 +49,13 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
 		}
 	}
 
-	private void bnb(Schedule remove) {
-		// TODO Auto-generated method stub
-
+	/**
+	 * bnb based on the current schedule s
+	 * @param s
+	 * @author Abby S
+	 */
+	private void bnb(Schedule s) {
+		
 	}
 
 	/**
@@ -63,10 +67,10 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
 	private void calculateBottomLevels() {
 		while(!bottomUpSinks.isEmpty()){
 			int nodeId = bottomUpSinks.remove(0);
-			List<Integer> inneighbours=getInneighbours(nodeId);
+			List<Integer> inneighbours=NeighbourManagerHelper.getInneighbours(nodeId);
 
 			for(int inneighbour:inneighbours){
-				List<Integer> inneighboursParents=getOutneighbours(inneighbour); //nodes with 1 on the node's row
+				List<Integer> inneighboursParents=NeighbourManagerHelper.getOutneighbours(inneighbour); //nodes with 1 on the node's row
 
 				int fromGivenNode=bottomLevels[nodeId]+_arcWeights[inneighbour][nodeId];
 				bottomLevels[inneighbour]=bottomLevels[inneighbour]>fromGivenNode?bottomLevels[inneighbour]:fromGivenNode;
@@ -77,64 +81,5 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
 				}
 			}
 		}	
-	}
-
-
-	/*
-	 * TODO: which of these methods are used?
-	 * Use getNeighbours().size!=0 instead of hasNeighbour()?
-	 */
-	private List<Integer> getOutneighbours(int nodeId) {
-		List<Integer> outneighbours=new ArrayList<>();
-
-		for(int node=0; node<numNodes; node++){
-			if(_arcs[nodeId][node]){
-				outneighbours.add(node);
-			}
-		}
-		return outneighbours;
-	}
-
-	private List<Integer> getInneighbours(int nodeId) {
-		List<Integer> inneighbours=new ArrayList<>();
-
-		for(int node=0; node<numNodes; node++){
-			if(_arcs[node][nodeId]){
-				inneighbours.add(node);
-			}
-		}
-		return inneighbours;
-	}
-
-	private boolean hasInneighbours(int nodeId) {
-		for(int node=0; node<numNodes; node++){
-			if(_arcs[node][nodeId]) return true;
-		}
-		return false;
-	}
-
-	private boolean hasOutneighbours(int nodeId) {
-		for(int node=0; node<numNodes; node++){
-			if(_arcs[nodeId][node]) return true;
-		}
-		return false;
-	}
-
-	private int numInneighbours(int nodeId) {
-		int count=0;
-
-		for(int node=0; node<numNodes; node++){
-			if(_arcs[node][nodeId]) count++;
-		}
-		return count;
-	}
-
-	private int numOutneighbours(int nodeId) {
-		int count=0;
-
-		for(int node=0; node<numNodes; node++){
-			if(_arcs[nodeId][node]) count++;
-		}
-		return count;
 	}
 }
