@@ -2,7 +2,6 @@ package nz.co.revilo.Scheduling;
 
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -17,6 +16,7 @@ public class Schedule {
 	int[] finishTimes;
 	int idleTime=0;
 	int lowerBound;
+	BranchAndBoundAlgorithmManager bnb;
 	Set<Integer> openSet=new HashSet<>(); //need to assign to processor
 	Map<Integer,Tuple> closedSet=new HashMap<>(); //done nodes
 	Set<Integer> independentSet=new HashSet<>(); //nodes it depends on are done
@@ -31,17 +31,17 @@ public class Schedule {
 	 */
 	public Schedule(BranchAndBoundAlgorithmManager bnb, Schedule parentSchedule, int nodeId, int processor){
 		int startTime=0;
+		finishTimes = new int[bnb._processingCores];
+		this.bnb=bnb;
 		
 		//scheduling on a root node
 		if(parentSchedule==null){
 			//initialise data structures
-			finishTimes = new int[bnb._processingCores];
 			for(int node=0; node<bnb.numNodes; node++){
 				openSet.add(node);
 			}
 			independentSet.addAll(bnb.sources);
 			lowerBound=bnb.bottomLevels[nodeId];
-			
 		} else { //adding to a schedule
 			cloneParentSchedule(parentSchedule);
 			
@@ -65,7 +65,7 @@ public class Schedule {
 		closedSet.put(nodeId, new Tuple(startTime, processor));
 		openSet.remove(nodeId);		
 		independentSet.remove(nodeId);
-		//updateIndependentChildren(nodeId);
+		updateIndependentChildren(nodeId);
 		finishTimes[processor]+=startTime+bnb._nodeWeights[nodeId];
 	}
 
@@ -76,27 +76,20 @@ public class Schedule {
 	 * @param parentSchedule
 	 */
 	private void cloneParentSchedule(Schedule parentSchedule) {
-		/*for(int i=0; i<numProcessors;i++){
-			finishTimes[i]=parentSchedule.finishTimes[i];
-		}
+		for(int i=0; i<bnb._processingCores;i++) finishTimes[i]=parentSchedule.finishTimes[i];
 		idleTime=parentSchedule.idleTime;
-		openSet=(Set<BnbNode>) bnbClone(parentSchedule.openSet);
-		closedSet=(Map<BnbNode, Tuple>) bnbClone(parentSchedule.closedSet);
-		independentSet=(Set<BnbNode>) bnbClone(parentSchedule.independentSet);*/
-	}
-	
-	/**
-	 * Disgusting stub method so compiler doesn't screen at me
-	 * Hope cloning issue to be solved by using primitives
-	 * 
-	 * @author Abby S
-	 * 
-	 * @param toCloneparentScheduleObject
-	 * @return
-	 */
-	private Object bnbClone(Object toCloneparentScheduleObject) {
-		// TODO Auto-generated method stub
-		return null;
+		Integer element;
+		while((element=parentSchedule.openSet.iterator().next()) != null){
+			openSet.add(element);
+		}
+		Integer nodeKey;
+		while((nodeKey=parentSchedule.closedSet.keySet().iterator().next()) != null){
+			Tuple t = parentSchedule.closedSet.get(nodeKey);
+			closedSet.put(nodeKey, new Tuple(t._startTime, t._processor));
+		}
+		while((element=parentSchedule.independentSet.iterator().next()) != null){
+			independentSet.add(element);
+		}
 	}
 
 	/**
@@ -107,13 +100,13 @@ public class Schedule {
 	 * @param parent
 	 */
 	private void updateIndependentChildren(int parent) {
-		/*for(BnbNode child:parent.outneighbours){
-			for(BnbNode p:child.inneighbours){
+		for(int child:NeighbourManagerHelper.getOutneighbours(parent)){
+			for(int p:NeighbourManagerHelper.getInneighbours(child)){
 				if(openSet.contains(p));
 				break; //still waiting on a parent
 			}
 			independentSet.add(child); //not waiting on any parents
-		}*/
+		}
 	}
 
 	/**
