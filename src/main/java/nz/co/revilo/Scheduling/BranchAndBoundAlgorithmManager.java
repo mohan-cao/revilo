@@ -54,23 +54,81 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
 		
 	}
 
+	/**
+	 * Calculates bottom level of each node in the graph
+	 * 
+	 * @author Abby S
+	 * 
+	 */
 	private void calculateBottomLevels() {
-		// TODO Auto-generated method stub
+		while(!bottomUpSinks.isEmpty()){
+			int nodeId = bottomUpSinks.remove(0);
+			
+			for(int node=0; node<numNodes; node++){
+				List<Integer> outneighbours=getOutneighbours(node); //nodes with 1 on this node's row
+				
+				if(_arcs[node][nodeId]){ //node is inneighbour of given node
+					int fromGivenNode=bottomLevels[nodeId]+_arcWeights[node][nodeId];
+					bottomLevels[node]=bottomLevels[node]>fromGivenNode?bottomLevels[node]:fromGivenNode;
+					
+					if(numOutneighbours(node)==1){
+						bottomUpSinks.add(node);//become a sink now that only child (given node) is removed
+						break;
+					} else { //if children are 
+						
+					}
+				}
+			}
+			
+			/*for(int inneighbour:nodeId.inneighboursClone){
+				inneighbour.outneighboursClone.remove(nodeId);
+				if(inneighbour.outneighboursClone.isEmpty()){
+					bottomUpSinks.add(inneighbour);//become a sink now that child is removed
+				}
+			}*/
+		}
+	}
+
+	private List<Integer> getOutneighbours(int nodeId) {
+		List<Integer> outneighbours=new ArrayList<>();
 		
+		for(int node=0; node<numNodes; node++){
+			if(_arcs[nodeId][node]){
+				outneighbours.add(node);
+			}
+		}
+		return outneighbours;
 	}
 
 	private boolean hasInneighbours(int nodeId) {
-		for(int node=0; node<_nodeWeights.length; node++){
+		for(int node=0; node<numNodes; node++){
 			if(_arcs[node][nodeId]) return true;
 		}
 		return false;
 	}
 	
 	private boolean hasOutneighbours(int nodeId) {
-		for(int node=0; node<_nodeWeights.length; node++){
+		for(int node=0; node<numNodes; node++){
 			if(_arcs[nodeId][node]) return true;
 		}
 		return false;
 	}
 
+	private int numInneighbours(int nodeId) {
+		int count=0;
+		
+		for(int node=0; node<numNodes; node++){
+			if(_arcs[node][nodeId]) count++;
+		}
+		return count;
+	}
+	
+	private int numOutneighbours(int nodeId) {
+		int count=0;
+
+		for(int node=0; node<numNodes; node++){
+			if(_arcs[nodeId][node]) count++;
+		}
+		return count;
+	}
 }
