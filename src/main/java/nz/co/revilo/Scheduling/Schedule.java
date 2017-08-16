@@ -2,10 +2,9 @@ package nz.co.revilo.Scheduling;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-
-import com.lowagie.text.pdf.hyphenation.TernaryTree.Iterator;
 
 import nz.co.revilo.Scheduling.BranchAndBoundAlgorithmManager;
 
@@ -35,7 +34,7 @@ public class Schedule {
 		int startTime=0;
 		finishTimes = new int[bnb._processingCores];
 		this.bnb=bnb;
-		
+
 		//scheduling on a root node
 		if(parentSchedule==null){
 			//initialise data structures
@@ -46,7 +45,7 @@ public class Schedule {
 			lowerBound=bnb.bottomLevels[nodeId];
 		} else { //adding to a schedule
 			cloneParentSchedule(parentSchedule);
-			
+
 			//when parents are done
 			for(int parent:NeighbourManagerHelper.getInneighbours(nodeId)){
 				Tuple parentAssignment=closedSet.get(parent);
@@ -56,13 +55,13 @@ public class Schedule {
 			}
 			//when processor is ready
 			startTime=finishTimes[processor]>startTime?finishTimes[processor]:startTime;
-			
+
 			idleTime+=startTime-finishTimes[processor];//processor idle time
 
 			int perfectLoadBalancing=(bnb.totalNodeWeights+idleTime)/bnb._processingCores;
 			lowerBound=(startTime+bnb.bottomLevels[nodeId])>perfectLoadBalancing?(startTime+bnb.bottomLevels[nodeId]):perfectLoadBalancing;
 		}
-		
+
 		//update data structures
 		closedSet.put(nodeId, new Tuple(startTime, processor));
 		openSet.remove(nodeId);		
@@ -78,21 +77,30 @@ public class Schedule {
 	 * @param parentSchedule
 	 */
 	private void cloneParentSchedule(Schedule parentSchedule) {
+		//clone finishTimes
 		for(int i=0; i<bnb._processingCores;i++) finishTimes[i]=parentSchedule.finishTimes[i];
+		//clone idleTime
 		idleTime=parentSchedule.idleTime;
+
 		Integer element;
-		java.util.Iterator<Integer> iterator=parentSchedule.openSet.iterator();
+		//clone openSet
+		Iterator<Integer> iterator=parentSchedule.openSet.iterator();
 		for(int n=0; n<parentSchedule.openSet.size();n++){
 			element=iterator.next();
 			openSet.add(element);
 		}
-		//TODO: Fix for rest
+		//clone closedSet
 		Integer nodeKey;
-		while((nodeKey=parentSchedule.closedSet.keySet().iterator().next()) != null){
+		iterator=parentSchedule.closedSet.keySet().iterator();
+		for(int n=0; n<parentSchedule.closedSet.keySet().size();n++){
+			nodeKey=iterator.next();
 			Tuple t = parentSchedule.closedSet.get(nodeKey);
 			closedSet.put(nodeKey, new Tuple(t._startTime, t._processor));
 		}
-		while((element=parentSchedule.independentSet.iterator().next()) != null){
+		//clone openSet
+		iterator=parentSchedule.independentSet.iterator();
+		for(int n=0; n<parentSchedule.independentSet.size();n++){
+			element=iterator.next();
 			independentSet.add(element);
 		}
 	}
