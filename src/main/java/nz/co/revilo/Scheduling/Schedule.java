@@ -50,7 +50,9 @@ public class Schedule {
 			for(int parent:NeighbourManagerHelper.getInneighbours(nodeId)){
 				Tuple parentAssignment=closedSet.get(parent);
 				int dataReadyTime=parentAssignment._startTime + bnb._nodeWeights[parent];
-				if(processor!=parentAssignment._processor) dataReadyTime+=bnb._arcWeights[parent][nodeId];
+				if(processor!=parentAssignment._processor) {
+					dataReadyTime+=bnb._arcWeights[parent][nodeId];
+				}
 				startTime=dataReadyTime>startTime?dataReadyTime:startTime;
 			}
 			//when processor is ready
@@ -58,8 +60,14 @@ public class Schedule {
 
 			idleTime+=startTime-finishTimes[processor];//processor idle time
 
-			int perfectLoadBalancing=(bnb.totalNodeWeights+idleTime)/bnb._processingCores;
-			lowerBound=(startTime+bnb.bottomLevels[nodeId])>perfectLoadBalancing?(startTime+bnb.bottomLevels[nodeId]):perfectLoadBalancing;
+			//TODO: cost function with perfect load balancing, because this doesn't actually work
+			int perfectLoadBalancing=0;//(bnb.totalNodeWeights+idleTime)/bnb._processingCores;
+			
+			//lowerBound=(startTime+bnb.bottomLevels[nodeId])>perfectLoadBalancing?(startTime+bnb.bottomLevels[nodeId]):perfectLoadBalancing;
+			lowerBound=finishTimes[0];
+			for(int i=1; i<finishTimes.length;i++){
+				if(finishTimes[i]>lowerBound) lowerBound=finishTimes[1];
+			}
 		}
 
 		//update data structures
@@ -67,7 +75,7 @@ public class Schedule {
 		openSet.remove(nodeId);		
 		independentSet.remove(nodeId);
 		updateIndependentChildren(nodeId);
-		finishTimes[processor]+=startTime+bnb._nodeWeights[nodeId];
+		finishTimes[processor]+=idleTime+bnb._nodeWeights[nodeId];
 	}
 
 	/**
@@ -121,12 +129,15 @@ public class Schedule {
 					break;
 				}
 			}
-			if(!waitingForParent) independentSet.add(child); //not waiting on any parents
+			if(!waitingForParent) {
+				independentSet.add(child); //not waiting on any parents
+				System.out.println("Adding "+child);
+			}
 		}
 	}
 	
 	public String toString(){
-		return "Printing schedule with " + closedSet.keySet() + " closed, and " + openSet + " open";
+		return "Printing schedule with " + closedSet.keySet() + " closed, and " + openSet + " open. Independent " + independentSet;
 	}
 
 	/**
