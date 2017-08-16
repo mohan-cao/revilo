@@ -114,11 +114,14 @@ public class Schedule {
 	 */
 	private void updateIndependentChildren(int parent) {
 		for(int child:NeighbourManagerHelper.getOutneighbours(parent)){
+			boolean waitingForParent=false;
 			for(int p:NeighbourManagerHelper.getInneighbours(child)){
-				if(openSet.contains(p));
-				break; //still waiting on a parent
+				if(openSet.contains(p)){
+					waitingForParent=true; //still waiting on a parent
+					break;
+				}
 			}
-			independentSet.add(child); //not waiting on any parents
+			if(!waitingForParent) independentSet.add(child); //not waiting on any parents
 		}
 	}
 
