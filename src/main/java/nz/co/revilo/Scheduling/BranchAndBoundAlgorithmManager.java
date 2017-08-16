@@ -47,10 +47,11 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
 			totalNodeWeights+=_nodeWeights[nodeId];
 		}
 
-		upperBound=totalNodeWeights; //TODO: is this a good upper bound?
+		upperBound=100000;//totalNodeWeights; //TODO: is this a good upper bound?
 		calculateBottomLevels();
 
 		while(!rootSchedules.isEmpty()){
+			System.out.println("Next root");
 			bnb(rootSchedules.remove(0));
 		}
 		
@@ -124,7 +125,7 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
 			for(int inneighbour:inneighbours){
 				List<Integer> inneighboursChildren=NeighbourManagerHelper.getOutneighbours(inneighbour); //nodes with 1 on the node's row
 
-				int fromGivenNode=bottomLevels[nodeId]+_arcWeights[inneighbour][nodeId];
+				int fromGivenNode=bottomLevels[nodeId]+_nodeWeights[inneighbour];
 				bottomLevels[inneighbour]=bottomLevels[inneighbour]>fromGivenNode?bottomLevels[inneighbour]:fromGivenNode;
 				//inneighbours.remove(inneighbour);
 				inneighboursChildren.remove(Integer.valueOf(nodeId));
