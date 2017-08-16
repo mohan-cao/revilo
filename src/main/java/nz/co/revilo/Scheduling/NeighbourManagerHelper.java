@@ -5,9 +5,9 @@ import java.util.List;
 
 public class NeighbourManagerHelper {
 	static int numNodes;
-	static Boolean[][] arcs;
+	static boolean[][] arcs;
 	
-	public NeighbourManagerHelper(int numNodes, Boolean[][] arcs) {
+	public static void setUpHelper(int numNodes, boolean[][] arcs) {
 		NeighbourManagerHelper.numNodes=numNodes;
 		NeighbourManagerHelper.arcs=arcs;
 	}
