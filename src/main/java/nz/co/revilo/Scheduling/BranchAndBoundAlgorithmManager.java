@@ -80,6 +80,8 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
 	 * @author Abby S
 	 */
 	private void bnb(Schedule s) {
+		System.out.println(s.toString());
+		
 		//TODO: not good enough
 		if(s.lowerBound>upperBound){
 			return; //break tree at this point

@@ -124,6 +124,10 @@ public class Schedule {
 			if(!waitingForParent) independentSet.add(child); //not waiting on any parents
 		}
 	}
+	
+	public String toString(){
+		return "Printing schedule with " + closedSet.keySet() + " closed, and " + openSet + " open";
+	}
 
 	/**
 	 * Java does not have a tuple class!! :O
