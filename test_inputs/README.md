@@ -25,3 +25,20 @@ input4.dot
 
 `Node 0 - Start 0, Finish 5
 Node 1/2/3/4 (in any order) - Start 5, Finish 10,15,20,25 (in any order)`
+
+
+Client's provided graphs with the optimal length:
+
+Scheduled on 2 processors:
+Node_7_OutTree 28
+Node_8_Random 581
+Node_9_SeriesParallel 55
+Node_10_Random 50
+Node_11_OutTree 350
+ 
+Scheduled on 4 processors:
+Node_7_OutTree 22
+Node_8_Random 581
+Node_9_SeriesParallel 55
+Node_10_Random 50
+Node_11_OutTree 227

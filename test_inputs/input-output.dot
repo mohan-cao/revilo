@@ -1,10 +1,10 @@
 digraph "outputMydiamond" {
-		a -> c	[Weight=5];
-		a -> b	[Weight=3];
-		c -> d	[Weight=1];
-		b -> d	[Weight=2];
-		d		[Weight=4,Start=6,Processor=1];
 		a		[Weight=2,Start=0,Processor=1];
-		c		[Weight=1,Start=2,Processor=1];
 		b		[Weight=3,Start=3,Processor=1];
+		c		[Weight=1,Start=2,Processor=1];
+		d		[Weight=4,Start=6,Processor=1];
+		a -> b	[Weight=3];
+		a -> c	[Weight=5];
+		b -> d	[Weight=2];
+		c -> d	[Weight=1];
 }
