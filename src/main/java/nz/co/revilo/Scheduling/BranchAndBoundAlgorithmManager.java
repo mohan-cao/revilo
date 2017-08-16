@@ -5,12 +5,12 @@ import java.util.List;
 
 public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
 
-	static List<Integer> sources=new ArrayList<>();
+	List<Integer> sources=new ArrayList<>();
 	private List<Integer> bottomUpSinks=new ArrayList<>();
 	private List<Schedule> rootSchedules=new ArrayList<>();
-	static int[] bottomLevels;
-	static int numNodes;
-	private int totalNodeWeights;
+	int[] bottomLevels;
+	int numNodes;
+	int totalNodeWeights;
 	private int upperBound;
 
 	public BranchAndBoundAlgorithmManager(int processingCores) {
@@ -28,7 +28,7 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
 				sources.add(nodeId);
 				//start a schedule with this node as source on each possible processor
 				for(int p=0; p<_processingCores; p++){
-					Schedule newSchedule = new Schedule(null, nodeId, p, _processingCores); 
+					Schedule newSchedule = new Schedule(this, null, nodeId, p); 
 					rootSchedules.add(newSchedule);
 				}
 			}		
