@@ -19,12 +19,13 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
 
 	public BranchAndBoundAlgorithmManager(int processingCores) {
 		super(processingCores);
-		numNodes=_nodeWeights.length;
-		bottomLevels=new int[numNodes];
 	}
 
 	@Override
 	protected void execute(){
+		numNodes=_nodeWeights.length;
+		bottomLevels=new int[numNodes];
+		
 		//get sources
 		for(int nodeId=0; nodeId<numNodes; nodeId++){
 			//sources
@@ -103,6 +104,7 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
 		}
 		for(Schedule nextSchedule:nextSchedules){
 			bnb(nextSchedule);
+			System.out.println("BnB");
 		}
 	}
 

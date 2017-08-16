@@ -5,6 +5,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import com.lowagie.text.pdf.hyphenation.TernaryTree.Iterator;
+
 import nz.co.revilo.Scheduling.BranchAndBoundAlgorithmManager;
 
 /**
@@ -79,9 +81,12 @@ public class Schedule {
 		for(int i=0; i<bnb._processingCores;i++) finishTimes[i]=parentSchedule.finishTimes[i];
 		idleTime=parentSchedule.idleTime;
 		Integer element;
-		while((element=parentSchedule.openSet.iterator().next()) != null){
+		java.util.Iterator<Integer> iterator=parentSchedule.openSet.iterator();
+		for(int n=0; n<parentSchedule.openSet.size();n++){
+			element=iterator.next();
 			openSet.add(element);
 		}
+		//TODO: Fix for rest
 		Integer nodeKey;
 		while((nodeKey=parentSchedule.closedSet.keySet().iterator().next()) != null){
 			Tuple t = parentSchedule.closedSet.get(nodeKey);
