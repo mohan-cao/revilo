@@ -25,6 +25,7 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
 	protected void execute(){
 		numNodes=_nodeWeights.length;
 		bottomLevels=new int[numNodes];
+		NeighbourManagerHelper.setUpHelper(numNodes, _arcs);
 		
 		//get sources
 		for(int nodeId=0; nodeId<numNodes; nodeId++){
@@ -104,7 +105,6 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
 		}
 		for(Schedule nextSchedule:nextSchedules){
 			bnb(nextSchedule);
-			System.out.println("BnB");
 		}
 	}
 
@@ -120,13 +120,13 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
 			List<Integer> inneighbours=NeighbourManagerHelper.getInneighbours(nodeId);
 
 			for(int inneighbour:inneighbours){
-				List<Integer> inneighboursParents=NeighbourManagerHelper.getOutneighbours(inneighbour); //nodes with 1 on the node's row
+				List<Integer> inneighboursChildren=NeighbourManagerHelper.getOutneighbours(inneighbour); //nodes with 1 on the node's row
 
 				int fromGivenNode=bottomLevels[nodeId]+_arcWeights[inneighbour][nodeId];
 				bottomLevels[inneighbour]=bottomLevels[inneighbour]>fromGivenNode?bottomLevels[inneighbour]:fromGivenNode;
-				inneighbours.remove(inneighbour);
-				inneighboursParents.remove(nodeId);
-				if(inneighboursParents.isEmpty()){
+				//inneighbours.remove(inneighbour);
+				inneighboursChildren.remove(Integer.valueOf(nodeId));
+				if(inneighboursChildren.isEmpty()){
 					bottomUpSinks.add(inneighbour);//become a sink now that child is removed
 				}
 			}
