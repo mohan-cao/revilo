@@ -39,4 +39,4 @@ __Previews
 !src/libs/**/*.jar
 
 # GraphViz output files. These should be local.
-*-output.dot
+# *-output.dot
