@@ -58,11 +58,16 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
 		passResults();
 	}
 
+	/**
+	 * @author Abby S
+	 * 
+	 */
 	private void passResults() {
 		for(int nodeId=0; nodeId<numNodes; nodeId++){
 			nodeStartTimes.add(optimalSchedule.closedSet.get(nodeId)._startTime);
 			nodeProcessors.add(optimalSchedule.closedSet.get(nodeId)._processor);
 		}	
+		System.out.println("Optimal length: "+optimalSchedule.getMaxFinishTime());
 		
 		getListener().finalSchedule(
                 _graphName,
@@ -78,6 +83,7 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
 	/**
 	 * bnb based on the current schedule s
 	 * @param s
+	 * 
 	 * @author Abby S
 	 */
 	private void bnb(Schedule s) {
@@ -96,9 +102,8 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
 			if(s.getMaxFinishTime()<=upperBound){
 				optimalSchedule=s;
 				upperBound=s.getMaxFinishTime();
+				return;
 			}
-				
-			return;
 		}
 
 		//continue DFS
@@ -127,10 +132,13 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
 			for(int inneighbour:inneighbours){
 				List<Integer> inneighboursChildren=NeighbourManagerHelper.getOutneighbours(inneighbour); //nodes with 1 on the node's row
 
+				 //bottom up add it's weight to child's
 				int fromGivenNode=bottomLevels[nodeId]+_nodeWeights[inneighbour];
+				//furthest distance needed from bottom
 				bottomLevels[inneighbour]=bottomLevels[inneighbour]>fromGivenNode?bottomLevels[inneighbour]:fromGivenNode;
-				//inneighbours.remove(inneighbour);
-				inneighboursChildren.remove(Integer.valueOf(nodeId));
+				
+				//inneighbours.remove(inneighbour); //ordered access so don't actually need to remove
+				inneighboursChildren.remove(Integer.valueOf(nodeId)); //else treat the int as index
 				if(inneighboursChildren.isEmpty()){
 					bottomUpSinks.add(inneighbour);//become a sink now that child is removed
 				}
@@ -171,6 +179,12 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
         return n;
     }
 
+    /**
+     * Creates an object type 1d list from primitive array
+     * 
+     * @param prim
+     * @return
+     */
     private List<Integer> primToInt(int[] prim) {
         ArrayList<Integer> n = new ArrayList<>();
         for (int i: prim) {
