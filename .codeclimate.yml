@@ -6,7 +6,7 @@ engines:
     enabled: true
     channel: "beta"
   checkstyle:
-    enabled: true
+    enabled: false
     channel: "beta"
 ratings:
   paths:
