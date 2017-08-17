@@ -51,8 +51,30 @@ Using Eclipse (Start from Eclipse instead of importing clone!):
 
 `mvn clean test` - Run unit test (from scratch)
 
-`mvn test` - Run unit test
+`mvn test` - Run unit tests
+
+`mvn build` - Builds your project. Good enough for most cases
 
 `mvn package` - Package classes into a jar. JAR is executable.
 
 `mvn install` - Do all the above and install the package
+
+# Parallel Task for Java Usage
+
+1. IntelliJ Preferences/Editor/File and Code Templates -> Add a new template named PTJava Class with extension ptjava. Paste in
+`
+#if (${PACKAGE_NAME} && ${PACKAGE_NAME} != "")package ${PACKAGE_NAME};#end
+#parse("File Header.java")
+public class ${NAME} {
+}
+`
+2. IntelliJ Preferences/Editor/File Types -> Select "Java Source"
+  - Add an association to *.ptjava (so that code autocompletion still works)
+3. When you run `mvn build`, `mvn process-sources` or any compile lifecycle, then .ptjava files are automatically preprocessed into equivalent .java files
+
+# Advanced - Here Be Dragons!
+
+`mvn install:install-file -Dfile=<path-to-file> -DgroupId=<group-id> \
+    -DartifactId=<artifact-id> -Dversion=<version> -Dpackaging=<packaging>`
+
+Self explanatory installation of local jar to local Maven repo. Hard to remember so I put it here.
