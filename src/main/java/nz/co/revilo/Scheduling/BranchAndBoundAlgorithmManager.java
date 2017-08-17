@@ -4,6 +4,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Finds optimal schedule using DFS Branch and Bound
+ * 
+ * @author Abby S
+ *
+ */
 public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
 
 	List<Integer> sources=new ArrayList<>();
@@ -55,20 +61,23 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
 			bnb(rootSchedules.remove(0));
 		}
 		
-		passResults();
+		returnResults();
 	}
 
 	/**
+	 * Return the optimal schedule found and it's information
+	 * 
 	 * @author Abby S
 	 * 
 	 */
-	private void passResults() {
+	private void returnResults() {
 		for(int nodeId=0; nodeId<numNodes; nodeId++){
-			nodeStartTimes.add(optimalSchedule.closedSet.get(nodeId)._startTime);
-			nodeProcessors.add(optimalSchedule.closedSet.get(nodeId)._processor);
+			nodeStartTimes.add(optimalSchedule.closedSet.get(nodeId)._startTime);//start times
+			nodeProcessors.add(optimalSchedule.closedSet.get(nodeId)._processor);//processors scheduled on
 		}	
-		System.out.println("Optimal length: "+optimalSchedule.getMaxFinishTime());
+		System.out.println("Optimal length found: "+optimalSchedule.getMaxFinishTime());
 		
+		//pass to output
 		getListener().finalSchedule(
                 _graphName,
                 Arrays.asList(_nodeNames),
@@ -82,6 +91,7 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
 
 	/**
 	 * bnb based on the current schedule s
+	 * 
 	 * @param s
 	 * 
 	 * @author Abby S
@@ -89,16 +99,16 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
 	private void bnb(Schedule s) {
 		System.out.println(s.toString());
 		
-		//TODO: not good enough?
+		//TODO: not strict enough?
 		if(s.lowerBound>upperBound){
+			s=null; //garbage collect that schedule
 			return; //break tree at this point
 		}
 
 		//found optimal for the root started with
-		if(s.openSet.isEmpty()){
-			//reached end of a valid schedule. Never broke off, so is optimal
-			
-			//TODO: doing this to avoid unoptimal schedules getting through
+		//reached end of a valid schedule. Never broke off, so is optimal
+		if(s.openSet.isEmpty()){			
+			//TODO: doing this to make sure only optimal schedules get through
 			if(s.getMaxFinishTime()<=upperBound){
 				optimalSchedule=s;
 				upperBound=s.getMaxFinishTime();
@@ -120,6 +130,7 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
 
 	/**
 	 * Calculates bottom level of each node in the graph
+	 * Using bottom-up approach
 	 * 
 	 * @author Abby S
 	 * 
@@ -130,15 +141,14 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
 			List<Integer> inneighbours=NeighbourManagerHelper.getInneighbours(nodeId);
 
 			for(int inneighbour:inneighbours){
-				List<Integer> inneighboursChildren=NeighbourManagerHelper.getOutneighbours(inneighbour); //nodes with 1 on the node's row
-
-				 //bottom up add it's weight to child's
+				//bottom up add it's weight to child's
 				int fromGivenNode=bottomLevels[nodeId]+_nodeWeights[inneighbour];
-				//furthest distance needed from bottom
+				//Farthest distance needed from bottom
 				bottomLevels[inneighbour]=bottomLevels[inneighbour]>fromGivenNode?bottomLevels[inneighbour]:fromGivenNode;
 				
 				//inneighbours.remove(inneighbour); //ordered access so don't actually need to remove
-				inneighboursChildren.remove(Integer.valueOf(nodeId)); //else treat the int as index
+				List<Integer> inneighboursChildren=NeighbourManagerHelper.getOutneighbours(inneighbour); //nodes with 1 on the node's row
+				inneighboursChildren.remove(Integer.valueOf(nodeId)); //Interger or will treat the int as index
 				if(inneighboursChildren.isEmpty()){
 					bottomUpSinks.add(inneighbour);//become a sink now that child is removed
 				}
