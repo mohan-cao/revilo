@@ -62,14 +62,16 @@ Using Eclipse (Start from Eclipse instead of importing clone!):
 # Parallel Task for Java Usage
 
 1. IntelliJ Preferences/Editor/File and Code Templates -> Add a new template named PTJava Class with extension ptjava. Paste in
+
 `
 #if (${PACKAGE_NAME} && ${PACKAGE_NAME} != "")package ${PACKAGE_NAME};#end
 #parse("File Header.java")
 public class ${NAME} {
 }
 `
+
 2. IntelliJ Preferences/Editor/File Types -> Select "Java Source"
-  - Add an association to *.ptjava (so that code autocompletion still works)
+   - Add an association to *.ptjava (so that code autocompletion still works)
 3. When you run `mvn build`, `mvn process-sources` or any compile lifecycle, then .ptjava files are automatically preprocessed into equivalent .java files
 
 # Advanced - Here Be Dragons!
