@@ -15,10 +15,20 @@ public class TestResultListener implements ScheduleResultListener {
 	 */
 	boolean _isBnb=false;
 	
+	/**
+	 * Default constructor for testing non-BnB algorithms
+	 * Currently this is for Topo sort
+	 * 
+	 * @author Abby S
+	 * 
+	 */
 	public TestResultListener(){
 	}
 	
 	/**
+	 * Constructor for specifying the algorithm is BnB
+	 * This boolean will be used to determine what to use when referencing the cores
+	 * 
 	 * @author Abby S
 	 * 
 	 * @param isBnB
@@ -92,6 +102,7 @@ public class TestResultListener implements ScheduleResultListener {
         _arcWeights = arcWeights;
         processNodes(nodeNames, nodeStarts, nodeWeights, nodeCore);
     }
+    
     private void processNodes(List<String> nodeNames, List <Integer> nodeStarts, List<Integer> nodeWeights
             , List<Integer> nodeCore) {
         _nCores = 1;
@@ -117,7 +128,7 @@ public class TestResultListener implements ScheduleResultListener {
         }
 
         for(Node node : _nodes) {
-        	//Changed by @Abby S slightly 
+        	//Changed by @Abby S slightly to accommodate for BnB
         	if(_isBnb){
         		_cores.get(node.getCore()).add(node);
         	} else {
@@ -125,6 +136,7 @@ public class TestResultListener implements ScheduleResultListener {
         	}
         }
     }
+    
     public List<Node> getNodes() {
         return _nodes;
     }

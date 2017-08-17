@@ -36,6 +36,9 @@ public abstract class ValidityTest {
     }
     
     /**
+     * As above method, for testing BnB
+     * By specifying to TestResultListener that the algotithm manager is BnB
+     * 
      * @author Abby S
      * 
      * @param filename

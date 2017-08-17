@@ -7,6 +7,13 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+/**
+ * Test class for BnB
+ * 
+ * @author Abby S
+ * Based on class written by Aimee
+ *
+ */
 public class BnBTest extends ValidityTest {
 
     class Pair<K,V>{
