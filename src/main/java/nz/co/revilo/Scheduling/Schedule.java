@@ -15,7 +15,7 @@ import nz.co.revilo.Scheduling.BranchAndBoundAlgorithmManager;
  */
 public class Schedule {
 	int[] finishTimes;
-	int idleTime=0;
+	int totalIdleTime=0;
 	int lowerBound;
 	BranchAndBoundAlgorithmManager bnb;
 	Set<Integer> openSet=new HashSet<>(); //need to assign to processor
@@ -34,6 +34,7 @@ public class Schedule {
 	 */
 	public Schedule(BranchAndBoundAlgorithmManager bnb, Schedule parentSchedule, int nodeId, int processor){
 		int startTime=0;
+		int addedIdleTime=0;
 		finishTimes = new int[bnb._processingCores];
 		this.bnb=bnb;
 
@@ -59,17 +60,16 @@ public class Schedule {
 			//when processor is ready
 			startTime=finishTimes[processor]>startTime?finishTimes[processor]:startTime;
 
-			idleTime+=startTime-finishTimes[processor];//processor idle time
+			addedIdleTime=startTime-finishTimes[processor]; //added by this node
+			totalIdleTime+=addedIdleTime;//total processor idle time
 
-			//TODO: cost function (with perfect load balancing?), because this doesn't actually work
-			//totalNodeWeights should be lower bound, why is perfectLoadBalancing sometimes giving greater number?
-			/*
-			int perfectLoadBalancing=(bnb.totalNodeWeights+idleTime)/bnb._processingCores;
+			//TODO: cost function. 
+			//Does this actually work as a heuristic?			
+			int perfectLoadBalancing=(bnb.totalNodeWeights+totalIdleTime)/bnb._processingCores;
 			lowerBound=(startTime+bnb.bottomLevels[nodeId])>perfectLoadBalancing?(startTime+bnb.bottomLevels[nodeId]):perfectLoadBalancing;
-			*/
 			
-			 //TODO: this will only remove the very slow ones that have already exceeded upper bound
-			lowerBound=getMaxFinishTime();
+			//this will only remove the very slow ones that have already exceeded upper bound
+			//lowerBound=getMaxFinishTime();
 		}
 
 		//update data structures
@@ -77,7 +77,7 @@ public class Schedule {
 		openSet.remove(nodeId);		
 		independentSet.remove(nodeId);
 		updateIndependentChildren(nodeId);
-		finishTimes[processor]+=idleTime+bnb._nodeWeights[nodeId];
+		finishTimes[processor]+=addedIdleTime+bnb._nodeWeights[nodeId];
 	}
 
 	/**
@@ -107,7 +107,7 @@ public class Schedule {
 		for(int i=0; i<bnb._processingCores;i++) finishTimes[i]=parentSchedule.finishTimes[i];
 		
 		//clone idleTime
-		idleTime=parentSchedule.idleTime;
+		totalIdleTime=parentSchedule.totalIdleTime;
 
 		Integer element;
 		//clone openSet
