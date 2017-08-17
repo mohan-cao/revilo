@@ -9,7 +9,7 @@ import java.util.Set;
 import nz.co.revilo.Scheduling.BranchAndBoundAlgorithmManager;
 
 /**
- * Represents a schedules
+ * Represents a schedule
  * 
  * @author Abby S
  */
@@ -23,11 +23,13 @@ public class Schedule {
 	Set<Integer> independentSet=new HashSet<>(); //nodes it depends on are done
 
 	/**
-	 * Create schedule
+	 * Create new schedule object
+	 * 
 	 * @author Abby S
 	 * 
+	 * @param bnb
 	 * @param parentSchedule
-	 * @param node
+	 * @param nodeId
 	 * @param processor
 	 */
 	public Schedule(BranchAndBoundAlgorithmManager bnb, Schedule parentSchedule, int nodeId, int processor){
@@ -38,11 +40,10 @@ public class Schedule {
 		//scheduling on a root node
 		if(parentSchedule==null){
 			//initialise data structures
-			for(int node=0; node<bnb.numNodes; node++){
-				openSet.add(node);
-			}
+			for(int node=0; node<bnb.numNodes; node++) openSet.add(node);
 			independentSet.addAll(bnb.sources);
 			lowerBound=bnb.bottomLevels[nodeId];
+			
 		} else { //adding to a schedule
 			cloneParentSchedule(parentSchedule);
 
@@ -60,11 +61,15 @@ public class Schedule {
 
 			idleTime+=startTime-finishTimes[processor];//processor idle time
 
-			//TODO: cost function with perfect load balancing, because this doesn't actually work
-			int perfectLoadBalancing=0;//(bnb.totalNodeWeights+idleTime)/bnb._processingCores;
+			//TODO: cost function (with perfect load balancing?), because this doesn't actually work
+			//totalNodeWeights should be lower bound, why is perfectLoadBalancing sometimes giving greater number?
+			/*
+			int perfectLoadBalancing=(bnb.totalNodeWeights+idleTime)/bnb._processingCores;
+			lowerBound=(startTime+bnb.bottomLevels[nodeId])>perfectLoadBalancing?(startTime+bnb.bottomLevels[nodeId]):perfectLoadBalancing;
+			*/
 			
-			//lowerBound=(startTime+bnb.bottomLevels[nodeId])>perfectLoadBalancing?(startTime+bnb.bottomLevels[nodeId]):perfectLoadBalancing;
-			lowerBound=getMaxFinishTime(); //TODO: not meant to be this but for now...
+			 //TODO: this will only remove the very slow ones that have already exceeded upper bound
+			lowerBound=getMaxFinishTime();
 		}
 
 		//update data structures
@@ -77,6 +82,9 @@ public class Schedule {
 
 	/**
 	 * TODO: testing purposes only!
+	 * 
+	 * @author Abby S
+	 * 
 	 */
 	public int getMaxFinishTime() {
 		int max=finishTimes[0];
@@ -88,6 +96,8 @@ public class Schedule {
 
 	/**
 	 * Clones the parent schedule for this next schedule
+	 * As child schedules are based on the partial schedule set out by parent
+	 * 
 	 * @author Abby S
 	 * 
 	 * @param parentSchedule
@@ -95,6 +105,7 @@ public class Schedule {
 	private void cloneParentSchedule(Schedule parentSchedule) {
 		//clone finishTimes
 		for(int i=0; i<bnb._processingCores;i++) finishTimes[i]=parentSchedule.finishTimes[i];
+		
 		//clone idleTime
 		idleTime=parentSchedule.idleTime;
 
@@ -105,6 +116,7 @@ public class Schedule {
 			element=iterator.next();
 			openSet.add(element);
 		}
+		
 		//clone closedSet
 		Integer nodeKey;
 		iterator=parentSchedule.closedSet.keySet().iterator();
@@ -113,6 +125,7 @@ public class Schedule {
 			Tuple t = parentSchedule.closedSet.get(nodeKey);
 			closedSet.put(nodeKey, new Tuple(t._startTime, t._processor));
 		}
+		
 		//clone openSet
 		iterator=parentSchedule.independentSet.iterator();
 		for(int n=0; n<parentSchedule.independentSet.size();n++){
@@ -134,7 +147,7 @@ public class Schedule {
 			for(int p:NeighbourManagerHelper.getInneighbours(child)){
 				if(openSet.contains(p)){
 					waitingForParent=true; //still waiting on a parent
-					break;
+					break; //move to next child node
 				}
 			}
 			if(!waitingForParent) {
@@ -144,18 +157,22 @@ public class Schedule {
 		}
 	}
 	
+	@Override
 	public String toString(){
 		return "Printing schedule with " + closedSet.keySet() + " closed, and " + openSet + " open. Independent " + independentSet;
 	}
 
 	/**
-	 * Java does not have a tuple class!! :O
+	 * Tuple class to represent a start time and processor tuple
+	 * Used in scheduling on a node
+	 * 
 	 * @author Abby S
 	 *
 	 */
 	class Tuple {
 		int _startTime;
 		int _processor;
+		
 		Tuple(int startTime, int processor){
 			_startTime=startTime;
 			_processor=processor;

@@ -3,6 +3,13 @@ package nz.co.revilo.Scheduling;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Static helper class to manage in and out neighbours
+ * Uses the primitive interface and loops through matrices
+ * 
+ * @author Abby S
+ *
+ */
 public class NeighbourManagerHelper {
 	static int numNodes;
 	static boolean[][] arcs;
@@ -14,7 +21,6 @@ public class NeighbourManagerHelper {
 
 	/*
 	 * TODO: which of these methods are used?
-	 * Use getNeighbours().size!=0 instead of hasNeighbour()?
 	 */
 	static List<Integer> getOutneighbours(int nodeId) {
 		List<Integer> outneighbours=new ArrayList<>();
