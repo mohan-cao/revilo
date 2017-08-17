@@ -64,10 +64,7 @@ public class Schedule {
 			int perfectLoadBalancing=0;//(bnb.totalNodeWeights+idleTime)/bnb._processingCores;
 			
 			//lowerBound=(startTime+bnb.bottomLevels[nodeId])>perfectLoadBalancing?(startTime+bnb.bottomLevels[nodeId]):perfectLoadBalancing;
-			lowerBound=finishTimes[0];
-			for(int i=1; i<finishTimes.length;i++){
-				if(finishTimes[i]>lowerBound) lowerBound=finishTimes[1];
-			}
+			lowerBound=getMaxFinishTime(); //TODO: not meant to be this but for now...
 		}
 
 		//update data structures
@@ -76,6 +73,17 @@ public class Schedule {
 		independentSet.remove(nodeId);
 		updateIndependentChildren(nodeId);
 		finishTimes[processor]+=idleTime+bnb._nodeWeights[nodeId];
+	}
+
+	/**
+	 * TODO: testing purposes only!
+	 */
+	public int getMaxFinishTime() {
+		int max=finishTimes[0];
+		for(int i=1; i<bnb._processingCores;i++){
+			if(finishTimes[i]>max) max=finishTimes[i];
+		}
+		return max;
 	}
 
 	/**
