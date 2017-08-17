@@ -34,6 +34,25 @@ public abstract class ValidityTest {
         }
         return listener;
     }
+    
+    /**
+     * @author Abby S
+     * 
+     * @param filename
+     * @return
+     */
+    public TestResultListener scheduleBnB(String filename) {
+        DotFileReader reader = new DotFileReader(filename);
+        TestResultListener listener = new TestResultListener(true);
+        _algorithmManager.inform(listener);
+        try {
+            reader.startParsing(_algorithmManager);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            System.out.println("File " + filename+ " does not exist");
+        }
+        return listener;
+    }
 
     /**
      * Check that dependencies (i.e. ordering of tasks based on what tasks must be completed for others to start) are
