@@ -15,14 +15,16 @@ public abstract class DotFileParser {
     private String _filename;
 
     /**
-     * DotFileParser is a constructor for the abstract class which currently does nothing
+     * Constructor for the class which sets the file name
+     *
+     * @param filename
      */
-     public DotFileParser(String filename) {
+    public DotFileParser(String filename) {
         _filename = filename;
     }
 
     /**
-     * Returns the name of the filename to be parsed
+     * @return the filename of the file the DotFileParser is to parse/has parsed, as set in the constructor
      */
     protected String getFilename() {
         return _filename;
@@ -30,6 +32,9 @@ public abstract class DotFileParser {
 
     /**
      * Initiates the file parsing on another thread and returns the result to the listener
+     *
+     * @param newListener
+     * @throws FileNotFoundException
      */
     public abstract void startParsing(ParseResultListener newListener) throws FileNotFoundException;
 }
