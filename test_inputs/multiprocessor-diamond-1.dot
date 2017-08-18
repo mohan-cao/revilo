@@ -1,0 +1,23 @@
+digraph G {
+    a   [Weight=2];
+    b   [Weight=2];
+    c   [Weight=2];
+    d   [Weight=2];
+    e   [Weight=2];
+    f   [Weight=2];
+    g   [Weight=2];
+    h   [Weight=2];
+    i   [Weight=2];
+    a -> b  [Weight=1];
+    a -> c  [Weight=1];
+    b -> d  [Weight=1];
+    b -> e  [Weight=1];
+    c -> e  [Weight=1];
+    c -> f  [Weight=1];
+    d -> g  [Weight=1];
+    e -> g  [Weight=1];
+    e -> h  [Weight=1];
+    f -> h  [Weight=1];
+    g -> i  [Weight=1];
+    h -> i  [Weight=1];
+}

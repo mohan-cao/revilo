@@ -35,15 +35,16 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
 		
 		//get sources
 		for(int nodeId=0; nodeId<numNodes; nodeId++){
-			//sources
+			//check that sources have no parents
 			if (!NeighbourManagerHelper.hasInneighbours(nodeId)) {
+				//if they don't have parents, then add it to a sources queue
 				sources.add(nodeId);
 				//start a schedule with this node as source on each possible processor
 				for(int p=0; p<_processingCores; p++){
 					Schedule newSchedule = new Schedule(this, null, nodeId, p); 
 					rootSchedules.add(newSchedule);
 				}
-			}		
+			}
 			//sinks
 			else if(!NeighbourManagerHelper.hasOutneighbours(nodeId)){
 				bottomUpSinks.add(nodeId);
