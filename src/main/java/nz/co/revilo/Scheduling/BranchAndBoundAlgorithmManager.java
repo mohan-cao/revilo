@@ -148,7 +148,7 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
 				
 				//inneighbours.remove(inneighbour); //ordered access so don't actually need to remove
 				List<Integer> inneighboursChildren=NeighbourManagerHelper.getOutneighbours(inneighbour); //nodes with 1 on the node's row
-				inneighboursChildren.remove(Integer.valueOf(nodeId)); //Interger or will treat the int as index
+				inneighboursChildren.remove(Integer.valueOf(nodeId)); //Integer or will treat the int as index
 				if(inneighboursChildren.isEmpty()){
 					bottomUpSinks.add(inneighbour);//become a sink now that child is removed
 				}
