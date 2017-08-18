@@ -35,6 +35,10 @@ public class App {
     private boolean _visualise;
     private String _outputFilename;
 
+    private static long startingTime;
+    private static long endingTime;
+    private static boolean isDone; // to stop increasing time when we're done
+
     /**
      * The one and only constructor which allows for the singleton pattern by never overriding the current instance
      *
@@ -57,6 +61,17 @@ public class App {
 
     public static int getExecCores() {
         return _inst._numExecutionCores;
+    }
+
+    public static double getRunningTime() {
+        double elapsed;
+        if (isDone) {
+            elapsed = ((endingTime - startingTime) / 1000.0); // incl. tenths of second
+        } else {
+            long now = System.currentTimeMillis();
+            elapsed = ((now - startingTime) / 1000.0); // incl. tenths of second
+        }
+        return elapsed;
     }
 
     /**
@@ -111,10 +126,7 @@ public class App {
 
         // Starts visualisation if requested
 //        System.out.println("This is the schedule called " + _inst._outputFilename + " processed on " + _inst._numParallelProcessors + " core(s).");
-        if (_inst._visualise) {
-//            System.out.println("There is a visualisation outputted.");
-            Application.launch(MainLauncher.class);
-        }
+
 
         // Parse file and give it algorithm manager to give results to. @Michael Kemp
         AlgorithmManager manager = new ImprovedTopologicalAlgorithmManager(_inst._numExecutionCores);
@@ -124,7 +136,15 @@ public class App {
         DotFileProducer output = new DotFileWriter(_inst._outputFilename);
         manager.inform(output);
         try {
+            isDone = false;
+            startingTime = System.currentTimeMillis();
+            if (_inst._visualise) {
+//            System.out.println("There is a visualisation outputted.");
+                Application.launch(MainLauncher.class);
+            }
             reader.startParsing(manager);
+            endingTime = System.currentTimeMillis();
+            isDone = true;
         } catch (FileNotFoundException e) {
             throw new RuntimeException("Input file does not exist");
         }
