@@ -100,7 +100,7 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
 		System.out.println(s.toString());
 		
 		//TODO: not strict enough?
-		if(s.lowerBound>upperBound){
+		if(s.lowerBound>=upperBound){
 			s=null; //garbage collect that schedule
 			return; //break tree at this point
 		}

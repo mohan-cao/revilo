@@ -81,7 +81,7 @@ public class Schedule {
 	}
 
 	/**
-	 * TODO: testing purposes only!
+	 * 
 	 * 
 	 * @author Abby S
 	 * 
