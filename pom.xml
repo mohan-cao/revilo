@@ -69,6 +69,11 @@
 			<version>1.0.0</version>
 			<optional>false</optional>
 		</dependency>
+		<dependency>
+			<groupId>eu.hansolo</groupId>
+			<artifactId>tilesfx</artifactId>
+			<version>1.4.5</version>
+		</dependency>
 	</dependencies>
 
 	<build>

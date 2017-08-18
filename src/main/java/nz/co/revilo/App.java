@@ -51,6 +51,14 @@ public class App {
         }
     }
 
+    public static App getInstance() {
+        return _inst;
+    }
+
+    public static int getExecCores() {
+        return _inst._numExecutionCores;
+    }
+
     /**
      * The entry point for the program, the only arguments are those from the CLI
      * <p>
