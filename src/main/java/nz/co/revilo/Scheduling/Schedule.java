@@ -82,6 +82,8 @@ public class Schedule {
 
 	/**
 	 * 
+	 * Get finish time of slowest processor
+	 * This determins the finish time of the schedule
 	 * 
 	 * @author Abby S
 	 * 
