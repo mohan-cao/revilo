@@ -1,0 +1,16 @@
+digraph "MichaelsStupidTestCase" {
+	a	[weight=1];
+	b	[weight=2];
+	c	[weight=9];
+	d	[weight=6];
+	e	[weight=3];
+	f	[weight=8];
+	a->f	[weight=7];
+	b->c	[weight=3];
+	c->f	[weight=9];
+	a->c	[weight=4];
+	f->e	[weight=2];
+	d->e	[weight=8];
+	c->d	[weight=4];
+	a->e	[weight=7];
+}
