@@ -40,10 +40,6 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
 				//if they don't have parents, then add it to a sources queue
 				sources.add(nodeId);
 				//start a schedule with this node as source on each possible processor
-				for(int p=0; p<_processingCores; p++){
-					Schedule newSchedule = new Schedule(this, null, nodeId, p); 
-					rootSchedules.add(newSchedule);
-				}
 			}
 			//sinks
 			else if(!NeighbourManagerHelper.hasOutneighbours(nodeId)){
@@ -52,6 +48,13 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
 			}
 
 			totalNodeWeights+=_nodeWeights[nodeId];
+		}
+
+		for(int nodeId : sources) {
+			for(int p=0; p<_processingCores; p++){
+				Schedule newSchedule = new Schedule(this, null, nodeId, p);
+				rootSchedules.add(newSchedule);
+			}
 		}
 
 		upperBound=totalNodeWeights; //TODO: is this a good upper bound?
