@@ -57,7 +57,7 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
 			}
 		}
 
-		upperBound=totalNodeWeights; //TODO: is this a good upper bound?
+		upperBound=totalNodeWeights + 1; //TODO: is this a good upper bound?
 		calculateBottomLevels();
 
 		while(!rootSchedules.isEmpty()){
@@ -101,7 +101,7 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
 	 * @author Abby S
 	 */
 	private void bnb(Schedule s) {
-		System.out.println(s.toString());
+		//System.out.println(s.toString());
 		
 		//TODO: not strict enough?
 		if(s.lowerBound>=upperBound){
@@ -115,6 +115,7 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
 			//TODO: doing this to make sure only optimal schedules get through
 			if(s.getMaxFinishTime()<=upperBound){
 				optimalSchedule=s;
+				System.out.println("New Optimal");
 				upperBound=s.getMaxFinishTime();
 				return;
 			}
