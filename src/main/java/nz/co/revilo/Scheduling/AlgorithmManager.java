@@ -9,7 +9,7 @@ import nz.co.revilo.Output.ScheduleResultListener;
  */
 public abstract class AlgorithmManager implements ParseResultListener {
 
-    private int _processingCores;
+    int _processingCores;
     private ScheduleResultListener _listener;
     int[] _nodeWeights;
     boolean[][] _arcs;

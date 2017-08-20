@@ -1,0 +1,10 @@
+digraph "outputMulti-diamond" {
+		a		[Weight=20,Start=0,Processor=3];
+		b		[Weight=10,Start=22,Processor=2];
+		c		[Weight=10,Start=20,Processor=3];
+		d		[Weight=5,Start=33,Processor=2];
+		a -> b	[Weight=2];
+		a -> c	[Weight=2];
+		b -> d	[Weight=3];
+		c -> d	[Weight=3];
+}

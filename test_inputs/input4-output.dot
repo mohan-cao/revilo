@@ -1,0 +1,11 @@
+digraph "output" {
+		4		[Weight=5,Start=20,Processor=0];
+		1		[Weight=5,Start=15,Processor=0];
+		2		[Weight=5,Start=10,Processor=0];
+		3		[Weight=5,Start=5,Processor=0];
+		0		[Weight=5,Start=0,Processor=0];
+		0 -> 4	[Weight=1];
+		0 -> 1	[Weight=1];
+		0 -> 2	[Weight=1];
+		0 -> 3	[Weight=1];
+}

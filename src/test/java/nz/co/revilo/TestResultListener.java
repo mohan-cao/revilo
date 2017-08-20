@@ -1,9 +1,6 @@
 package nz.co.revilo;
 
 import nz.co.revilo.Output.ScheduleResultListener;
-import org.jfree.util.ArrayUtilities;
-
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,6 +10,34 @@ import java.util.List;
  * @version alpha
  */
 public class TestResultListener implements ScheduleResultListener {
+	/*
+	 * @Abby S
+	 */
+	boolean _isBnb=false;
+	
+	/**
+	 * Default constructor for testing non-BnB algorithms
+	 * Currently this is for Topo sort
+	 * 
+	 * @author Abby S
+	 * 
+	 */
+	public TestResultListener(){
+	}
+	
+	/**
+	 * Constructor for specifying the algorithm is BnB
+	 * This boolean will be used to determine what to use when referencing the cores
+	 * 
+	 * @author Abby S
+	 * 
+	 * @param isBnB
+	 */
+	public TestResultListener(boolean isBnB){
+		_isBnb=isBnB;
+	}
+	
+	
     /**
      * Inner class used to more easily represent nodes for testing.
      * @author Aimee
@@ -77,6 +102,7 @@ public class TestResultListener implements ScheduleResultListener {
         _arcWeights = arcWeights;
         processNodes(nodeNames, nodeStarts, nodeWeights, nodeCore);
     }
+    
     private void processNodes(List<String> nodeNames, List <Integer> nodeStarts, List<Integer> nodeWeights
             , List<Integer> nodeCore) {
         _nCores = 1;
@@ -102,9 +128,15 @@ public class TestResultListener implements ScheduleResultListener {
         }
 
         for(Node node : _nodes) {
-            _cores.get(node.getCore() - 1).add(node);
+        	//Changed by @Abby S slightly to accommodate for BnB
+        	if(_isBnb){
+        		_cores.get(node.getCore()).add(node);
+        	} else {
+        		_cores.get(node.getCore() - 1).add(node);
+        	}
         }
     }
+    
     public List<Node> getNodes() {
         return _nodes;
     }
