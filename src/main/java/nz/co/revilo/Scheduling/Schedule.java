@@ -17,6 +17,7 @@ public class Schedule {
 	int[] finishTimes;
 	int totalIdleTime=0;
 	int lowerBound;
+	int scheduledWeight = 0;
 	BranchAndBoundAlgorithmManager bnb;
 	Set<Integer> openSet=new HashSet<>(); //need to assign to processor
 	Map<Integer,Tuple> closedSet=new HashMap<>(); //done nodes
@@ -44,7 +45,7 @@ public class Schedule {
 			for(int node=0; node<bnb.numNodes; node++) openSet.add(node);
 			independentSet.addAll(bnb.sources);
 			lowerBound=bnb.bottomLevels[nodeId];
-			
+				//System.out.println(independentSet + "  " + nodeId);
 		} else { //adding to a schedule
 			cloneParentSchedule(parentSchedule);
 
@@ -72,6 +73,7 @@ public class Schedule {
 			//lowerBound=getMaxFinishTime();
 		}
 
+
 		//update data structures
 		closedSet.put(nodeId, new Tuple(startTime, processor));
 		openSet.remove(nodeId);		
@@ -96,6 +98,13 @@ public class Schedule {
 		return max;
 	}
 
+	public boolean isBounded(int maxFinishTime) {
+		if(this.lowerBound >= maxFinishTime){
+			return true;
+		}
+		return false;
+	}
+
 	/**
 	 * Clones the parent schedule for this next schedule
 	 * As child schedules are based on the partial schedule set out by parent
@@ -118,7 +127,7 @@ public class Schedule {
 			element=iterator.next();
 			openSet.add(element);
 		}
-		
+
 		//clone closedSet
 		Integer nodeKey;
 		iterator=parentSchedule.closedSet.keySet().iterator();
@@ -127,7 +136,7 @@ public class Schedule {
 			Tuple t = parentSchedule.closedSet.get(nodeKey);
 			closedSet.put(nodeKey, new Tuple(t._startTime, t._processor));
 		}
-		
+
 		//clone openSet
 		iterator=parentSchedule.independentSet.iterator();
 		for(int n=0; n<parentSchedule.independentSet.size();n++){
@@ -154,11 +163,11 @@ public class Schedule {
 			}
 			if(!waitingForParent) {
 				independentSet.add(child); //not waiting on any parents
-				System.out.println("Adding "+child);
+				//System.out.println("Adding "+child);
 			}
 		}
 	}
-	
+
 	@Override
 	public String toString(){
 		return "Printing schedule with " + closedSet.keySet() + " closed, and " + openSet + " open. Independent " + independentSet;
@@ -171,13 +180,27 @@ public class Schedule {
 	 * @author Abby S
 	 *
 	 */
-	class Tuple {
+	public class Tuple {
 		int _startTime;
 		int _processor;
 		
-		Tuple(int startTime, int processor){
+		public Tuple(int startTime, int processor){
 			_startTime=startTime;
 			_processor=processor;
+		}
+
+		@Override
+		public boolean equals(Object o) {
+			if(o.getClass() != this.getClass()) {
+				return false;
+			}
+
+			Tuple t = (Tuple) o;
+
+			if((t._processor == this._processor) && (t._startTime == this._startTime)) {
+				return true;
+			}
+			return false;
 		}
 	}
 }

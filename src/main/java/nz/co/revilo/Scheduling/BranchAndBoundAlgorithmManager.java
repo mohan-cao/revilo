@@ -40,10 +40,6 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
 				//if they don't have parents, then add it to a sources queue
 				sources.add(nodeId);
 				//start a schedule with this node as source on each possible processor
-				for(int p=0; p<_processingCores; p++){
-					Schedule newSchedule = new Schedule(this, null, nodeId, p); 
-					rootSchedules.add(newSchedule);
-				}
 			}
 			//sinks
 			else if(!NeighbourManagerHelper.hasOutneighbours(nodeId)){
@@ -54,7 +50,14 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
 			totalNodeWeights+=_nodeWeights[nodeId];
 		}
 
-		upperBound=totalNodeWeights; //TODO: is this a good upper bound?
+		for(int nodeId : sources) {
+			for(int p=0; p<_processingCores; p++){
+				Schedule newSchedule = new Schedule(this, null, nodeId, p);
+				rootSchedules.add(newSchedule);
+			}
+		}
+
+		upperBound=totalNodeWeights + 1; //TODO: is this a good upper bound?
 		calculateBottomLevels();
 
 		while(!rootSchedules.isEmpty()){
@@ -98,7 +101,7 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
 	 * @author Abby S
 	 */
 	private void bnb(Schedule s) {
-		System.out.println(s.toString());
+		//System.out.println(s.toString());
 		
 		//TODO: not strict enough?
 		if(s.lowerBound>=upperBound){
@@ -112,6 +115,7 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
 			//TODO: doing this to make sure only optimal schedules get through
 			if(s.getMaxFinishTime()<=upperBound){
 				optimalSchedule=s;
+				System.out.println("New Optimal");
 				upperBound=s.getMaxFinishTime();
 				return;
 			}
