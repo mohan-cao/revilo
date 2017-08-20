@@ -1,7 +1,7 @@
 package nz.co.revilo;
 
 import com.beust.jcommander.JCommander;
-import nz.co.revilo.CommandLine.Parameters;
+import nz.co.revilo.CommandLine.CLIParameters;
 import nz.co.revilo.Input.DotFileReader;
 import nz.co.revilo.Output.DotFileProducer;
 import nz.co.revilo.Output.DotFileWriter;
@@ -67,7 +67,7 @@ public class App {
         new App();
 
         // Instantiates a new parameters container
-        Parameters params = new Parameters();
+        CLIParameters params = new CLIParameters();
 
         // Checks for an insufficient number of arguments
         if (args.length < 2) {

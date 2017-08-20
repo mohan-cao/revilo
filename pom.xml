@@ -27,6 +27,11 @@
 			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
 			<layout>default</layout>
 		</repository>
+		<repository>
+			<id>pt-task-repo</id>
+			<name>Parallel Task Local Repo</name>
+			<url>file://${project.basedir}/src/libs</url>
+		</repository>
 	</repositories>
 
 	<properties>
@@ -56,6 +61,12 @@
 			<groupId>com.beust</groupId>
 			<artifactId>jcommander</artifactId>
 			<version>1.72</version>
+			<optional>false</optional>
+		</dependency>
+		<dependency>
+			<groupId>nz.ac.auckland.parallel</groupId>
+			<artifactId>ParallelTask</artifactId>
+			<version>1.0.0</version>
 			<optional>false</optional>
 		</dependency>
 	</dependencies>
@@ -92,6 +103,31 @@
 					</descriptorRefs>
 					<appendAssemblyId>false</appendAssemblyId>
 				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>exec-maven-plugin</artifactId>
+				<version>1.6.0</version>
+				<executions>
+					<execution>
+						<id>ptjava-gen</id>
+						<phase>process-sources</phase>
+						<goals>
+							<goal>exec</goal>
+						</goals>
+						<configuration>
+							<executable>java</executable>
+							<arguments>
+								<argument>-classpath</argument>
+								<classpath>
+									<dependency>nz.ac.auckland.parallel:ParallelTask</dependency>
+								</classpath>
+								<argument>pt.compiler.ParaTaskParser</argument>
+								<argument>src/main/java</argument>
+							</arguments>
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>

@@ -1,0 +1,15 @@
+---
+engines:
+  fixme:
+    enabled: false
+  pmd:
+    enabled: true
+    channel: "beta"
+  checkstyle:
+    enabled: false
+    channel: "beta"
+ratings:
+  paths:
+  - "**.java"
+  - "**.ptjava"
+exclude_paths: []
