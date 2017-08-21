@@ -84,9 +84,9 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
 		getListener().finalSchedule(
 				_graphName,
 				Arrays.asList(_nodeNames),
-				primToBool2D(_arcs),
-				primToInt2D(_arcWeights),
-				primToInt(_nodeWeights),
+				primToBoolean2D(_arcs),
+				primToInteger2D(_arcWeights),
+				primToInteger1D(_nodeWeights),
 				nodeStartTimes,
 				nodeProcessors
 				);
@@ -159,48 +159,48 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
 
 
 	/**
-	 * Creates an object type 2d bool list from primitive array
-	 * @param prim the primitive boolean 2d array
+	 * Creates an object type 2d Boolean list from primitive matrix
+	 * @param primMatrix the primitive boolean 2d matrix
 	 * @return b the reference type list
 	 */
-	private List<List<Boolean>> primToBool2D(boolean[][] prim) {
-		List<List<Boolean>> b = new ArrayList<>();
-		for (int i = 0; i < prim.length; i++) {
-			b.add(new ArrayList<>());
-			for (int j = 0; j < prim[i].length; j++) {
-				b.get(i).add(prim[i][j]);
+	private List<List<Boolean>> primToBoolean2D(boolean[][] primMatrix) {
+		List<List<Boolean>> booleanMatrix = new ArrayList<>();
+		for (int row = 0; row < primMatrix.length; row++) {
+			booleanMatrix.add(new ArrayList<>());
+			for (int col = 0; col < primMatrix[row].length; col++) {
+				booleanMatrix.get(row).add(primMatrix[row][col]);
 			}
 		}
-		return b;
+		return booleanMatrix;
 	}
 
 	/**
-	 * Creates an object type 2d int list from primitive array
-	 * @param prim the primitive int 2d array
+	 * Creates an object type 2d Integer list from primitive matrix
+	 * @param primMatrix the primitive int 2d matrix
 	 * @return n the reference type list
 	 */
-	private List<List<Integer>> primToInt2D(int[][] prim) {
-		List<List<Integer>> n = new ArrayList<>();
-		for (int i = 0; i < prim.length; i++) {
-			n.add(new ArrayList<>());
-			for (int j = 0; j < prim[i].length; j++) {
-				n.get(i).add(prim[i][j]);
+	private List<List<Integer>> primToInteger2D(int[][] primMatrix) {
+		List<List<Integer>> integerMatrix = new ArrayList<>();
+		for (int row = 0; row < primMatrix.length; row++) {
+			integerMatrix.add(new ArrayList<>());
+			for (int col = 0; col < primMatrix[row].length; col++) {
+				integerMatrix.get(row).add(primMatrix[row][col]);
 			}
 		}
-		return n;
+		return integerMatrix;
 	}
 
 	/**
-	 * Creates an object type 1d list from primitive array
+	 * Creates an object type Integer list from primitive int array
 	 * 
-	 * @param prim
+	 * @param primArray
 	 * @return
 	 */
-	private List<Integer> primToInt(int[] prim) {
-		ArrayList<Integer> n = new ArrayList<>();
-		for (int i: prim) {
-			n.add(i);
+	private List<Integer> primToInteger1D(int[] primArray) {
+		ArrayList<Integer> integerList = new ArrayList<>();
+		for (int i: primArray) {
+			integerList.add(i);
 		}
-		return n;
+		return integerList;
 	}
 }
