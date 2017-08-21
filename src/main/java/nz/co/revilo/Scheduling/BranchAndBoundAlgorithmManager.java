@@ -50,10 +50,24 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
 			totalNodeWeights+=_nodeWeights[nodeId];
 		}
 
-		for(int nodeId : sources) {
-			for(int p=0; p<_processingCores; p++){
+		/*
+		 * Definitely have sources as a row at start of each processor if there aren't more sources than cores
+		 * All others will just be permutations
+		 * If stack sources on same processor, will be less optimal
+		 */
+		if(sources.size()<=_processingCores){
+			int p=0;
+			for(int nodeId : sources) {
 				Schedule newSchedule = new Schedule(this, null, nodeId, p);
 				rootSchedules.add(newSchedule);
+				p++;
+			}
+		} else {
+			for(int nodeId : sources) {
+				for(int p=0; p<_processingCores; p++){
+					Schedule newSchedule = new Schedule(this, null, nodeId, p);
+					rootSchedules.add(newSchedule);
+				}
 			}
 		}
 
