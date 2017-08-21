@@ -32,7 +32,7 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
 		numNodes=_nodeWeights.length;
 		bottomLevels=new int[numNodes];
 		NeighbourManagerHelper.setUpHelper(numNodes, _arcs);
-		
+
 		//get sources
 		for(int nodeId=0; nodeId<numNodes; nodeId++){
 			//check that sources have no parents
@@ -61,10 +61,9 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
 		calculateBottomLevels();
 
 		while(!rootSchedules.isEmpty()){
-			System.out.println("Next root");
 			bnb(rootSchedules.remove(0));
 		}
-		
+
 		returnResults();
 	}
 
@@ -80,17 +79,17 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
 			nodeProcessors.add(optimalSchedule.closedSet.get(nodeId)._processor);//processors scheduled on
 		}	
 		System.out.println("Optimal length found: "+optimalSchedule.getMaxFinishTime());
-		
+
 		//pass to output
 		getListener().finalSchedule(
-                _graphName,
-                Arrays.asList(_nodeNames),
-                primToBool2D(_arcs),
-                primToInt2D(_arcWeights),
-                primToInt(_nodeWeights),
-                nodeStartTimes,
-                nodeProcessors
-        );
+				_graphName,
+				Arrays.asList(_nodeNames),
+				primToBool2D(_arcs),
+				primToInt2D(_arcWeights),
+				primToInt(_nodeWeights),
+				nodeStartTimes,
+				nodeProcessors
+				);
 	}
 
 	/**
@@ -101,8 +100,6 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
 	 * @author Abby S
 	 */
 	private void bnb(Schedule s) {
-		//System.out.println(s.toString());
-		
 		//TODO: not strict enough?
 		if(s.lowerBound>=upperBound){
 			s=null; //garbage collect that schedule
@@ -115,7 +112,6 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
 			//TODO: doing this to make sure only optimal schedules get through
 			if(s.getMaxFinishTime()<=upperBound){
 				optimalSchedule=s;
-				System.out.println("New Optimal");
 				upperBound=s.getMaxFinishTime();
 				return;
 			}
@@ -150,7 +146,7 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
 				int fromGivenNode=bottomLevels[nodeId]+_nodeWeights[inneighbour];
 				//Farthest distance needed from bottom
 				bottomLevels[inneighbour]=bottomLevels[inneighbour]>fromGivenNode?bottomLevels[inneighbour]:fromGivenNode;
-				
+
 				//inneighbours.remove(inneighbour); //ordered access so don't actually need to remove
 				List<Integer> inneighboursChildren=NeighbourManagerHelper.getOutneighbours(inneighbour); //nodes with 1 on the node's row
 				inneighboursChildren.remove(Integer.valueOf(nodeId)); //Integer or will treat the int as index
@@ -160,51 +156,51 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
 			}
 		}	
 	}
-	
-	
-    /**
-     * Creates an object type 2d bool list from primitive array
-     * @param prim the primitive boolean 2d array
-     * @return b the reference type list
-     */
-    private List<List<Boolean>> primToBool2D(boolean[][] prim) {
-        List<List<Boolean>> b = new ArrayList<>();
-        for (int i = 0; i < prim.length; i++) {
-            b.add(new ArrayList<>());
-            for (int j = 0; j < prim[i].length; j++) {
-                b.get(i).add(prim[i][j]);
-            }
-        }
-        return b;
-    }
 
-    /**
-     * Creates an object type 2d int list from primitive array
-     * @param prim the primitive int 2d array
-     * @return n the reference type list
-     */
-    private List<List<Integer>> primToInt2D(int[][] prim) {
-        List<List<Integer>> n = new ArrayList<>();
-        for (int i = 0; i < prim.length; i++) {
-            n.add(new ArrayList<>());
-            for (int j = 0; j < prim[i].length; j++) {
-                n.get(i).add(prim[i][j]);
-            }
-        }
-        return n;
-    }
 
-    /**
-     * Creates an object type 1d list from primitive array
-     * 
-     * @param prim
-     * @return
-     */
-    private List<Integer> primToInt(int[] prim) {
-        ArrayList<Integer> n = new ArrayList<>();
-        for (int i: prim) {
-            n.add(i);
-        }
-        return n;
-    }
+	/**
+	 * Creates an object type 2d bool list from primitive array
+	 * @param prim the primitive boolean 2d array
+	 * @return b the reference type list
+	 */
+	private List<List<Boolean>> primToBool2D(boolean[][] prim) {
+		List<List<Boolean>> b = new ArrayList<>();
+		for (int i = 0; i < prim.length; i++) {
+			b.add(new ArrayList<>());
+			for (int j = 0; j < prim[i].length; j++) {
+				b.get(i).add(prim[i][j]);
+			}
+		}
+		return b;
+	}
+
+	/**
+	 * Creates an object type 2d int list from primitive array
+	 * @param prim the primitive int 2d array
+	 * @return n the reference type list
+	 */
+	private List<List<Integer>> primToInt2D(int[][] prim) {
+		List<List<Integer>> n = new ArrayList<>();
+		for (int i = 0; i < prim.length; i++) {
+			n.add(new ArrayList<>());
+			for (int j = 0; j < prim[i].length; j++) {
+				n.get(i).add(prim[i][j]);
+			}
+		}
+		return n;
+	}
+
+	/**
+	 * Creates an object type 1d list from primitive array
+	 * 
+	 * @param prim
+	 * @return
+	 */
+	private List<Integer> primToInt(int[] prim) {
+		ArrayList<Integer> n = new ArrayList<>();
+		for (int i: prim) {
+			n.add(i);
+		}
+		return n;
+	}
 }

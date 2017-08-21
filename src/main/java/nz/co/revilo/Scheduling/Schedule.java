@@ -6,8 +6,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-import nz.co.revilo.Scheduling.BranchAndBoundAlgorithmManager;
-
 /**
  * Represents a schedule
  * 
@@ -45,7 +43,6 @@ public class Schedule {
 			for(int node=0; node<bnb.numNodes; node++) openSet.add(node);
 			independentSet.addAll(bnb.sources);
 			lowerBound=bnb.bottomLevels[nodeId];
-				//System.out.println(independentSet + "  " + nodeId);
 		} else { //adding to a schedule
 			cloneParentSchedule(parentSchedule);
 
@@ -68,7 +65,7 @@ public class Schedule {
 			//Does this actually work as a heuristic?			
 			int perfectLoadBalancing=(bnb.totalNodeWeights+totalIdleTime)/bnb._processingCores;
 			lowerBound=(startTime+bnb.bottomLevels[nodeId])>perfectLoadBalancing?(startTime+bnb.bottomLevels[nodeId]):perfectLoadBalancing;
-			
+
 			//this will only remove the very slow ones that have already exceeded upper bound
 			//lowerBound=getMaxFinishTime();
 		}
@@ -116,7 +113,7 @@ public class Schedule {
 	private void cloneParentSchedule(Schedule parentSchedule) {
 		//clone finishTimes
 		for(int i=0; i<bnb._processingCores;i++) finishTimes[i]=parentSchedule.finishTimes[i];
-		
+
 		//clone idleTime
 		totalIdleTime=parentSchedule.totalIdleTime;
 
@@ -163,11 +160,18 @@ public class Schedule {
 			}
 			if(!waitingForParent) {
 				independentSet.add(child); //not waiting on any parents
-				//System.out.println("Adding "+child);
 			}
 		}
 	}
 
+	/**
+	 * Method to show current schedule in a string form
+	 * 
+	 * TODO: delete if unused
+	 * 
+	 * @author Abby S
+	 * 
+	 */
 	@Override
 	public String toString(){
 		return "Printing schedule with " + closedSet.keySet() + " closed, and " + openSet + " open. Independent " + independentSet;
@@ -183,7 +187,7 @@ public class Schedule {
 	public class Tuple {
 		int _startTime;
 		int _processor;
-		
+
 		public Tuple(int startTime, int processor){
 			_startTime=startTime;
 			_processor=processor;
