@@ -56,16 +56,16 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
 		 * If stack sources on same processor, will be less optimal
 		 */
 		if(sources.size()<=_processingCores){
-			int p=0;
+			int processor=0;
 			for(int nodeId : sources) {
-				Schedule newSchedule = new Schedule(this, null, nodeId, p);
+				Schedule newSchedule = new Schedule(this, null, nodeId, processor);
 				rootSchedules.add(newSchedule);
-				p++;
+				processor++;
 			}
 		} else {
 			for(int nodeId : sources) {
-				for(int p=0; p<_processingCores; p++){
-					Schedule newSchedule = new Schedule(this, null, nodeId, p);
+				for(int processor=0; processor<_processingCores; processor++){
+					Schedule newSchedule = new Schedule(this, null, nodeId, processor);
 					rootSchedules.add(newSchedule);
 				}
 			}
@@ -109,33 +109,33 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
 	/**
 	 * bnb based on the current schedule s
 	 * 
-	 * @param s
+	 * @param schedule
 	 * 
 	 * @author Abby S
 	 */
-	private void bnb(Schedule s) {
+	private void bnb(Schedule schedule) {
 		//TODO: not strict enough?
-		if(s.lowerBound>=upperBound){
-			s=null; //garbage collect that schedule
+		if(schedule.lowerBound>=upperBound){
+			schedule=null; //garbage collect that schedule
 			return; //break tree at this point
 		}
 
 		//found optimal for the root started with
 		//reached end of a valid schedule. Never broke off, so is optimal
-		if(s.openSet.isEmpty()){			
+		if(schedule.openSet.isEmpty()){			
 			//TODO: doing this to make sure only optimal schedules get through
-			if(s.getMaxFinishTime()<=upperBound){
-				optimalSchedule=s;
-				upperBound=s.getMaxFinishTime();
+			if(schedule.getMaxFinishTime()<=upperBound){
+				optimalSchedule=schedule;
+				upperBound=schedule.getMaxFinishTime();
 				return;
 			}
 		}
 
 		//continue DFS
 		List<Schedule> nextSchedules = new ArrayList<>();
-		for(int n:s.independentSet){
-			for(int p=0; p<_processingCores; p++){
-				nextSchedules.add(new Schedule(this, s, n, p));
+		for(int node:schedule.independentSet){
+			for(int processor=0; processor<_processingCores; processor++){
+				nextSchedules.add(new Schedule(this, schedule, node, processor));
 			}
 		}
 		for(Schedule nextSchedule:nextSchedules){
