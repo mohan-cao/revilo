@@ -84,9 +84,9 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
 		getListener().finalSchedule(
 				_graphName,
 				Arrays.asList(_nodeNames),
-				primToBool2D(_arcs),
-				primToInt2D(_arcWeights),
-				primToInt(_nodeWeights),
+				PrimitiveInterfaceHelper.primToBoolean2D(_arcs),
+				PrimitiveInterfaceHelper.primToInteger2D(_arcWeights),
+				PrimitiveInterfaceHelper.primToInteger1D(_nodeWeights),
 				nodeStartTimes,
 				nodeProcessors
 				);
@@ -155,52 +155,5 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
 				}
 			}
 		}	
-	}
-
-
-	/**
-	 * Creates an object type 2d bool list from primitive array
-	 * @param prim the primitive boolean 2d array
-	 * @return b the reference type list
-	 */
-	private List<List<Boolean>> primToBool2D(boolean[][] prim) {
-		List<List<Boolean>> b = new ArrayList<>();
-		for (int i = 0; i < prim.length; i++) {
-			b.add(new ArrayList<>());
-			for (int j = 0; j < prim[i].length; j++) {
-				b.get(i).add(prim[i][j]);
-			}
-		}
-		return b;
-	}
-
-	/**
-	 * Creates an object type 2d int list from primitive array
-	 * @param prim the primitive int 2d array
-	 * @return n the reference type list
-	 */
-	private List<List<Integer>> primToInt2D(int[][] prim) {
-		List<List<Integer>> n = new ArrayList<>();
-		for (int i = 0; i < prim.length; i++) {
-			n.add(new ArrayList<>());
-			for (int j = 0; j < prim[i].length; j++) {
-				n.get(i).add(prim[i][j]);
-			}
-		}
-		return n;
-	}
-
-	/**
-	 * Creates an object type 1d list from primitive array
-	 * 
-	 * @param prim
-	 * @return
-	 */
-	private List<Integer> primToInt(int[] prim) {
-		ArrayList<Integer> n = new ArrayList<>();
-		for (int i: prim) {
-			n.add(i);
-		}
-		return n;
 	}
 }
