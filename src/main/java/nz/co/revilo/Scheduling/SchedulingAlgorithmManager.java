@@ -7,6 +7,9 @@ public class SchedulingAlgorithmManager extends AlgorithmManager {
     public SchedulingAlgorithmManager(int processingCores) {
         super(processingCores);
     }
+    public int getCurrentOptimal() {
+        return -1; // this doesn't exist
+    }
 
     protected void execute() {
         //priority queue about nodes to go to next

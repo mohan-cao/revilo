@@ -62,6 +62,8 @@ public class App {
         return _inst;
     }
 
+    public static AlgorithmManager getAlgorithmManager() {return _inst.manager;} //access data from it
+
     public static int getExecCores() {
         return _inst._numExecutionCores;
     }

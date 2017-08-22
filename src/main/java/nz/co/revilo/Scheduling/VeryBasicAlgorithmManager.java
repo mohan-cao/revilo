@@ -15,6 +15,9 @@ public class VeryBasicAlgorithmManager extends AlgorithmManager {
     public VeryBasicAlgorithmManager(int processingCores) {
         super(processingCores);
     }
+    public int getCurrentOptimal() {
+        return -1; // this doesn't actually have a current optimal because it's topological
+    }
 
 
     // we have arcs arcweights and nodeweights :O

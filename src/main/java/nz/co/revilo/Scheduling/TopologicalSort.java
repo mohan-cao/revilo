@@ -14,6 +14,9 @@ public class TopologicalSort extends AlgorithmManager {
     public TopologicalSort(int processingCores) {
         super(processingCores);
     }
+    public int getCurrentOptimal() {
+        return -1; // this doesn't actually have a current optimal because it's topological
+    }
 
     /**
      * Executes the implemented sorting algorithm (topological sort)

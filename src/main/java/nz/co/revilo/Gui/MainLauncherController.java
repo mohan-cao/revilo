@@ -20,7 +20,7 @@ public class MainLauncherController implements Initializable {
 
     public MainLauncherController(App app) {
         this.app = app;
-
+    // TODO is this the best way?
         Task task = new Task<Void>() {
             @Override
             public Void call() throws Exception {
@@ -52,11 +52,11 @@ public class MainLauncherController implements Initializable {
 
     @FXML
     private Label bestLabel;
-    
+
     @FXML
     private void closeRevilo(ActionEvent event) {
 //        timeLabel.setText(app.getRunningTime()+ "");
-        ((Button)event.getSource()).getScene().getWindow().hide();
+        ((Button)event.getSource()).getScene().getWindow().hide(); //close machine broke
     }
 
     @Override
@@ -70,6 +70,7 @@ public class MainLauncherController implements Initializable {
                 Platform.runLater(new Runnable() {
                     public void run() {
                         timeLabel.setText(String.format("%.1f", app.getRunningTime()));
+                        bestLabel.setText(app.getAlgorithmManager().getCurrentOptimal() + "");
 //                        timeLabel.setText(app.getRunningTime() + "");
                     }
                 });

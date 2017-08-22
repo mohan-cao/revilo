@@ -28,6 +28,10 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
 	}
 
 	@Override
+	public int getCurrentOptimal() {
+		return upperBound;
+	}
+	@Override
 	protected void execute(){
 		numNodes=_nodeWeights.length;
 		bottomLevels=new int[numNodes];

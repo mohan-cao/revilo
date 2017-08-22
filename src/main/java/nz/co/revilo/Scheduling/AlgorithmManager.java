@@ -68,6 +68,12 @@ public abstract class AlgorithmManager implements ParseResultListener {
     }
 
     /**
+     * Provides a way for the UI to grab the current optimal time
+     * @return current optimal time
+     */
+    public abstract int getCurrentOptimal();
+
+    /**
      * Getter for the associated ScheduleResultListener
      * @return listener associated with this algorithm manager
      */
