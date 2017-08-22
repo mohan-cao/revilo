@@ -140,6 +140,7 @@ public class Schedule {
 		return max;
 	}
 
+	//TODO: remove if unused
 	public boolean isBounded(int maxFinishTime) {
 		if(this.lowerBound >= maxFinishTime){
 			return true;
