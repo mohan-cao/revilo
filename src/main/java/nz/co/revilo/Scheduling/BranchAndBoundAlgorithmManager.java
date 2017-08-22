@@ -90,8 +90,8 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
 	 */
 	private void returnResults() {
 		for(int nodeId=0; nodeId<numNodes; nodeId++){
-			nodeStartTimes.add(optimalSchedule.closedSet.get(nodeId).getA());//start times
-			nodeProcessors.add(optimalSchedule.closedSet.get(nodeId).getB());//processors scheduled on
+			nodeStartTimes.add(optimalSchedule.closedNodes.get(nodeId).getA());//start times
+			nodeProcessors.add(optimalSchedule.closedNodes.get(nodeId).getB());//processors scheduled on
 		}	
 		System.out.println("Optimal length found: "+optimalSchedule.getMaxFinishTime());
 
@@ -131,7 +131,7 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
 
 		//found optimal for the root started with
 		//reached end of a valid schedule. Never broke off, so is optimal
-		if(schedule.openSet.isEmpty()){			
+		if(schedule.openNodes.isEmpty()){			
 			//TODO: doing this to make sure only optimal schedules get through
 			if(schedule.getMaxFinishTime()<=upperBound){
 				optimalSchedule=schedule;
@@ -142,7 +142,7 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
 
 		//continue DFS
 		List<Schedule> nextSchedules = new ArrayList<>();
-		for(int node:schedule.independentSet){
+		for(int node:schedule.independentNodes){
 			for(int processor=0; processor<_processingCores; processor++){
 				nextSchedules.add(new Schedule(this, schedule, node, processor));
 			}

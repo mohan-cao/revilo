@@ -23,10 +23,10 @@ public class Schedule {
 	int scheduledWeight = 0;
 	int _scheduleStructureId = -1;
 	BranchAndBoundAlgorithmManager bnb;
-	Set<Integer> openSet=new HashSet<>(); //need to assign to processor
-	Map<Integer,Tuple<Integer,Integer>> closedSet=new HashMap<>(); //done nodes
+	Set<Integer> openNodes=new HashSet<>(); //need to assign to processor
+	Map<Integer,Tuple<Integer,Integer>> closedNodes=new HashMap<>(); //done nodes
+	Set<Integer> independentNodes=new HashSet<>(); //nodes it depends on are done
 	Map<Integer,Set<Tuple<Integer,Integer>>> processorToTasks; //processor to task map
-	Set<Integer> independentSet=new HashSet<>(); //nodes it depends on are done
 
 	/**
 	 * Create new schedule object
@@ -47,15 +47,15 @@ public class Schedule {
 		//scheduling on a root node
 		if(parentSchedule==null){
 			//initialise data structures
-			for(int node=0; node<bnb.numNodes; node++) openSet.add(node);
-			independentSet.addAll(bnb.sources);
+			for(int node=0; node<bnb.numNodes; node++) openNodes.add(node);
+			independentNodes.addAll(bnb.sources);
 			lowerBound=bnb.bottomLevels[nodeId];
 		} else { //adding to a schedule
 			cloneParentSchedule(parentSchedule);
 
 			//when parents are done
 			for(int parent:NeighbourManagerHelper.getInneighbours(nodeId)){
-				Tuple<Integer,Integer> parentAssignment=closedSet.get(parent);
+				Tuple<Integer,Integer> parentAssignment=closedNodes.get(parent);
 				int dataReadyTime=parentAssignment.getA() + bnb._nodeWeights[parent];
 				if(processor!=parentAssignment.getB()) {
 					dataReadyTime+=bnb._arcWeights[parent][nodeId];
@@ -77,9 +77,9 @@ public class Schedule {
 		createScheduleStructureMap(bnb);
 
 		//update data structures
-		closedSet.put(nodeId, new Tuple<>(startTime, processor));
-		openSet.remove(nodeId);		
-		independentSet.remove(nodeId);
+		closedNodes.put(nodeId, new Tuple<>(startTime, processor));
+		openNodes.remove(nodeId);		
+		independentNodes.remove(nodeId);
 		updateIndependentChildren(nodeId);
 		finishTimes[processor]+=addedIdleTime+bnb._nodeWeights[nodeId];
 
@@ -105,9 +105,9 @@ public class Schedule {
 		}
 		
 		//Add all assigned nodes to schedule structure map
-		for(Integer assignedNode : closedSet.keySet()){
-			int assignedStartTime = closedSet.get(assignedNode).getA();
-			int assignedProcessor = closedSet.get(assignedNode).getB();
+		for(Integer assignedNode : closedNodes.keySet()){
+			int assignedStartTime = closedNodes.get(assignedNode).getA();
+			int assignedProcessor = closedNodes.get(assignedNode).getB();
 			processorToTasks.get(assignedProcessor).add(new Tuple<>(assignedNode,assignedStartTime));
 		}
 	}
@@ -163,26 +163,26 @@ public class Schedule {
 
 		Integer element;
 		//clone openSet
-		Iterator<Integer> iterator=parentSchedule.openSet.iterator();
-		for(int n=0; n<parentSchedule.openSet.size();n++){
+		Iterator<Integer> iterator=parentSchedule.openNodes.iterator();
+		for(int n=0; n<parentSchedule.openNodes.size();n++){
 			element=iterator.next();
-			openSet.add(element);
+			openNodes.add(element);
 		}
 
 		//clone closedSet
 		Integer nodeKey;
-		iterator=parentSchedule.closedSet.keySet().iterator();
-		for(int n=0; n<parentSchedule.closedSet.keySet().size();n++){
+		iterator=parentSchedule.closedNodes.keySet().iterator();
+		for(int n=0; n<parentSchedule.closedNodes.keySet().size();n++){
 			nodeKey=iterator.next();
-			Tuple<Integer,Integer> t = parentSchedule.closedSet.get(nodeKey);
-			closedSet.put(nodeKey, new Tuple<>(t.getA(), t.getB()));
+			Tuple<Integer,Integer> t = parentSchedule.closedNodes.get(nodeKey);
+			closedNodes.put(nodeKey, new Tuple<>(t.getA(), t.getB()));
 		}
 
 		//clone openSet
-		iterator=parentSchedule.independentSet.iterator();
-		for(int n=0; n<parentSchedule.independentSet.size();n++){
+		iterator=parentSchedule.independentNodes.iterator();
+		for(int n=0; n<parentSchedule.independentNodes.size();n++){
 			element=iterator.next();
-			independentSet.add(element);
+			independentNodes.add(element);
 		}
 	}
 
@@ -197,13 +197,13 @@ public class Schedule {
 		for(int child:NeighbourManagerHelper.getOutneighbours(parent)){
 			boolean waitingForParent=false;
 			for(int p:NeighbourManagerHelper.getInneighbours(child)){
-				if(openSet.contains(p)){
+				if(openNodes.contains(p)){
 					waitingForParent=true; //still waiting on a parent
 					break; //move to next child node
 				}
 			}
 			if(!waitingForParent) {
-				independentSet.add(child); //not waiting on any parents
+				independentNodes.add(child); //not waiting on any parents
 			}
 		}
 	}
@@ -220,7 +220,7 @@ public class Schedule {
 	 */
 	@Override
 	public String toString(){
-		return "Printing schedule with " + closedSet.keySet() + " closed, and " + openSet + " open. Independent " + independentSet;
+		return "Printing schedule with " + closedNodes.keySet() + " closed, and " + openNodes + " open. Independent " + independentNodes;
 	}
 
 	/**
