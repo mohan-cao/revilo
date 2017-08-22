@@ -99,10 +99,7 @@ public class Schedule {
 	}
 
 	public boolean isBounded(int maxFinishTime) {
-		if(this.lowerBound >= maxFinishTime){
-			return true;
-		}
-		return false;
+		return this.lowerBound >= maxFinishTime;
 	}
 
 	/**
@@ -197,10 +194,7 @@ public class Schedule {
 
 			Tuple t = (Tuple) o;
 
-			if((t._processor == this._processor) && (t._startTime == this._startTime)) {
-				return true;
-			}
-			return false;
+			return (t._processor == this._processor) && (t._startTime == this._startTime);
 		}
 	}
 }

@@ -38,7 +38,7 @@ public class MainLauncher extends Application{
             loader.setLocation(MainLauncher.class.getResource("/Main.fxml"));
             MainLauncherController mlc = new MainLauncherController(app);
             loader.setController(mlc);
-            rootLayout = (BorderPane) loader.load();
+            rootLayout = loader.load();
 
             rootLayout.setOnMousePressed(new EventHandler<MouseEvent>() {
                 @Override

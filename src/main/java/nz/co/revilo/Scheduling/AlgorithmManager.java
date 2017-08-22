@@ -3,11 +3,13 @@ package nz.co.revilo.Scheduling;
 import nz.co.revilo.Input.ParseResultListener;
 import nz.co.revilo.Output.ScheduleResultListener;
 
+import java.util.Observable;
+
 /**
  * Abstract class defining the data structures, and information to be used when implementing any algorithms as part of a
  * scheduling solution.
  */
-public abstract class AlgorithmManager implements ParseResultListener {
+public abstract class AlgorithmManager extends Observable implements ParseResultListener {
 
     int _processingCores;
     private ScheduleResultListener _listener;
@@ -17,12 +19,29 @@ public abstract class AlgorithmManager implements ParseResultListener {
     String[] _nodeNames;
     String _graphName;
 
+    int brokenTrees;
+    int upperBound;
+    Schedule optimalSchedule;
+
     /**
      * Sets the number of processing cores the tasks must be scheduled on.
      * @param processingCores number of cores specified for the final schedule
      */
     public AlgorithmManager(int processingCores) {
         _processingCores = processingCores;
+        brokenTrees = 0;
+    }
+
+    public int getBrokenTrees() {
+        return brokenTrees;
+    }
+
+    public int getUpperBound() {
+        return upperBound;
+    }
+
+    public Schedule getOptimalSchedule() {
+        return optimalSchedule;
     }
 
     /**
@@ -66,12 +85,6 @@ public abstract class AlgorithmManager implements ParseResultListener {
     protected int getProcessingCores() {
         return _processingCores;
     }
-
-    /**
-     * Provides a way for the UI to grab the current optimal time
-     * @return current optimal time
-     */
-    public abstract int getCurrentOptimal();
 
     /**
      * Getter for the associated ScheduleResultListener

@@ -15,10 +15,6 @@ public class ImprovedTopologicalAlgorithmManager extends AlgorithmManager {
     ArrayList<Integer> visited = new ArrayList<>();
     // information we have
     // graph name, node names, node weights, arcs, arcweights
-    @Override
-    public int getCurrentOptimal() {
-        return -1; // this doesn't actually have a current optimal because it's topological
-    }
 
     @Override
     protected void execute() {

@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.chart.StackedBarChart?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.BorderPane?>
@@ -10,7 +13,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane fx:id="baseBp" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
    <top>
       <Pane minHeight="50.0" style="-fx-background-color: #139AF9;" BorderPane.alignment="CENTER">
          <children>
@@ -27,21 +30,6 @@
          </children>
       </Pane>
    </top>
-   <center>
-      <Pane style="-fx-background-color: #213653;" BorderPane.alignment="CENTER">
-         <children>
-            <Label layoutX="48.0" layoutY="55.0" text="This is Revilo." textFill="WHITE">
-               <font>
-                  <Font size="16.0" />
-               </font>
-            </Label>
-            <Label layoutX="48.0" layoutY="91.0" text="The optimal solution is no solution." textFill="WHITE">
-               <font>
-                  <Font size="16.0" />
-               </font>
-            </Label>
-         </children></Pane>
-   </center>
    <bottom>
       <GridPane alignment="CENTER" style="-fx-background-color: #1A2C41;" BorderPane.alignment="CENTER">
         <columnConstraints>
@@ -146,7 +134,7 @@
             </Label>
             <Label fx:id="branchesLabel" contentDisplay="CENTER" text="728" textFill="#e98755" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
                <font>
-                  <Font name="Whitney-Semibold" size="48.0" />
+                  <Font name="Whitney-Semibold" size="24.0" />
                </font>
                <GridPane.margin>
                   <Insets />
@@ -169,4 +157,18 @@
          </children>
       </GridPane>
    </bottom>
+   <center>
+      <Pane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #1F334F;" BorderPane.alignment="CENTER">
+         <children>
+            <StackedBarChart fx:id="ganttChart" layoutX="150.0" layoutY="28.0" legendVisible="false">
+              <xAxis>
+                <CategoryAxis side="BOTTOM" />
+              </xAxis>
+              <yAxis>
+                <NumberAxis side="LEFT" />
+              </yAxis>
+            </StackedBarChart>
+         </children>
+      </Pane>
+   </center>
 </BorderPane>

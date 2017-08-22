@@ -18,20 +18,14 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
 	int[] bottomLevels;
 	int numNodes;
 	int totalNodeWeights;
-	private int upperBound;
-	private Schedule optimalSchedule;
-	private List<Integer> nodeStartTimes=new ArrayList<>();;
-	private List<Integer> nodeProcessors=new ArrayList<>();;
+	//private int upperBound;
+//	private Schedule optimalSchedule;
+	private List<Integer> nodeStartTimes=new ArrayList<>();
+	private List<Integer> nodeProcessors=new ArrayList<>();
 
-	private int brokenTrees;
 
 	public BranchAndBoundAlgorithmManager(int processingCores) {
 		super(processingCores);
-	}
-
-	@Override
-	public int getCurrentOptimal() {
-		return upperBound;
 	}
 	@Override
 	protected void execute(){
@@ -112,6 +106,7 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
 		//TODO: not strict enough?
 		if(s.lowerBound>=upperBound){
 			s=null; //garbage collect that schedule
+			brokenTrees++; //we're breaking a tree;
 			return; //break tree at this point
 		}
 
@@ -121,7 +116,7 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
 			//TODO: doing this to make sure only optimal schedules get through
 			if(s.getMaxFinishTime()<=upperBound){
 				optimalSchedule=s;
-				System.out.println("New Optimal");
+				System.out.println("New Optimal: " + upperBound);
 				upperBound=s.getMaxFinishTime();
 				return;
 			}

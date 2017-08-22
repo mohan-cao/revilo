@@ -62,7 +62,7 @@ public class App {
         return _inst;
     }
 
-    public static AlgorithmManager getAlgorithmManager() {return _inst.manager;} //access data from it
+    public static AlgorithmManager getAlgorithmManager() {return manager;} //access data from it
 
     public static int getExecCores() {
         return _inst._numExecutionCores;
@@ -131,12 +131,12 @@ public class App {
 
 
         // Parse file and give it algorithm manager to give results to. @Michael Kemp
-        _inst.manager = new BranchAndBoundAlgorithmManager(_inst._numExecutionCores);
-        _inst.reader = new DotFileReader(_inst._inputFilename);
+        manager = new BranchAndBoundAlgorithmManager(_inst._numExecutionCores);
+        reader = new DotFileReader(_inst._inputFilename);
 
         // Output to file @Michael Kemp
-        _inst.output = new DotFileWriter(_inst._outputFilename);
-        _inst.manager.inform(output);
+        output = new DotFileWriter(_inst._outputFilename);
+        manager.inform(output);
 
         if (_inst._visualise) {
 //            System.out.println("There is a visualisation outputted.");
