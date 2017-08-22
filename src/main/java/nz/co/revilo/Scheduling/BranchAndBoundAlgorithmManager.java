@@ -23,6 +23,8 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
 	private List<Integer> nodeStartTimes=new ArrayList<>();;
 	private List<Integer> nodeProcessors=new ArrayList<>();;
 
+	private int brokenTrees;
+
 	public BranchAndBoundAlgorithmManager(int processingCores) {
 		super(processingCores);
 	}
