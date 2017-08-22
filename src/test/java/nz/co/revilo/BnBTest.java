@@ -1,7 +1,6 @@
 package nz.co.revilo;
 
-import junit.framework.TestResult;
-import nz.co.revilo.Scheduling.ImprovedTopologicalAlgorithmManager;
+import nz.co.revilo.Scheduling.BranchAndBoundAlgorithmManager;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -9,13 +8,13 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 /**
- * Test cases designed for use with the topological sort implementation(s) of AlgorithmManager. These tests only ensure
- * that schedules are valid, NOT optimal. This is done by ensuring all dependencies are satisfied (i.e. arcs correctly
- * acknowledged) in scheduling, and that is no more than one process running on a processor at once.
- * @author Aimee
- * @version alpha
+ * Test class for BnB
+ * 
+ * @author Abby S
+ * Based on class written by Aimee
+ *
  */
-public class TopologicalTest extends ValidityTest {
+public class BnBTest extends ValidityTest {
 
     class Pair<K,V>{
         private K _a;
@@ -38,7 +37,7 @@ public class TopologicalTest extends ValidityTest {
      */
     @Before
     public void setUp() {
-        _algorithmManager = new ImprovedTopologicalAlgorithmManager(1);
+        _algorithmManager = new BranchAndBoundAlgorithmManager(1);
     }
 
 
@@ -48,7 +47,7 @@ public class TopologicalTest extends ValidityTest {
      */
     @Test
     public void testSimpleDiamondDAG(){
-        TestResultListener t = schedule(AppTest.TEST_PATH + "input.dot");
+        TestResultListener t = scheduleBnB(AppTest.TEST_PATH + "input.dot");
         assertTrue(satisfiesDependencies(t));
         assertTrue(validStartTimeForTasks(t));
         for(TestResultListener.Node n : t.getNodes()){
@@ -77,7 +76,7 @@ public class TopologicalTest extends ValidityTest {
      */
     @Test
     public void testLinearDAG(){
-        TestResultListener t = schedule(AppTest.TEST_PATH + "input1.dot");
+        TestResultListener t = scheduleBnB(AppTest.TEST_PATH + "input1.dot");
         assertTrue(satisfiesDependencies(t));
         assertTrue(validStartTimeForTasks(t));
         for(TestResultListener.Node n : t.getNodes()){
@@ -108,7 +107,7 @@ public class TopologicalTest extends ValidityTest {
      */
     @Test
     public void testLinearDAG2(){
-        TestResultListener t = schedule(AppTest.TEST_PATH + "input2.dot");
+        TestResultListener t = scheduleBnB(AppTest.TEST_PATH + "input2.dot");
         assertTrue(satisfiesDependencies(t));
         assertTrue(validStartTimeForTasks(t));
         for(TestResultListener.Node n : t.getNodes()){
@@ -138,40 +137,16 @@ public class TopologicalTest extends ValidityTest {
     /**
      * Tests against a small branching DAG with arbitrary branching
      * 
-     * TODO: Test accepted output currently doesn't cover all correct output
-     * @author Abby S : uncomment @Test annotation when fixed
+     * @author Abby S : test was found to be incorrect
      */
-//    @Test
-    public void testSmallBranchingDAG(){
-        TestResultListener t = schedule(AppTest.TEST_PATH + "input3.dot");
-        assertTrue(satisfiesDependencies(t));
-        assertTrue(validStartTimeForTasks(t));
-        for(TestResultListener.Node n : t.getNodes()){
-            String s = n.toString();
-            int starttime = n.getStartTime();
-            int weight = n.getWeight();
-            if(s.equals("0")){
-                assertEquals(starttime,0);
-                assertEquals(weight,4);
-            }else if(s.equals("1")||s.equals("2")||s.equals("3")){ //TODO
-                assertTrue(starttime==4||starttime==6||starttime==8);
-                assertEquals(weight,2);
-            }else if(s.equals("4")||s.equals("5")){ //TODO
-                assertTrue(starttime==10||starttime==15);
-                assertEquals(weight,5);
-            }else if(s.equals("6")){
-                assertEquals(starttime,20);
-                assertEquals(weight,10);
-            }
-        }
-    }
+    
 
     /**
      * Tests against a simple fanning DAG
      */
     @Test
     public void testSimpleFanningDAG(){
-        TestResultListener t = schedule(AppTest.TEST_PATH + "input4.dot");
+        TestResultListener t = scheduleBnB(AppTest.TEST_PATH + "input4.dot");
         assertTrue(satisfiesDependencies(t));
         assertTrue(validStartTimeForTasks(t));
         for(TestResultListener.Node n : t.getNodes()){
@@ -193,7 +168,7 @@ public class TopologicalTest extends ValidityTest {
      */
     @Test
     public void test10NodesRandom() {
-        TestResultListener t = schedule(AppTest.TEST_PATH + "input.dot");
+        TestResultListener t = scheduleBnB(AppTest.TEST_PATH + "input.dot");
         assertTrue(satisfiesDependencies(t));
         assertTrue(validStartTimeForTasks(t));
     }
@@ -203,7 +178,7 @@ public class TopologicalTest extends ValidityTest {
      */
     @Test
     public void test7NodeOutTree() {
-        TestResultListener t = schedule(AppTest.TEST_PATH + "Nodes_7_OutTree.dot");
+        TestResultListener t = scheduleBnB(AppTest.TEST_PATH + "Nodes_7_OutTree.dot");
         assertTrue(satisfiesDependencies(t));
         assertTrue(validStartTimeForTasks(t));
     }
@@ -213,7 +188,7 @@ public class TopologicalTest extends ValidityTest {
      */
     @Test
     public void test8NodeRandom() {
-        TestResultListener t = schedule(AppTest.TEST_PATH + "Nodes_7_OutTree.dot");
+        TestResultListener t = scheduleBnB(AppTest.TEST_PATH + "Nodes_7_OutTree.dot");
         assertTrue(satisfiesDependencies(t));
         assertTrue(validStartTimeForTasks(t));
     }
@@ -223,7 +198,7 @@ public class TopologicalTest extends ValidityTest {
      */
     @Test
     public void test9NodeSeriesParallel() {
-        TestResultListener t = schedule(AppTest.TEST_PATH + "Nodes_7_OutTree.dot");
+        TestResultListener t = scheduleBnB(AppTest.TEST_PATH + "Nodes_7_OutTree.dot");
         assertTrue(satisfiesDependencies(t));
         assertTrue(validStartTimeForTasks(t));
     }
