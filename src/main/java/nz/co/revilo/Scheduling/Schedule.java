@@ -91,7 +91,7 @@ public class Schedule {
 	}
 
 	/**
-	 * create schedule structure map for hashcode comparison
+	 * create schedule structure map for id comparison
 	 * @param bnb
 	 * 
 	 * @author Abby S
