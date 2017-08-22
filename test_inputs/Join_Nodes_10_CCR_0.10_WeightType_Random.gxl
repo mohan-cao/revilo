@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gxl>
+	<graph id="Join_Nodes_10_CCR_0.10_WeightType_Random">
+		<attr name="No of nodes">
+			<int>10</int>
+		</attr>
+		<attr name="No of edges">
+			<int>9</int>
+		</attr>
+		<attr name="Density">
+			<float>0.9</float>
+		</attr>
+		<attr name="CCR">
+			<float>0.1</float>
+		</attr>
+		<attr name="Node concurrency">
+			<int>9</int>
+		</attr>
+		<attr name="Total sequential time">
+			<int>520</int>
+		</attr>
+		<node id="0">
+			<attr name="Weight">
+				<int>43</int>
+			</attr>
+		</node>
+		<node id="1">
+			<attr name="Weight">
+				<int>36</int>
+			</attr>
+		</node>
+		<node id="2">
+			<attr name="Weight">
+				<int>71</int>
+			</attr>
+		</node>
+		<node id="3">
+			<attr name="Weight">
+				<int>71</int>
+			</attr>
+		</node>
+		<node id="4">
+			<attr name="Weight">
+				<int>50</int>
+			</attr>
+		</node>
+		<node id="5">
+			<attr name="Weight">
+				<int>64</int>
+			</attr>
+		</node>
+		<node id="6">
+			<attr name="Weight">
+				<int>57</int>
+			</attr>
+		</node>
+		<node id="7">
+			<attr name="Weight">
+				<int>14</int>
+			</attr>
+		</node>
+		<node id="8">
+			<attr name="Weight">
+				<int>57</int>
+			</attr>
+		</node>
+		<node id="9">
+			<attr name="Weight">
+				<int>57</int>
+			</attr>
+		</node>
+		<edge from="0" to="9">
+			<attr name="Weight">
+				<int>10</int>
+			</attr>
+		</edge>
+		<edge from="1" to="9">
+			<attr name="Weight">
+				<int>10</int>
+			</attr>
+		</edge>
+		<edge from="2" to="9">
+			<attr name="Weight">
+				<int>4</int>
+			</attr>
+		</edge>
+		<edge from="3" to="9">
+			<attr name="Weight">
+				<int>2</int>
+			</attr>
+		</edge>
+		<edge from="4" to="9">
+			<attr name="Weight">
+				<int>4</int>
+			</attr>
+		</edge>
+		<edge from="5" to="9">
+			<attr name="Weight">
+				<int>5</int>
+			</attr>
+		</edge>
+		<edge from="6" to="9">
+			<attr name="Weight">
+				<int>7</int>
+			</attr>
+		</edge>
+		<edge from="7" to="9">
+			<attr name="Weight">
+				<int>6</int>
+			</attr>
+		</edge>
+		<edge from="8" to="9">
+			<attr name="Weight">
+				<int>4</int>
+			</attr>
+		</edge>
+	</graph>
+</gxl>
