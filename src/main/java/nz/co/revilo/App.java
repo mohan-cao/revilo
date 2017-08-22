@@ -3,6 +3,8 @@ package nz.co.revilo;
 import com.beust.jcommander.JCommander;
 import nz.co.revilo.CommandLine.CLIParameters;
 import nz.co.revilo.Input.DotFileReader;
+import nz.co.revilo.Input.FileParser;
+import nz.co.revilo.Input.GxlFileReader;
 import nz.co.revilo.Output.DotFileProducer;
 import nz.co.revilo.Output.DotFileWriter;
 import nz.co.revilo.Scheduling.AlgorithmManager;
@@ -89,7 +91,7 @@ public class App {
             }
             // Sets the number of cores to do the scheduling on
             _inst._numParallelProcessors = params.getParallelCores();
-            
+
             // Sets the visualisation switch
             _inst._visualise = params.getVisualise();
 
@@ -119,6 +121,13 @@ public class App {
         	manager = new BranchAndBoundAlgorithmManager(_inst._numExecutionCores);
         }
         DotFileReader reader = new DotFileReader(_inst._inputFilename);
+        AlgorithmManager manager = new BranchAndBoundAlgorithmManager(_inst._numExecutionCores);
+        FileParser reader;
+        if (_inst._inputFilename.matches(".*gxl") || _inst._inputFilename.matches(".*GXL")) {
+            reader = new GxlFileReader(_inst._inputFilename);
+        } else {
+            reader = new DotFileReader(_inst._inputFilename);
+        }
 
         // Output to file @Michael Kemp
         DotFileProducer output = new DotFileWriter(_inst._outputFilename);

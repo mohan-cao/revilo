@@ -12,7 +12,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * DotFileReader is a class that extends DotFileParser it's purpose is to read the file and place the digraph in to a
+ * DotFileReader is a class that extends FileParser it's purpose is to read the file and place the digraph in to a
  * data-structure and give it to a ParseResultListener.
  * <p>
  * At the moment this is just a skeleton and needs to be fleshed out but a data structure needs to be determined
@@ -20,7 +20,7 @@ import java.util.regex.Pattern;
  * @author Michael Kemp
  * @version Beta
  */
-public class DotFileReader extends DotFileParser {
+public class DotFileReader extends FileParser {
 
     // Regex for string matchers that will extract the required information from the string
     public static final Pattern GRAPH_NAME_MATCH = Pattern.compile("[\\s]*digraph[\\s]*\"(.*)\"[\\s]*\\{[\\s]*");
