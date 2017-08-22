@@ -23,17 +23,17 @@ import java.util.regex.Pattern;
 public class GxlFileReader extends FileParser {
 
     // Regex for string matchers that will extract the required information from the string
-    public static final Pattern GRAPH_NAME_MATCH = Pattern.compile("[\\s]*<graph id=\"(.)*\">[\\s]*");
-    public static final Pattern ARC_FROM_MATCH = Pattern.compile("[\\s]*<edge from=\"(.)*\" to=\".*\">[\\s]*;");
-    public static final Pattern ARC_TO_MATCH = Pattern.compile("[\\s]*<edge from=\".*\" to=\"(.)*\">[\\s]*;");
-    public static final Pattern NODE_NAME_MATCH = Pattern.compile("[\\s]*<node id=\"(.)*\">[\\s]*;");
-    public static final Pattern WEIGHT_INT_MATCH = Pattern.compile("[\\s]*<int>[\\p{Digit}]*</int>[\\s]*;");
+    public static final Pattern GRAPH_NAME_MATCH = Pattern.compile("[\\s]*<graph id=\"(.*)\">[\\s]*");
+    public static final Pattern ARC_FROM_MATCH = Pattern.compile("[\\s]*<edge from=\"(.*)\" to=\".*\">[\\s]*");
+    public static final Pattern ARC_TO_MATCH = Pattern.compile("[\\s]*<edge from=\".*\" to=\"(.*)\">[\\s]*");
+    public static final Pattern NODE_NAME_MATCH = Pattern.compile("[\\s]*<node id=\"(.*)\">[\\s]*");
+    public static final Pattern WEIGHT_INT_MATCH = Pattern.compile("[\\s]*<int>(.*)</int>[\\s]*");
 
     // Regex for string matchers of line types
-    public static final String ARC_LINE_MATCH = "[\\s]*<edge from=\".*\" to=\".*\">[\\s]*;";
-    public static final String NODE_LINE_MATCH = "[\\s]*<node id=\".*\">[\\s]*;";
+    public static final String ARC_LINE_MATCH = "[\\s]*<edge from=\".*\" to=\".*\">[\\s]*";
+    public static final String NODE_LINE_MATCH = "[\\s]*<node id=\".*\">[\\s]*";
     public static final String GRAPH_NAME_LINE_MATCH = "[\\s]*<graph id=\".*\">[\\s]*";
-    public static final String WEIGHT_LINE_MATCH = "[\\s]*<attr name=\"Weight\">[\\s]*;";
+    public static final String WEIGHT_LINE_MATCH = "[\\s]*<attr name=\"Weight\">[\\s]*";
     // Default weight for arcs and nodes if not defined
     public static final int DEFAULT_WEIGHT = -1;
     // First match found by matcher
