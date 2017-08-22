@@ -119,9 +119,9 @@ public class Schedule {
 	 * @return
 	 */
 	private int generateScheduleStructureId(){
-		//TODO: actually generate an Id based on processorToTasks map
-		//return this.hashCode();
-		return(int)(Math.random()*100001);
+		Set<Set<Tuple<Integer,Integer>>> set = new HashSet<>();
+		set.addAll(scheduleStructure.values());
+		return set.hashCode();
 	}
 
 	/**
