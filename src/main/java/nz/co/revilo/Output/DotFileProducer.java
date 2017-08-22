@@ -69,6 +69,9 @@ public abstract class DotFileProducer implements ScheduleResultListener {
      */
     public DotFileProducer(String outputFilename) {
         _outputFilename = outputFilename;
+        if (_outputFilename.toUpperCase().endsWith(".DOT")) {
+            _outputFilename = outputFilename + ".dot";
+        }
     }
 
     /**
