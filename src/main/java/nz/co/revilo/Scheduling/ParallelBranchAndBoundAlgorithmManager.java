@@ -186,87 +186,88 @@ public class ParallelBranchAndBoundAlgorithmManager extends BranchAndBoundAlgori
             upperBound = worker.getOptimalLength();//####[83]####
             optimalSchedule = worker.getOptimal();//####[84]####
         }//####[85]####
-    }//####[86]####
-//####[86]####
-//####[88]####
-    private class WorkerBnb extends BranchAndBoundAlgorithmManager {//####[88]####
-//####[88]####
-        /*  ParaTask helper method to access private/protected slots *///####[88]####
-        public void __pt__accessPrivateSlot(Method m, Object instance, TaskID arg, Object interResult ) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException {//####[88]####
-            if (m.getParameterTypes().length == 0)//####[88]####
-                m.invoke(instance);//####[88]####
-            else if ((m.getParameterTypes().length == 1))//####[88]####
-                m.invoke(instance, arg);//####[88]####
-            else //####[88]####
-                m.invoke(instance, arg, interResult);//####[88]####
-        }//####[88]####
+        worker = null;//####[86]####
+    }//####[87]####
+//####[87]####
 //####[89]####
-        private Schedule _schedule;//####[89]####
+    private class WorkerBnb extends BranchAndBoundAlgorithmManager {//####[89]####
+//####[89]####
+        /*  ParaTask helper method to access private/protected slots *///####[89]####
+        public void __pt__accessPrivateSlot(Method m, Object instance, TaskID arg, Object interResult ) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException {//####[89]####
+            if (m.getParameterTypes().length == 0)//####[89]####
+                m.invoke(instance);//####[89]####
+            else if ((m.getParameterTypes().length == 1))//####[89]####
+                m.invoke(instance, arg);//####[89]####
+            else //####[89]####
+                m.invoke(instance, arg, interResult);//####[89]####
+        }//####[89]####
 //####[90]####
-        private Schedule _optimalSchedule;//####[90]####
-//####[92]####
-        public WorkerBnb(Schedule schedule, int upperBound, int processingCores, List<Integer> sources, List<Integer> bottomUpSinks, List<Schedule> rootSchedules, int[] bottomLevels, int numNodes, int totalNodeWeights, List<Integer> nodeStartTimes, List<Integer> nodeProcessors, int[] nodeWeights, boolean[][] arcs, int[][] arcWeights) {//####[96]####
-            super(processingCores);//####[97]####
-            _schedule = schedule;//####[98]####
-            this.upperBound = upperBound;//####[99]####
-            this.sources = sources;//####[100]####
-            this.bottomUpSinks = bottomUpSinks;//####[101]####
-            this.rootSchedules = rootSchedules;//####[102]####
-            this.bottomLevels = bottomLevels;//####[103]####
-            this.numNodes = numNodes;//####[104]####
-            this.totalNodeWeights = totalNodeWeights;//####[105]####
-            this.nodeStartTimes = nodeStartTimes;//####[106]####
-            this.nodeProcessors = nodeProcessors;//####[107]####
-            _nodeWeights = nodeWeights;//####[109]####
-            _arcs = arcs;//####[110]####
-            _arcWeights = arcWeights;//####[111]####
-        }//####[112]####
-//####[114]####
-        public void execute() {//####[114]####
-            workerBnb(_schedule);//####[115]####
-        }//####[116]####
-//####[118]####
-        private void workerBnb(Schedule s) {//####[118]####
-            if (s.lowerBound >= upperBound) //####[119]####
-            {//####[119]####
-                return;//####[120]####
-            }//####[121]####
-            if (s.openSet.isEmpty()) //####[125]####
-            {//####[125]####
-                if (s.getMaxFinishTime() <= upperBound) //####[127]####
-                {//####[127]####
-                    _optimalSchedule = s;//####[128]####
-                    upperBound = s.getMaxFinishTime();//####[129]####
+        private Schedule _schedule;//####[90]####
+//####[91]####
+        private Schedule _optimalSchedule;//####[91]####
+//####[93]####
+        public WorkerBnb(Schedule schedule, int upperBound, int processingCores, List<Integer> sources, List<Integer> bottomUpSinks, List<Schedule> rootSchedules, int[] bottomLevels, int numNodes, int totalNodeWeights, List<Integer> nodeStartTimes, List<Integer> nodeProcessors, int[] nodeWeights, boolean[][] arcs, int[][] arcWeights) {//####[97]####
+            super(processingCores);//####[98]####
+            _schedule = schedule;//####[99]####
+            this.upperBound = upperBound;//####[100]####
+            this.sources = sources;//####[101]####
+            this.bottomUpSinks = bottomUpSinks;//####[102]####
+            this.rootSchedules = rootSchedules;//####[103]####
+            this.bottomLevels = bottomLevels;//####[104]####
+            this.numNodes = numNodes;//####[105]####
+            this.totalNodeWeights = totalNodeWeights;//####[106]####
+            this.nodeStartTimes = nodeStartTimes;//####[107]####
+            this.nodeProcessors = nodeProcessors;//####[108]####
+            _nodeWeights = nodeWeights;//####[110]####
+            _arcs = arcs;//####[111]####
+            _arcWeights = arcWeights;//####[112]####
+        }//####[113]####
+//####[115]####
+        public void execute() {//####[115]####
+            workerBnb(_schedule);//####[116]####
+        }//####[117]####
+//####[119]####
+        private void workerBnb(Schedule s) {//####[119]####
+            if (s.lowerBound >= upperBound) //####[120]####
+            {//####[120]####
+                return;//####[121]####
+            }//####[122]####
+            if (s.openSet.isEmpty()) //####[126]####
+            {//####[126]####
+                if (s.getMaxFinishTime() <= upperBound) //####[128]####
+                {//####[128]####
+                    _optimalSchedule = s;//####[129]####
                     upperBound = s.getMaxFinishTime();//####[130]####
-                    return;//####[131]####
-                }//####[132]####
-            }//####[133]####
-            List<Schedule> nextSchedules = new ArrayList<Schedule>();//####[136]####
-            for (int n : s.independentSet) //####[137]####
-            {//####[137]####
-                for (int p = 0; p < _processingCores; p++) //####[138]####
-                {//####[138]####
-                    nextSchedules.add(new Schedule(this, s, n, p));//####[139]####
-                }//####[140]####
-            }//####[141]####
-            for (Schedule nextSchedule : nextSchedules) //####[143]####
-            {//####[143]####
-                workerBnb(nextSchedule);//####[144]####
-            }//####[145]####
-        }//####[146]####
-//####[151]####
+                    upperBound = s.getMaxFinishTime();//####[131]####
+                    return;//####[132]####
+                }//####[133]####
+            }//####[134]####
+            List<Schedule> nextSchedules = new ArrayList<Schedule>();//####[137]####
+            for (int n : s.independentSet) //####[138]####
+            {//####[138]####
+                for (int p = 0; p < _processingCores; p++) //####[139]####
+                {//####[139]####
+                    nextSchedules.add(new Schedule(this, s, n, p));//####[140]####
+                }//####[141]####
+            }//####[142]####
+            for (Schedule nextSchedule : nextSchedules) //####[144]####
+            {//####[144]####
+                workerBnb(nextSchedule);//####[145]####
+            }//####[146]####
+        }//####[147]####
+//####[152]####
         /**
 		 * Returns the optimal schedule found by this worker.
-		 *///####[151]####
-        public Schedule getOptimal() {//####[151]####
-            return _optimalSchedule;//####[152]####
-        }//####[153]####
-//####[158]####
+		 *///####[152]####
+        public Schedule getOptimal() {//####[152]####
+            return _optimalSchedule;//####[153]####
+        }//####[154]####
+//####[159]####
         /**
 		 * Returns the optimal schedule's length
-		 *///####[158]####
-        public int getOptimalLength() {//####[158]####
-            return upperBound;//####[159]####
-        }//####[160]####
-    }//####[160]####
-}//####[160]####
+		 *///####[159]####
+        public int getOptimalLength() {//####[159]####
+            return upperBound;//####[160]####
+        }//####[161]####
+    }//####[161]####
+}//####[161]####

@@ -83,6 +83,7 @@ public class ParallelBranchAndBoundAlgorithmManager extends BranchAndBoundAlgori
 			upperBound = worker.getOptimalLength();
 			optimalSchedule = worker.getOptimal();
 		}
+		worker = null; // Null it for hopeful garbage collection
 	}
 
 	private class WorkerBnb extends BranchAndBoundAlgorithmManager{
