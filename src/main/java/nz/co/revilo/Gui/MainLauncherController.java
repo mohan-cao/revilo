@@ -56,25 +56,42 @@ public class MainLauncherController implements Initializable, ScheduleResultList
         _arcWeights = arcWeights;
         _nodeWeights = nodeWeights;
         _nodeStarts = nodeStarts;
+//        Task task = new Task<Void>() {
+//            @Override
+//            public Void call() throws Exception {
+//                for (int i : nodeStarts) {
+//                    System.out.println("adding " + i);
+//                    observableStartTime.add(i);
+//                }
+//                return null;
+//            }
+//        };
+
+        for (int i : nodeStarts) {
+            System.out.println("adding " + i);
+            observableStartTime.add(i);
+        }
         _nodeProcessor = nodeProcessor;
         System.out.println("Inform success!" + processorLabel + _graphName);
+        //this can't affect the GUI AT ALL and IDK HOW
     }
 
     public MainLauncherController(App app) {
+        _nodeStarts = new ArrayList<>();
         this.app = app;
         app.getAlgorithmManager().inform(this);
     // TODO is this the best way?
-        Task task = new Task<Void>() {
-            @Override
-            public Void call() throws Exception {
-                App.startParsing();
-                return null;
-            }
+//        Task task = new Task<Void>() {
+//            @Override
+//            public Void call() throws Exception {
+//                App.startParsing();
+//                return null;
+//            }
         };
 
-        Thread thread = new Thread(task);
-        thread.start();
-    }
+//        Thread thread = new Thread(task);
+//        thread.start();
+//    }
     @FXML
     private Button closeBtn;
 
@@ -116,7 +133,16 @@ public class MainLauncherController implements Initializable, ScheduleResultList
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
+        observableStartTime = FXCollections.observableArrayList(_nodeStarts);
+        observableStartTime.addListener(new ListChangeListener<Integer>() {
+            @Override
+            public void onChanged(Change<? extends Integer> c) {
+                System.out.println("STUFF ADDED");
+                processorLabel.setText("meme");
+            }
+        });
         processorLabel.setText(App.getExecCores() + "");
+        app.startParsing();
 
         Timer timer = new Timer();
         timer.schedule(new TimerTask() {
