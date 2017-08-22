@@ -21,7 +21,7 @@ public class Schedule {
 	int totalIdleTime=0;
 	int lowerBound;
 	int scheduledWeight = 0;
-	int _id;
+	int _id = -1;
 	BranchAndBoundAlgorithmManager bnb;
 	Set<Integer> openSet=new HashSet<>(); //need to assign to processor
 	Map<Integer,Tuple<Integer,Integer>> closedSet=new HashMap<>(); //done nodes
@@ -107,7 +107,7 @@ public class Schedule {
 
 	private int generateHashCode(){//TODO: actually generate a hashcode
 
-		return 0;
+		return -1;
 	}
 
 	/**
