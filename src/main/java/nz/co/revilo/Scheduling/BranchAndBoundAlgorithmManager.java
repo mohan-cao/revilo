@@ -12,19 +12,20 @@ import java.util.List;
  */
 public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
 
-	List<Integer> sources=new ArrayList<>();
-	private List<Integer> bottomUpSinks=new ArrayList<>();
-	private List<Schedule> rootSchedules=new ArrayList<>();
-	int[] bottomLevels;
-	int numNodes;
-	int totalNodeWeights;
-	private int upperBound;
-	private Schedule optimalSchedule;
-	private List<Integer> nodeStartTimes=new ArrayList<>();;
-	private List<Integer> nodeProcessors=new ArrayList<>();;
+	protected List<Integer> sources=new ArrayList<>();
+	protected List<Integer> bottomUpSinks=new ArrayList<>();
+	protected List<Schedule> rootSchedules;
+	protected int[] bottomLevels;
+	protected int numNodes;
+	protected int totalNodeWeights;
+	protected int upperBound;
+	protected Schedule optimalSchedule;
+	protected List<Integer> nodeStartTimes=new ArrayList<>();
+	protected List<Integer> nodeProcessors=new ArrayList<>();
 
 	public BranchAndBoundAlgorithmManager(int processingCores) {
 		super(processingCores);
+		rootSchedules = new ArrayList<>();
 	}
 
 	@Override
@@ -32,7 +33,7 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
 		numNodes=_nodeWeights.length;
 		bottomLevels=new int[numNodes];
 		NeighbourManagerHelper.setUpHelper(numNodes, _arcs);
-
+		setUpExecute();
 		//get sources
 		for(int nodeId=0; nodeId<numNodes; nodeId++){
 			//check that sources have no parents
@@ -65,6 +66,13 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
 		}
 
 		returnResults();
+	}
+	
+	/**
+	 * Hook method for additional setup of state of AlgorithmManager in execute()
+	 */
+	protected void setUpExecute() {
+		
 	}
 
 	/**
@@ -99,11 +107,10 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
 	 * 
 	 * @author Abby S
 	 */
-	private void bnb(Schedule s) {
+	protected void bnb(Schedule s) {
 		//TODO: not strict enough?
-		if(s.lowerBound>=upperBound){
-			s=null; //garbage collect that schedule
-			return; //break tree at this point
+		if(isBounded(s)) {
+			return;
 		}
 
 		//found optimal for the root started with
@@ -128,7 +135,7 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
 			bnb(nextSchedule);
 		}
 	}
-
+	
 	/**
 	 * Calculates bottom level of each node in the graph
 	 * Using bottom-up approach
@@ -155,5 +162,13 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
 				}
 			}
 		}	
+	}
+	
+	protected boolean isBounded(Schedule s) {
+		if(s.lowerBound>=upperBound){
+			s=null; //garbage collect that schedule
+			return true; //break tree at this point
+		}
+		return false;
 	}
 }

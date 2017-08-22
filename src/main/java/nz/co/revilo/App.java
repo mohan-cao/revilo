@@ -8,6 +8,8 @@ import nz.co.revilo.Output.DotFileWriter;
 import nz.co.revilo.Scheduling.AlgorithmManager;
 import nz.co.revilo.Scheduling.BranchAndBoundAlgorithmManager;
 import nz.co.revilo.Scheduling.ImprovedTopologicalAlgorithmManager;
+import nz.co.revilo.Scheduling.ParallelBranchAndBoundAlgorithmManager;
+import pt.runtime.ParaTask;
 
 import java.io.FileNotFoundException;
 import java.util.Arrays;
@@ -87,6 +89,7 @@ public class App {
             }
             // Sets the number of cores to do the scheduling on
             _inst._numParallelProcessors = params.getParallelCores();
+            
             // Sets the visualisation switch
             _inst._visualise = params.getVisualise();
 
@@ -107,7 +110,14 @@ public class App {
         }
 
         // Parse file and give it algorithm manager to give results to. @Michael Kemp
-        AlgorithmManager manager = new BranchAndBoundAlgorithmManager(_inst._numExecutionCores);
+        AlgorithmManager manager= null;
+        if(_inst._numParallelProcessors > 1) {
+        	ParaTask.init();
+        	ParaTask.setThreadPoolSize(ParaTask.ThreadPoolType.MULTI,_inst._numParallelProcessors);
+        	manager = new ParallelBranchAndBoundAlgorithmManager(_inst._numExecutionCores);
+        } else {
+        	manager = new BranchAndBoundAlgorithmManager(_inst._numExecutionCores);
+        }
         DotFileReader reader = new DotFileReader(_inst._inputFilename);
 
         // Output to file @Michael Kemp
