@@ -120,7 +120,8 @@ public class Schedule {
 	 */
 	private int generateScheduleStructureId(){
 		//TODO: actually generate an Id based on processorToTasks map
-		return this.hashCode();
+		//return this.hashCode();
+		return(int)(Math.random()*100001);
 	}
 
 	/**
