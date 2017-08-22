@@ -1,0 +1,10 @@
+digraph "multi-diamond" {
+    a   [Weight=20];
+	b   [Weight=10];
+	c   [Weight=10];
+	d   [Weight=5];
+	a -> c  [Weight=2];
+    a -> b  [Weight=2];
+    b -> d  [Weight=3];
+    c -> d  [Weight=3];
+}

@@ -33,3 +33,10 @@ hs_err_pid*
 .project
 .settings/
 target/
+__Previews
+
+# Anti-ignore for library folders
+!src/libs/**/*.jar
+
+# GraphViz output files. These should be local.
+# *-output.dot

@@ -8,6 +8,8 @@ import java.util.List;
  * 
  * Java generics List used, but change to primitive for performance
  * 
+ * TODO: delete
+ * 
  * @author Abby S
  *
  */

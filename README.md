@@ -15,12 +15,13 @@ Shared Google Drive folder for resources: [Revilo Project Folder](https://drive.
 For developers, please only merge branches if they pass the unit tests on the build server!
 
 ## The Team
-
-- Abby Shen ashe848@aucklanduni.ac.nz
-- Aimee Tagle atag549@aucklanduni.ac.nz
-- Michael Kemp mkem114@aucklanduni.ac.nz
-- Mohan Cao mcao024@aucklanduni.ac.nz
-- Terran Kroft tkro003@aucklanduni.ac.nz
+| Name         | UPI     | Uni ID | GitHub    |
+| ------------ | ------- | ------ | --------- |
+| Abby Shen    | [ashe848](mailto:ashe848@aucklanduni.ac.nz) | 269481021 | [ashe848](http://www.github.com/ashe848)   |
+| Aimee Tagle  | [atag549](mailto:atag549@aucklanduni.ac.nz) | 8194348 | [abtagle](http://www.github.com/abtagle)   |
+| Mohan Cao    | [mcao024](mailto:mcao024@aucklanduni.ac.nz) | 820512142 | [mohan-cao](http://www.github.com/mohan-cao) |
+| Michael Kemp | [mkem114](mailto:mkem114@aucklanduni.ac.nz) | 6273632 | [mkem114](http://www.github.com/mkem114)   |
+| Terran Kroft | [tkro003](mailto:tkro003@aucklanduni.ac.nz) | 6869815 | [itemic](http://www.github.com/itemic)    |
 
 ## Quick Startup Guide
 
@@ -50,8 +51,31 @@ Using Eclipse (Start from Eclipse instead of importing clone!):
 
 `mvn clean test` - Run unit test (from scratch)
 
-`mvn test` - Run unit test
+`mvn test` - Run unit tests
+
+`mvn build` - Builds your project. Good enough for most cases
 
 `mvn package` - Package classes into a jar. JAR is executable.
 
 `mvn install` - Do all the above and install the package
+
+# Parallel Task for Java Usage
+
+1. IntelliJ Preferences/Editor/File and Code Templates -> Add a new template named PTJava Class with extension ptjava. Paste in
+```
+#if (${PACKAGE_NAME} && ${PACKAGE_NAME} != "")package ${PACKAGE_NAME};#end
+#parse("File Header.java")
+public class ${NAME} {
+}
+```
+2. IntelliJ Preferences/Editor/File Types -> Select "Java Source"
+   - Add an association to *.ptjava (so that code autocompletion still works)
+3. When you run `mvn build`, `mvn process-sources` or any compile lifecycle, then .ptjava files are automatically preprocessed into equivalent .java files
+
+# Advanced - Here Be Dragons!
+
+```
+mvn install:install-file -Dfile=<path-to-file> -DgroupId=<group-id> \
+    -DartifactId=<artifact-id> -Dversion=<version> -Dpackaging=<packaging>
+```
+Self explanatory installation of local jar to local Maven repo. Hard to remember so I put it here.
