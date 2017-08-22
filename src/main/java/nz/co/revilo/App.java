@@ -9,7 +9,6 @@ import nz.co.revilo.Output.DotFileProducer;
 import nz.co.revilo.Output.DotFileWriter;
 import nz.co.revilo.Scheduling.AlgorithmManager;
 import nz.co.revilo.Scheduling.BranchAndBoundAlgorithmManager;
-import nz.co.revilo.Scheduling.ImprovedTopologicalAlgorithmManager;
 import nz.co.revilo.Scheduling.ParallelBranchAndBoundAlgorithmManager;
 import pt.runtime.ParaTask;
 
@@ -97,8 +96,12 @@ public class App {
 
             // Sets the output filename if one is given, otherwise uses default
             if (params.getOutputName() == null) {
-                int fileNameLocation = _inst._inputFilename.toLowerCase().lastIndexOf(DEFAULT_FILETYPE);
-                String fileNameWithoutExtension = _inst._inputFilename.substring(0, fileNameLocation);
+                String temp = _inst._inputFilename;
+                if (_inst._inputFilename.toUpperCase().contains("GXL")) {
+                    temp = _inst._inputFilename.substring(0, _inst._inputFilename.length() - 4) + ".dot";
+                }
+                int fileNameLocation = temp.toLowerCase().lastIndexOf(DEFAULT_FILETYPE);
+                String fileNameWithoutExtension = temp.substring(0, fileNameLocation);
                 _inst._outputFilename = fileNameWithoutExtension + DEFAULT_OUTPUT_FILENAME;
             } else {
                 _inst._outputFilename = params.getOutputName();
@@ -120,8 +123,6 @@ public class App {
         } else {
         	manager = new BranchAndBoundAlgorithmManager(_inst._numExecutionCores);
         }
-        DotFileReader reader = new DotFileReader(_inst._inputFilename);
-        AlgorithmManager manager = new BranchAndBoundAlgorithmManager(_inst._numExecutionCores);
         FileParser reader;
         if (_inst._inputFilename.matches(".*gxl") || _inst._inputFilename.matches(".*GXL")) {
             reader = new GxlFileReader(_inst._inputFilename);
