@@ -121,12 +121,12 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
 			return; //break tree at this point
 		}
 
-		//compare to existing hashcodes in bnb
-		if(scheduleStructures.contains(schedule._id)){
+		//compare to existing schedule structures and remove if duplicate
+		if(scheduleStructures.contains(schedule._scheduleStructureId)){
 			schedule=null; //garbage collect that schedule
 			return; //break tree at this point
 		} else {
-			scheduleStructures.add(schedule._id);
+			scheduleStructures.add(schedule._scheduleStructureId);
 		}
 
 		//found optimal for the root started with

@@ -21,7 +21,7 @@ public class Schedule {
 	int totalIdleTime=0;
 	int lowerBound;
 	int scheduledWeight = 0;
-	int _id = -1;
+	int _scheduleStructureId = -1;
 	BranchAndBoundAlgorithmManager bnb;
 	Set<Integer> openSet=new HashSet<>(); //need to assign to processor
 	Map<Integer,Tuple<Integer,Integer>> closedSet=new HashMap<>(); //done nodes
@@ -68,52 +68,65 @@ public class Schedule {
 			addedIdleTime=startTime-finishTimes[processor]; //added by this node
 			totalIdleTime+=addedIdleTime;//total processor idle time
 
-			//TODO: cost function. 
-			//Does this actually work as a heuristic?			
+			//TODO: cost function. Does this actually work as a heuristic?			
 			int perfectLoadBalancing=(bnb.totalNodeWeights+totalIdleTime)/bnb._processingCores;
 			lowerBound=(startTime+bnb.bottomLevels[nodeId])>perfectLoadBalancing?(startTime+bnb.bottomLevels[nodeId]):perfectLoadBalancing;
-
-			//this will only remove the very slow ones that have already exceeded upper bound
-			//lowerBound=getMaxFinishTime();
 		}
 
-		//create schedule structure map for hashcode comparison
-		processorToTasks = new HashMap<>();
-		for(int i=0;i<bnb._processingCores;i++){
-			processorToTasks.put(i,new HashSet<>());
-		}
-		for(Integer node : closedSet.keySet()){
-			int starttime = closedSet.get(node).getA();
-			int processornum = closedSet.get(node).getB();
-
-			Set<Tuple<Integer,Integer>> set = processorToTasks.get(processornum);
-			set.add(new Tuple<>(node,starttime));
-		}
+		//create schedule structure map for structure id comparison
+		createScheduleStructureMap(bnb);
 
 		//update data structures
 		closedSet.put(nodeId, new Tuple<>(startTime, processor));
-
-		Set<Tuple<Integer,Integer>> setToAdd = processorToTasks.get(processor);
-		setToAdd.add(new Tuple<>(nodeId, startTime));
-		processorToTasks.put(processor,setToAdd);
-
 		openSet.remove(nodeId);		
 		independentSet.remove(nodeId);
 		updateIndependentChildren(nodeId);
 		finishTimes[processor]+=addedIdleTime+bnb._nodeWeights[nodeId];
 
-		_id = generateHashCode();
+		//update schedule structure
+		Set<Tuple<Integer,Integer>> setToAdd = processorToTasks.get(processor);
+		setToAdd.add(new Tuple<>(nodeId, startTime));
+		processorToTasks.put(processor,setToAdd);
+		_scheduleStructureId = generateScheduleStructureId();
 	}
 
-	private int generateHashCode(){//TODO: actually generate a hashcode
+	/**
+	 * create schedule structure map for hashcode comparison
+	 * @param bnb
+	 * 
+	 * @author Abby S
+	 * @author Mohan Cao
+	 */
+	private void createScheduleStructureMap(BranchAndBoundAlgorithmManager bnb) {
+		processorToTasks = new HashMap<>();
+		for(int i=0;i<bnb._processingCores;i++){
+			//set of tuples assigned on each processor
+			processorToTasks.put(i,new HashSet<>());
+		}
+		
+		//Add all assigned nodes to schedule structure map
+		for(Integer assignedNode : closedSet.keySet()){
+			int assignedStartTime = closedSet.get(assignedNode).getA();
+			int assignedProcessor = closedSet.get(assignedNode).getB();
+			processorToTasks.get(assignedProcessor).add(new Tuple<>(assignedNode,assignedStartTime));
+		}
+	}
 
+	/**
+	 * Generates id for identifying the structure of this schedule
+	 * To be compared to existing structures for mirrors
+	 * 
+	 * @return
+	 */
+	private int generateScheduleStructureId(){
+		//TODO: actually generate an Id based on processorToTasks map
 		return -1;
 	}
 
 	/**
 	 * 
 	 * Get finish time of slowest processor
-	 * This determins the finish time of the schedule
+	 * This determines the finish time of the schedule
 	 * 
 	 * @author Abby S
 	 * 
@@ -142,8 +155,6 @@ public class Schedule {
 	 * @param parentSchedule
 	 */
 	private void cloneParentSchedule(Schedule parentSchedule) {
-		//clone parent's processor lists TODO: not yet
-
 		//clone finishTimes
 		for(int i=0; i<bnb._processingCores;i++) finishTimes[i]=parentSchedule.finishTimes[i];
 
