@@ -22,7 +22,7 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
 	private Schedule optimalSchedule;
 	private List<Integer> nodeStartTimes=new ArrayList<>();
 	private List<Integer> nodeProcessors=new ArrayList<>();
-	private List<Integer> scheduleStructures=new ArrayList<>();
+	private List<Integer> existingScheduleStructures=new ArrayList<>();
 
 	public BranchAndBoundAlgorithmManager(int processingCores) {
 		super(processingCores);
@@ -122,11 +122,11 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
 		}
 
 		//compare to existing schedule structures and remove if duplicate
-		if(scheduleStructures.contains(schedule._scheduleStructureId)){
+		if(existingScheduleStructures.contains(schedule._scheduleStructureId)){
 			schedule=null; //garbage collect that schedule
 			return; //break tree at this point
 		} else {
-			scheduleStructures.add(schedule._scheduleStructureId);
+			existingScheduleStructures.add(schedule._scheduleStructureId);
 		}
 
 		//found optimal for the root started with

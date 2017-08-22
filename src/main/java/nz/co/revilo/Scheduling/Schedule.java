@@ -26,7 +26,7 @@ public class Schedule {
 	Set<Integer> openNodes=new HashSet<>(); //need to assign to processor
 	Map<Integer,Tuple<Integer,Integer>> closedNodes=new HashMap<>(); //done nodes
 	Set<Integer> independentNodes=new HashSet<>(); //nodes it depends on are done
-	Map<Integer,Set<Tuple<Integer,Integer>>> processorToTasks; //processor to task map
+	Map<Integer,Set<Tuple<Integer,Integer>>> scheduleStructure; //map of processor to tasks assigned on each processor
 
 	/**
 	 * Create new schedule object
@@ -84,9 +84,9 @@ public class Schedule {
 		finishTimes[processor]+=addedIdleTime+bnb._nodeWeights[nodeId];
 
 		//update schedule structure
-		Set<Tuple<Integer,Integer>> setToAdd = processorToTasks.get(processor);
+		Set<Tuple<Integer,Integer>> setToAdd = scheduleStructure.get(processor);
 		setToAdd.add(new Tuple<>(nodeId, startTime));
-		processorToTasks.put(processor,setToAdd);
+		scheduleStructure.put(processor,setToAdd);
 		_scheduleStructureId = generateScheduleStructureId();
 	}
 
@@ -98,17 +98,17 @@ public class Schedule {
 	 * @author Mohan Cao
 	 */
 	private void createScheduleStructureMap(BranchAndBoundAlgorithmManager bnb) {
-		processorToTasks = new HashMap<>();
+		scheduleStructure = new HashMap<>();
 		for(int i=0;i<bnb._processingCores;i++){
 			//set of tuples assigned on each processor
-			processorToTasks.put(i,new HashSet<>());
+			scheduleStructure.put(i,new HashSet<>());
 		}
 		
 		//Add all assigned nodes to schedule structure map
 		for(Integer assignedNode : closedNodes.keySet()){
 			int assignedStartTime = closedNodes.get(assignedNode).getA();
 			int assignedProcessor = closedNodes.get(assignedNode).getB();
-			processorToTasks.get(assignedProcessor).add(new Tuple<>(assignedNode,assignedStartTime));
+			scheduleStructure.get(assignedProcessor).add(new Tuple<>(assignedNode,assignedStartTime));
 		}
 	}
 
