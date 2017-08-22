@@ -3,11 +3,12 @@ package nz.co.revilo;
 import com.beust.jcommander.JCommander;
 import nz.co.revilo.CommandLine.CLIParameters;
 import nz.co.revilo.Input.DotFileReader;
+import nz.co.revilo.Input.FileParser;
+import nz.co.revilo.Input.GxlFileReader;
 import nz.co.revilo.Output.DotFileProducer;
 import nz.co.revilo.Output.DotFileWriter;
 import nz.co.revilo.Scheduling.AlgorithmManager;
 import nz.co.revilo.Scheduling.BranchAndBoundAlgorithmManager;
-import nz.co.revilo.Scheduling.ImprovedTopologicalAlgorithmManager;
 
 import java.io.FileNotFoundException;
 import java.util.Arrays;
@@ -108,7 +109,12 @@ public class App {
 
         // Parse file and give it algorithm manager to give results to. @Michael Kemp
         AlgorithmManager manager = new BranchAndBoundAlgorithmManager(_inst._numExecutionCores);
-        DotFileReader reader = new DotFileReader(_inst._inputFilename);
+        FileParser reader;
+        if (_inst._inputFilename.matches(".*gxl") || _inst._inputFilename.matches(".*GXL")) {
+            reader = new GxlFileReader(_inst._inputFilename);
+        } else {
+            reader = new DotFileReader(_inst._inputFilename);
+        }
 
         // Output to file @Michael Kemp
         DotFileProducer output = new DotFileWriter(_inst._outputFilename);
