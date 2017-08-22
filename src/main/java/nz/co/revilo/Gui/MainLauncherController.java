@@ -1,11 +1,11 @@
 package nz.co.revilo.Gui;
 
 import javafx.application.Platform;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.input.MouseEvent;
 import javafx.event.ActionEvent;
 import nz.co.revilo.App;
 
@@ -20,6 +20,17 @@ public class MainLauncherController implements Initializable {
 
     public MainLauncherController(App app) {
         this.app = app;
+
+        Task task = new Task<Void>() {
+            @Override
+            public Void call() throws Exception {
+                app.startParsing();
+                return null;
+            }
+        };
+
+        Thread thread = new Thread(task);
+        thread.start();
     }
     @FXML
     private Button closeBtn;
@@ -41,12 +52,7 @@ public class MainLauncherController implements Initializable {
 
     @FXML
     private Label bestLabel;
-
-//    @FXML
-//    void closeRevilo(MouseEvent event) {
-//
-//    }
-
+    
     @FXML
     private void closeRevilo(ActionEvent event) {
 //        timeLabel.setText(app.getRunningTime()+ "");

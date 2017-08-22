@@ -39,7 +39,9 @@ public class App {
     private static long startingTime;
     private static long endingTime;
     private static boolean isDone; // to stop increasing time when we're done
-
+    private static AlgorithmManager manager;
+    private static DotFileReader reader;
+    private static DotFileProducer output;
     /**
      * The one and only constructor which allows for the singleton pattern by never overriding the current instance
      *
@@ -125,24 +127,28 @@ public class App {
             }
         }
 
-        // Starts visualisation if requested
-//        System.out.println("This is the schedule called " + _inst._outputFilename + " processed on " + _inst._numParallelProcessors + " core(s).");
-
 
         // Parse file and give it algorithm manager to give results to. @Michael Kemp
-        AlgorithmManager manager = new BranchAndBoundAlgorithmManager(_inst._numExecutionCores);
-        DotFileReader reader = new DotFileReader(_inst._inputFilename);
+        _inst.manager = new BranchAndBoundAlgorithmManager(_inst._numExecutionCores);
+        _inst.reader = new DotFileReader(_inst._inputFilename);
 
         // Output to file @Michael Kemp
-        DotFileProducer output = new DotFileWriter(_inst._outputFilename);
-        manager.inform(output);
+        _inst.output = new DotFileWriter(_inst._outputFilename);
+        _inst.manager.inform(output);
+
+        if (_inst._visualise) {
+//            System.out.println("There is a visualisation outputted.");
+                Application.launch(MainLauncher.class);
+        } else {
+            startParsing();
+        }
+
+    }
+
+    public static void startParsing() {
         try {
             isDone = false;
             startingTime = System.currentTimeMillis();
-            if (_inst._visualise) {
-//            System.out.println("There is a visualisation outputted.");
-                Application.launch(MainLauncher.class);
-            }
             reader.startParsing(manager);
             endingTime = System.currentTimeMillis();
             isDone = true;
