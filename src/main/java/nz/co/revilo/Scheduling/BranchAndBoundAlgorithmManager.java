@@ -20,8 +20,9 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
 	int totalNodeWeights;
 	private int upperBound;
 	private Schedule optimalSchedule;
-	private List<Integer> nodeStartTimes=new ArrayList<>();;
-	private List<Integer> nodeProcessors=new ArrayList<>();;
+	private List<Integer> nodeStartTimes=new ArrayList<>();
+	private List<Integer> nodeProcessors=new ArrayList<>();
+	private List<Integer> scheduleStructures=new ArrayList<>();
 
 	public BranchAndBoundAlgorithmManager(int processingCores) {
 		super(processingCores);
@@ -89,8 +90,8 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
 	 */
 	private void returnResults() {
 		for(int nodeId=0; nodeId<numNodes; nodeId++){
-			nodeStartTimes.add(optimalSchedule.closedSet.get(nodeId)._startTime);//start times
-			nodeProcessors.add(optimalSchedule.closedSet.get(nodeId)._processor);//processors scheduled on
+			nodeStartTimes.add(optimalSchedule.closedSet.get(nodeId).getA());//start times
+			nodeProcessors.add(optimalSchedule.closedSet.get(nodeId).getB());//processors scheduled on
 		}	
 		System.out.println("Optimal length found: "+optimalSchedule.getMaxFinishTime());
 
@@ -118,6 +119,14 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
 		if(schedule.lowerBound>=upperBound){
 			schedule=null; //garbage collect that schedule
 			return; //break tree at this point
+		}
+
+		//compare to existing hashcodes in bnb
+		if(scheduleStructures.contains(schedule._id)){
+			schedule=null; //garbage collect that schedule
+			return; //break tree at this point
+		} else {
+			scheduleStructures.add(schedule._id);
 		}
 
 		//found optimal for the root started with
