@@ -25,9 +25,11 @@ public class AstartFirstAlgorithmManager extends AlgorithmManager {
         //Sort Tasks into start, middle and end sets
         Set<Integer> startTasks = new HashSet<>();
         Set<Integer> endTasks = new HashSet<>();
+        Set<Integer> middleTasks = new HashSet<>();
         for (int task = 0; task < numTasks; task++) {
             startTasks.add(task);
             endTasks.add(task);
+            middleTasks.add(task);
         }
         for (int fromTask = 0; fromTask < numTasks; fromTask++) {
             for (int toTask = 0; toTask < numTasks; toTask++) {
@@ -37,7 +39,6 @@ public class AstartFirstAlgorithmManager extends AlgorithmManager {
                 }
             }
         }
-        Set<Integer> middleTasks = new HashSet<>();
         middleTasks.removeAll(endTasks);
         middleTasks.removeAll(startTasks);
 
@@ -123,11 +124,10 @@ public class AstartFirstAlgorithmManager extends AlgorithmManager {
                                 }
                             }
                         }
-                        System.out.println(drt);
 
                         newTask._start = drt;
 
-                        newSchedule._processorLastUsed.set(processorNum, drt);
+                        newSchedule._processorLastUsed.set(processorNum, (drt + _nodeWeights[newTask._taskNum]));
 
                         //Move task to scheduled from schedulable
                         newSchedule._schedulable.remove(newTask);
