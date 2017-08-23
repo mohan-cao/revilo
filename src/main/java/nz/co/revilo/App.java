@@ -10,7 +10,6 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import nz.co.revilo.CommandLine.CLIParameters;
-import nz.co.revilo.Gui.MainLauncher;
 import nz.co.revilo.Gui.MainLauncherController;
 import nz.co.revilo.Input.DotFileReader;
 import nz.co.revilo.Input.FileParser;
@@ -194,7 +193,7 @@ public class App extends Application {
         try {
             // Load root layout from fxml file.
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(MainLauncher.class.getResource("/Main.fxml"));
+            loader.setLocation(getClass().getResource("/Main.fxml"));
             MainLauncherController mlc = new MainLauncherController(this);
             loader.setController(mlc);
             rootLayout = loader.load();
