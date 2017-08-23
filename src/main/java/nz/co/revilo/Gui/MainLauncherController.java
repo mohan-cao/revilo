@@ -54,6 +54,7 @@ public class MainLauncherController implements Initializable, ScheduleResultList
     public MainLauncherController(App app) {
         _nodeStarts = new ArrayList<>();
         this.app = app;
+
     }
 
     @FXML
@@ -76,6 +77,9 @@ public class MainLauncherController implements Initializable, ScheduleResultList
 
     @FXML
     private Label bestLabel;
+
+    @FXML
+    private Label graphNameLabel;
 
     @FXML
     private BorderPane mainPane;
@@ -110,7 +114,6 @@ public class MainLauncherController implements Initializable, ScheduleResultList
         });
 
 
-
         processorLabel.setText(App.getExecCores() + "");
 //        app.startParsing();
         Task task = new Task<Void>() {
@@ -133,11 +136,15 @@ public class MainLauncherController implements Initializable, ScheduleResultList
                         timeLabel.setText(String.format("%.2f", App.getRunningTime()));
                         bestLabel.setText(App.getAlgorithmManager().getUpperBound() + "");
                         branchesLabel.setText(App.getAlgorithmManager().getBrokenTrees() + "");
+                        graphNameLabel.setText("  " + App.getAlgorithmManager().getGraphName()); //padding
+
 //                        timeLabel.setText(app.getRunningTime() + "");
                     }
                 });
             }
-        }, 0, 50);
+        }, 0, 30);
+
+//        System.out.println(App.getAlgorithmManager().getGraphName());
     }
 
     @Override
@@ -174,7 +181,6 @@ public class MainLauncherController implements Initializable, ScheduleResultList
             ganttChart.getData().add(ps);
         }
 
-        ganttChart.setTitle(_graphName);
         mainPane.setCenter(ganttChart);
     }
 

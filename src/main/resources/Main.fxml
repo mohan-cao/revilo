@@ -19,11 +19,22 @@
                   <Font name="SF UI Display Heavy" size="36.0" />
                </font>
             </Label>
-            <Button fx:id="closeBtn" layoutX="753.0" layoutY="9.0" mnemonicParsing="false" onAction="#closeRevilo" text="X">
+            <Button fx:id="closeBtn" layoutX="753.0" layoutY="9.0" maxHeight="30.0" maxWidth="30.0" mnemonicParsing="false" onAction="#closeRevilo" prefHeight="30.0" prefWidth="30.0" text="X">
                <font>
                   <Font name="System Bold" size="16.0" />
                </font>
             </Button>
+            <Label fx:id="graphNameLabel" layoutX="158.0" layoutY="10.0" prefHeight="30.0" prefWidth="585.0" style="-fx-background-color: #E5E5E5; -fx-background-radius: 10;" text="Placeholder text name">
+               <font>
+                  <Font name="SF UI Display Regular" size="16.0" />
+               </font>
+               <padding>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </padding>
+               <opaqueInsets>
+                  <Insets bottom="1.0" left="1.0" right="1.0" top="1.0" />
+               </opaqueInsets>
+            </Label>
          </children>
       </Pane>
    </top>

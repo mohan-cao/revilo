@@ -1,5 +1,6 @@
 .button {
-    -fx-border-radius: 10 10 10 10;
+    /*-fx-border-radius: 40 40 40 40;*/
+    -fx-background-radius: 15;
     -fx-border-style: none;
     -fx-background-color: #F1F1F1;
 }
