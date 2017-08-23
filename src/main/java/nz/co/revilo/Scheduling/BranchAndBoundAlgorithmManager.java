@@ -143,7 +143,9 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
 			//TODO: doing this to make sure only optimal schedules get through
 			if(schedule.getMaxFinishTime()<=upperBound){
 				optimalSchedule=schedule;
-				getOptimalListener().newOptimal(optimalSchedule);
+				if (getOptimalListener() != null) {
+					getOptimalListener().newOptimal(optimalSchedule);
+				}
 				upperBound=schedule.getMaxFinishTime();
 				return;
 			}

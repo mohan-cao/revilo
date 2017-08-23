@@ -10,6 +10,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import nz.co.revilo.CommandLine.CLIParameters;
+import nz.co.revilo.Gui.MainLauncher;
 import nz.co.revilo.Gui.MainLauncherController;
 import nz.co.revilo.Input.DotFileReader;
 import nz.co.revilo.Input.FileParser;
@@ -31,7 +32,7 @@ import java.util.Arrays;
  * @author Mohan Cao (file created by), Michael Kemp (pattern and fleshed out), Terran Kroft (Modified for CLI library), Abby Shen
  * @version alpha
  */
-public class App extends Application {
+public class App {
     public static final String DEFAULT_FILETYPE = ".dot";
     public static final String DEFAULT_OUTPUT_FILENAME = "-output.dot";
 
@@ -54,10 +55,7 @@ public class App extends Application {
     private static DotFileProducer output;
 
     //GUI Stuff
-    private Stage primaryStage;
-    private BorderPane rootLayout;
-    private double xOffset = 0;
-    private double yOffset = 0;
+
 
     public static AlgorithmManager getAlgorithmManager() {
         return manager;
@@ -83,7 +81,7 @@ public class App extends Application {
      *
      * @author Michael Kemp
      */
-    public App() {
+    private App() {
         // If there's no current instance then it's instantiated
         if (_inst == null) {
             _inst = this;
@@ -92,6 +90,10 @@ public class App extends Application {
             //System.out.println("App was instantiated more than once");
             //TODO throw an informative exception to indicate error
         }
+    }
+
+    public static App getInstance() {
+        return _inst;
     }
 
     /**
@@ -167,7 +169,7 @@ public class App extends Application {
         output = new DotFileWriter(_inst._outputFilename);
         manager.inform(output);
         if (_inst._visualise) {
-            Application.launch();
+            Application.launch(MainLauncher.class);
         } else {
             startParsing();
         }
@@ -185,43 +187,6 @@ public class App extends Application {
         }
     }
 
-    @Override
-    public void start(Stage primaryStage) throws Exception {
-        this.primaryStage = primaryStage;
-        this.primaryStage.initStyle(StageStyle.UNDECORATED);
-        this.primaryStage.setTitle("Revilo");
-        try {
-            // Load root layout from fxml file.
-            FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(getClass().getResource("/Main.fxml"));
-            MainLauncherController mlc = new MainLauncherController(this);
-            loader.setController(mlc);
-            rootLayout = loader.load();
 
-            rootLayout.setOnMousePressed(new EventHandler<MouseEvent>() {
-                @Override
-                public void handle(MouseEvent event) {
-                    xOffset = event.getSceneX();
-                    yOffset = event.getSceneY();
-                }
-            });
-
-            rootLayout.setOnMouseDragged(new EventHandler<MouseEvent>() {
-                @Override
-                public void handle(MouseEvent event) {
-                    primaryStage.setX(event.getScreenX() - xOffset);
-                    primaryStage.setY(event.getScreenY() - yOffset);
-                }
-            });
-
-            // Show the scene containing the root layout.
-            Scene scene = new Scene(rootLayout);
-            scene.getStylesheets().add("/main.css");
-            primaryStage.setScene(scene);
-            primaryStage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
 }

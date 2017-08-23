@@ -1,28 +1,19 @@
 package nz.co.revilo.Gui;
 
 import javafx.application.Platform;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
-import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Scene;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.NumberAxis;
-import javafx.scene.chart.StackedBarChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.event.ActionEvent;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 import nz.co.revilo.App;
 import nz.co.revilo.Output.NewOptimalResultListener;
@@ -30,9 +21,6 @@ import nz.co.revilo.Output.ScheduleResultListener;
 import nz.co.revilo.Gui.GanttChart.ExtraData;
 import nz.co.revilo.Scheduling.Schedule;
 
-import java.io.FileNotFoundException;
-import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.util.*;
 
@@ -89,12 +77,13 @@ public class MainLauncherController implements Initializable, ScheduleResultList
 
     private GanttChart<Number, String> ganttChart;
 
+    private ArrayList<String> processorCatStr;
+    private ArrayList<XYChart.Series> processorCat;
 
     @FXML
     private void closeRevilo(ActionEvent event) {
-//        timeLabel.setText(app.getRunningTime()+ "");
-//        ((Button)event.getSource()).getScene().getWindow().hide(); //close machine broke
-//        thisStage.close();
+        Platform.exit();
+        System.exit(0);
     }
 
     @Override
@@ -102,13 +91,12 @@ public class MainLauncherController implements Initializable, ScheduleResultList
         app.getAlgorithmManager().inform(this);
         app.getAlgorithmManager().optimalInform(this);
         results = new GUIScheduleResult();
-
         //set up change listeners
         results.isDoneProcessingProperty().addListener(new ChangeListener<Boolean>() {
             @Override
             public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
                 Platform.runLater(() -> {
-                    makeGantt();
+                    updateGantt();
                 });
             }
         });
@@ -142,7 +130,9 @@ public class MainLauncherController implements Initializable, ScheduleResultList
                     }
                 });
             }
-        }, 0, 30);
+        }, 0, 33);
+
+        createGantt();
 
 //        System.out.println(App.getAlgorithmManager().getGraphName());
     }
@@ -158,17 +148,34 @@ public class MainLauncherController implements Initializable, ScheduleResultList
         results.setIsDoneProcessing(true);
     }
 
-    public void makeGantt() {
+    public void createGantt() {
         NumberAxis xAxis = new NumberAxis();
         CategoryAxis yAxis = new CategoryAxis();
         ArrayList<String> processorCatStr = new ArrayList<>();
         ArrayList<XYChart.Series> processorCat = new ArrayList<>();
+
+
         for (int i = 0; i < App.getExecCores(); i++) {
             processorCatStr.add("Processor " + i);
             processorCat.add(new XYChart.Series()); // each processor has its own series
         }
+
         yAxis.setCategories(FXCollections.observableArrayList(processorCatStr));
         ganttChart = new GanttChart<Number, String>(xAxis, yAxis);
+
+
+        mainPane.setCenter(ganttChart);
+    }
+
+    public void updateGantt() {
+        ArrayList<String> processorCatStr = new ArrayList<>();
+        ArrayList<XYChart.Series> processorCat = new ArrayList<>();
+
+        for (int i = 0; i < App.getExecCores(); i++) {
+            processorCatStr.add("Processor " + i);
+            processorCat.add(new XYChart.Series()); // each processor has its own series
+        }
+
 
         for (int i = 0; i < _nodeStarts.size(); i++) { //using node starts as not all nodes might be set yet
             int psr = _nodeProcessor.get(i);
@@ -177,11 +184,14 @@ public class MainLauncherController implements Initializable, ScheduleResultList
             psrCat.getData().add(new XYChart.Data(_nodeStarts.get(i), ("Processor " + psr), new ExtraData(_nodeWeights.get(i), "status-green")));
         }
 
+        ganttChart.getData().clear();
+
         for (XYChart.Series ps : processorCat) {
             ganttChart.getData().add(ps);
         }
 
-        mainPane.setCenter(ganttChart);
+
+
     }
 
     @Override
@@ -198,7 +208,7 @@ public class MainLauncherController implements Initializable, ScheduleResultList
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
-                makeGantt();
+                updateGantt();
             }
         });
 
