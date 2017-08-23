@@ -10,14 +10,19 @@ public class Schedule implements Cloneable {
     public Set<Task> _schedulable = new HashSet<>();
     public Set<Task> _unschedulable = new HashSet<>();
     public List<Schedule> _subSchedules = new ArrayList<>();
+    public ArrayList<Integer> _processorLastUsed = new ArrayList<>();
 
-    private Schedule(Set<Task> scheduled, Set<Task> schedulable, Set<Task> unschedulable) {
+    public Schedule() {
+    }
+
+    private Schedule(Set<Task> scheduled, Set<Task> schedulable, Set<Task> unschedulable, List<Integer> processorLastUsed) {
         _scheduled = new HashSet<>(scheduled);
         _schedulable = new HashSet<>(schedulable);
         _unschedulable = new HashSet<>(unschedulable);
+        _processorLastUsed = new ArrayList<>(processorLastUsed);
     }
 
     public Schedule clone() {
-        return new Schedule(_scheduled, _schedulable, _unschedulable);
+        return new Schedule(_scheduled, _schedulable, _unschedulable, _processorLastUsed);
     }
 }
