@@ -1,8 +1,7 @@
 package nz.co.revilo.Scheduling;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Finds optimal schedule using DFS Branch and Bound
@@ -18,11 +17,11 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
 	int[] bottomLevels;
 	int numNodes;
 	int totalNodeWeights;
-	private int upperBound;
+	private AtomicInteger upperBound = new AtomicInteger();
 	private Schedule optimalSchedule;
 	private List<Integer> nodeStartTimes=new ArrayList<>();
 	private List<Integer> nodeProcessors=new ArrayList<>();
-	private List<Integer> existingScheduleStructures=new ArrayList<>();
+	private Set<Integer> existingScheduleStructures= Collections.synchronizedSet(new HashSet<>());
 
 	public BranchAndBoundAlgorithmManager(int processingCores) {
 		super(processingCores);
@@ -72,7 +71,7 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
 			}
 		}
 
-		upperBound=totalNodeWeights + 1; //TODO: is this a good upper bound?
+		upperBound.set(totalNodeWeights + 1); //TODO: is this a good upper bound?
 		calculateBottomLevels();
 
 		while(!rootSchedules.isEmpty()){
@@ -114,30 +113,36 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
 	 * 
 	 * @author Abby S
 	 */
-	private void bnb(Schedule schedule) {
+	private void bnb(final Schedule schedule) {
 		//TODO: not strict enough?
-		if(schedule.lowerBound>=upperBound){
-			schedule=null; //garbage collect that schedule
+		if(schedule.lowerBound>=upperBound.get()){
+			//schedule=null; //garbage collect that schedule
 			return; //break tree at this point
 		}
 
 		//compare to existing schedule structures and remove if duplicate
-		if(existingScheduleStructures.contains(schedule._scheduleStructureId)){
-			schedule=null; //garbage collect that schedule
-			return; //break tree at this point
-		} else {
-			existingScheduleStructures.add(schedule._scheduleStructureId);
+		synchronized (existingScheduleStructures){
+			if(existingScheduleStructures.contains(schedule._scheduleStructureId)){
+				//schedule=null; //garbage collect that schedule
+				return; //break tree at this point
+			} else {
+				existingScheduleStructures.add(schedule._scheduleStructureId);
+			}
 		}
 
 		//found optimal for the root started with
 		//reached end of a valid schedule. Never broke off, so is optimal
 		if(schedule.openNodes.isEmpty()){			
 			//TODO: doing this to make sure only optimal schedules get through
-			if(schedule.getMaxFinishTime()<=upperBound){
-				optimalSchedule=schedule;
-				upperBound=schedule.getMaxFinishTime();
-				return;
-			}
+			final int maxFinishTime = schedule.getMaxFinishTime();
+			upperBound.getAndUpdate((upper)-> {
+				if(maxFinishTime <= upper){
+					optimalSchedule = schedule;
+					return maxFinishTime;
+				}else{
+					return upper;
+				}
+			});
 		}
 
 		//continue DFS
