@@ -25,8 +25,10 @@ import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import nz.co.revilo.App;
+import nz.co.revilo.Output.NewOptimalResultListener;
 import nz.co.revilo.Output.ScheduleResultListener;
 import nz.co.revilo.Gui.GanttChart.ExtraData;
+import nz.co.revilo.Scheduling.Schedule;
 
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
@@ -34,7 +36,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.util.*;
 
-public class MainLauncherController implements Initializable, ScheduleResultListener {
+public class MainLauncherController implements Initializable, ScheduleResultListener, NewOptimalResultListener {
 
     App app;
     protected String _graphName;
@@ -94,6 +96,7 @@ public class MainLauncherController implements Initializable, ScheduleResultList
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         app.getAlgorithmManager().inform(this);
+        app.getAlgorithmManager().optimalInform(this);
         results = new GUIScheduleResult();
 
         //set up change listeners
@@ -126,7 +129,7 @@ public class MainLauncherController implements Initializable, ScheduleResultList
             public void run() {
                 Platform.runLater(new Runnable() {
                     public void run() {
-                        memoryLabel.setText((Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory())/1024/1024+"");
+                        memoryLabel.setText((Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory())/1024/1024+""); //needs to be better
                         timeLabel.setText(String.format("%.2f", App.getRunningTime()));
                         bestLabel.setText(App.getAlgorithmManager().getUpperBound() + "");
                         branchesLabel.setText(App.getAlgorithmManager().getBrokenTrees() + "");
@@ -160,7 +163,7 @@ public class MainLauncherController implements Initializable, ScheduleResultList
         yAxis.setCategories(FXCollections.observableArrayList(processorCatStr));
         ganttChart = new GanttChart<Number, String>(xAxis, yAxis);
 
-        for (int i = 0; i < _nodeNames.size(); i++) {
+        for (int i = 0; i < _nodeStarts.size(); i++) { //using node starts as not all nodes might be set yet
             int psr = _nodeProcessor.get(i);
             XYChart.Series psrCat = processorCat.get(psr);
 //            System.out.println("Node " + i + " starts at " + _nodeStarts.get(i) + " and goes for " + _nodeWeights.get(i) + " on processor " + psr);
@@ -171,39 +174,28 @@ public class MainLauncherController implements Initializable, ScheduleResultList
             ganttChart.getData().add(ps);
         }
 
-
-//        XYChart.Series<Number, String> idleSeries = new XYChart.Series<>();
-//        idleSeries.setName("Idle time");
-//
-//
-//        XYChart.Series<Number, String> a = new XYChart.Series<>();
-//        a.setName("A");
-//
-//        XYChart.Series<Number, String> b = new XYChart.Series<>();
-//        b.setName("B");
-//
-//        XYChart.Series<Number, String> c = new XYChart.Series<>();
-//        c.setName("C");
-//
-//        XYChart.Series<Number, String> d = new XYChart.Series<>();
-//        d.setName("D");
-//
-//        a.getData().add(new XYChart.Data<Number, String>(2, "Processor 1"));
-//        b.getData().add(new XYChart.Data<Number, String>(2, "Processor 1"));
-//        idleSeries.getData().add(new XYChart.Data<Number, String>(3, "Processor 2"));
-//        c.getData().add(new XYChart.Data<Number, String>(3, "Processor 2"));
-//        d.getData().add(new XYChart.Data<Number, String>(2, "Processor 2"));
-////        idleSeries.getData().add(new XYChart.Data<Number, String>(0.3, "Processor 1"));
-
-
-
-//        ganttChart.getData().addAll(idleSeries, a, b, c, d);
-
-
-
-
         ganttChart.setTitle(_graphName);
         mainPane.setCenter(ganttChart);
+    }
+
+    @Override
+    public void newOptimal(Schedule optimal) {
+        _graphName = App.getAlgorithmManager().getGraphName();
+        _nodeNames = App.getAlgorithmManager().getNodeNames();
+        _nodeWeights = App.getAlgorithmManager().getNodeWeights();
+        _nodeStarts = new ArrayList<>();
+        _nodeProcessor = new ArrayList<>();
+        for(int nodeId=0; nodeId< _nodeWeights.size(); nodeId++){
+            _nodeStarts.add(optimal.getClosedNodes().get(nodeId).getA());//start times
+            _nodeProcessor.add(optimal.getClosedNodes().get(nodeId).getB());//processors scheduled on
+        }
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                makeGantt();
+            }
+        });
+
     }
 
 

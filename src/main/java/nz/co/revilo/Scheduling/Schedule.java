@@ -28,6 +28,10 @@ public class Schedule {
 	Set<Integer> independentNodes=new HashSet<>(); //nodes it depends on are done
 	Map<Integer,Set<Tuple<Integer,Integer>>> scheduleStructure; //map of processor to tasks assigned on each processor
 
+	public Map<Integer,Tuple<Integer,Integer>> getClosedNodes() {
+		return closedNodes;
+	}
+
 	/**
 	 * Create new schedule object
 	 * 

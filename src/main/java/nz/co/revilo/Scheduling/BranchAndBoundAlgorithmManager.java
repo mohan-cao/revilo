@@ -83,6 +83,8 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
 		returnResults();
 	}
 
+
+
 	/**
 	 * Return the optimal schedule found and it's information
 	 * 
@@ -141,6 +143,7 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
 			//TODO: doing this to make sure only optimal schedules get through
 			if(schedule.getMaxFinishTime()<=upperBound){
 				optimalSchedule=schedule;
+				getOptimalListener().newOptimal(optimalSchedule);
 				upperBound=schedule.getMaxFinishTime();
 				return;
 			}

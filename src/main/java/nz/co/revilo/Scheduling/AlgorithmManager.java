@@ -1,9 +1,11 @@
 package nz.co.revilo.Scheduling;
 
 import nz.co.revilo.Input.ParseResultListener;
+import nz.co.revilo.Output.NewOptimalResultListener;
 import nz.co.revilo.Output.ScheduleResultListener;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Observable;
 
@@ -15,6 +17,7 @@ public abstract class AlgorithmManager extends Observable implements ParseResult
 
     int _processingCores;
     private ScheduleResultListener _listener;
+    private NewOptimalResultListener optimalListener;
     private List<ScheduleResultListener> listeners = new ArrayList<>();;
     int[] _nodeWeights;
     boolean[][] _arcs;
@@ -43,8 +46,16 @@ public abstract class AlgorithmManager extends Observable implements ParseResult
         return upperBound;
     }
 
-    public Schedule getOptimalSchedule() {
-        return optimalSchedule;
+    public String getGraphName() {
+        return _graphName;
+    }
+
+    public List<String> getNodeNames(){
+        return new ArrayList<>(Arrays.asList(_nodeNames));
+    }
+
+    public List<Integer> getNodeWeights() {
+        return PrimitiveInterfaceHelper.primToInteger1D(_nodeWeights);
     }
 
     /**
@@ -65,6 +76,8 @@ public abstract class AlgorithmManager extends Observable implements ParseResult
     public void inform(ScheduleResultListener listener) {
         listeners.add(listener);
     }
+    public void optimalInform(NewOptimalResultListener listener) { optimalListener = listener; }
+    public NewOptimalResultListener getOptimalListener() { return optimalListener; }
 
     /**
      * Template method for reading in graph information required to process a schedule, and executes the schedule (using
