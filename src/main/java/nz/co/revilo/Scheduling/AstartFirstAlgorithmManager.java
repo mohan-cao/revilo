@@ -68,11 +68,34 @@ public class AstartFirstAlgorithmManager extends AlgorithmManager {
             root._processorLastUsed.set(processor, 0);
         }
 
+        //Iterative BFS
+        List<List<Schedule>> levels = new ArrayList<>(numTasks);
+        for (int level = 0; level < numTasks; level++) {
+            levels.set(level, new ArrayList<>());
+        }
         Schedule blah = root;
-        for (int processorNum = 0; processorNum < _processingCores; processorNum++) {
-            for (Task t : root._schedulable) {
-                Schedule newSched = new Schedule();
-                blah._subSchedules.add(newSched);
+        for (int level = 0; level < numTasks; level++) {
+            List<Schedule> currentLevel = levels.get(level);
+            if (level == 0) {
+                levels.get(0).add(root);
+            }
+            for (int child = 0; child < currentLevel.size(); child++) {
+                Schedule childSchedule = currentLevel.get(child);
+                for (int processorNum = 0; processorNum < _processingCores; processorNum++) {
+                    for (Task task : root._schedulable) {
+                        Schedule newSchedule = childSchedule.clone();
+                        Task newTask = task.clone();
+
+                        newTask._processor = processorNum;
+                        newSchedule._processorLastUsed.set(processorNum, childSchedule._processorLastUsed.get(processorNum) + _nodeWeights[task._taskNum]);
+
+
+                        //Check if unschedulables are schedulable
+
+                        blah._subSchedules.add(newSchedule);
+                        currentLevel.add(newSchedule);
+                    }
+                }
             }
         }
     }

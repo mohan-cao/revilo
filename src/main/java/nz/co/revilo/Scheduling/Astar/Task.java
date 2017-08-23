@@ -19,4 +19,17 @@ public class Task implements Cloneable {
     public Task clone() {
         return new Task(_start, _processor, _taskNum);
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Task) {
+            return ((Task) obj)._taskNum == _taskNum;
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return _taskNum;
+    }
 }
