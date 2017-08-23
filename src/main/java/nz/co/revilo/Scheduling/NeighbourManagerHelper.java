@@ -7,21 +7,20 @@ import java.util.List;
  * Static helper class to manage in and out neighbours
  * Uses the primitive interface and loops through matrices
  * 
+ * TODO: Javadoc
+ * 
  * @author Abby S
  *
  */
 public class NeighbourManagerHelper {
 	static int numNodes;
 	static boolean[][] arcs;
-	
+
 	public static void setUpHelper(int numNodes, boolean[][] arcs) {
 		NeighbourManagerHelper.numNodes=numNodes;
 		NeighbourManagerHelper.arcs=arcs;
 	}
 
-	/*
-	 * TODO: which of these methods are used?
-	 */
 	static List<Integer> getOutneighbours(int nodeId) {
 		List<Integer> outneighbours=new ArrayList<>();
 

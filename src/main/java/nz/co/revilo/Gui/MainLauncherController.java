@@ -150,7 +150,7 @@ public class MainLauncherController implements Initializable, ScheduleResultList
             public void run() {
                 Platform.runLater(new Runnable() {
                     public void run() {
-                        timeLabel.setText(String.format("%.1f", App.getRunningTime()));
+//                        timeLabel.setText(String.format("%.1f", App.getRunningTime()));
                         bestLabel.setText(App.getAlgorithmManager().getUpperBound() + "");
                         branchesLabel.setText(App.getAlgorithmManager().getBrokenTrees() + "");
 //                        timeLabel.setText(app.getRunningTime() + "");

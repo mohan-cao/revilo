@@ -18,11 +18,11 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
 	int[] bottomLevels;
 	int numNodes;
 	int totalNodeWeights;
-	//private int upperBound;
-//	private Schedule optimalSchedule;
+	private int upperBound;
+	private Schedule optimalSchedule;
 	private List<Integer> nodeStartTimes=new ArrayList<>();
 	private List<Integer> nodeProcessors=new ArrayList<>();
-
+	private List<Integer> existingScheduleStructures=new ArrayList<>();
 
 	public BranchAndBoundAlgorithmManager(int processingCores) {
 		super(processingCores);
@@ -32,7 +32,7 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
 		numNodes=_nodeWeights.length;
 		bottomLevels=new int[numNodes];
 		NeighbourManagerHelper.setUpHelper(numNodes, _arcs);
-		
+
 		//get sources
 		for(int nodeId=0; nodeId<numNodes; nodeId++){
 			//check that sources have no parents
@@ -50,10 +50,24 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
 			totalNodeWeights+=_nodeWeights[nodeId];
 		}
 
-		for(int nodeId : sources) {
-			for(int p=0; p<_processingCores; p++){
-				Schedule newSchedule = new Schedule(this, null, nodeId, p);
+		/*
+		 * Definitely have sources as a row at start of each processor if there aren't more sources than cores
+		 * All others will just be permutations
+		 * If stack sources on same processor, will be less optimal
+		 */
+		if(sources.size()<=_processingCores){
+			int processor=0;
+			for(int nodeId : sources) {
+				Schedule newSchedule = new Schedule(this, null, nodeId, processor);
 				rootSchedules.add(newSchedule);
+				processor++;
+			}
+		} else {
+			for(int nodeId : sources) {
+				for(int processor=0; processor<_processingCores; processor++){
+					Schedule newSchedule = new Schedule(this, null, nodeId, processor);
+					rootSchedules.add(newSchedule);
+				}
 			}
 		}
 
@@ -61,10 +75,9 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
 		calculateBottomLevels();
 
 		while(!rootSchedules.isEmpty()){
-			System.out.println("Next root");
 			bnb(rootSchedules.remove(0));
 		}
-		
+
 		returnResults();
 	}
 
@@ -76,57 +89,61 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
 	 */
 	private void returnResults() {
 		for(int nodeId=0; nodeId<numNodes; nodeId++){
-			nodeStartTimes.add(optimalSchedule.closedSet.get(nodeId)._startTime);//start times
-			nodeProcessors.add(optimalSchedule.closedSet.get(nodeId)._processor);//processors scheduled on
+			nodeStartTimes.add(optimalSchedule.closedNodes.get(nodeId).getA());//start times
+			nodeProcessors.add(optimalSchedule.closedNodes.get(nodeId).getB());//processors scheduled on
 		}	
 		System.out.println("Optimal length found: "+optimalSchedule.getMaxFinishTime());
-		
+
 		//pass to output
 		getListener().finalSchedule(
-                _graphName,
-                Arrays.asList(_nodeNames),
-                primToBool2D(_arcs),
-                primToInt2D(_arcWeights),
-                primToInt(_nodeWeights),
-                nodeStartTimes,
-                nodeProcessors
-        );
+				_graphName,
+				Arrays.asList(_nodeNames),
+				PrimitiveInterfaceHelper.primToBoolean2D(_arcs),
+				PrimitiveInterfaceHelper.primToInteger2D(_arcWeights),
+				PrimitiveInterfaceHelper.primToInteger1D(_nodeWeights),
+				nodeStartTimes,
+				nodeProcessors
+				);
 	}
 
 	/**
 	 * bnb based on the current schedule s
 	 * 
-	 * @param s
+	 * @param schedule
 	 * 
 	 * @author Abby S
 	 */
-	private void bnb(Schedule s) {
-		//System.out.println(s.toString());
-		
+	private void bnb(Schedule schedule) {
 		//TODO: not strict enough?
-		if(s.lowerBound>=upperBound){
-			s=null; //garbage collect that schedule
-			brokenTrees++; //we're breaking a tree;
+		if(schedule.lowerBound>=upperBound){
+			schedule=null; //garbage collect that schedule
 			return; //break tree at this point
+		}
+
+		//compare to existing schedule structures and remove if duplicate
+		if(existingScheduleStructures.contains(schedule._scheduleStructureId)){
+			schedule=null; //garbage collect that schedule
+			return; //break tree at this point
+		} else {
+			existingScheduleStructures.add(schedule._scheduleStructureId);
 		}
 
 		//found optimal for the root started with
 		//reached end of a valid schedule. Never broke off, so is optimal
-		if(s.openSet.isEmpty()){			
+		if(schedule.openNodes.isEmpty()){
 			//TODO: doing this to make sure only optimal schedules get through
-			if(s.getMaxFinishTime()<=upperBound){
-				optimalSchedule=s;
-				System.out.println("New Optimal: " + upperBound);
-				upperBound=s.getMaxFinishTime();
+			if(schedule.getMaxFinishTime()<=upperBound){
+				optimalSchedule=schedule;
+				upperBound=schedule.getMaxFinishTime();
 				return;
 			}
 		}
 
 		//continue DFS
 		List<Schedule> nextSchedules = new ArrayList<>();
-		for(int n:s.independentSet){
-			for(int p=0; p<_processingCores; p++){
-				nextSchedules.add(new Schedule(this, s, n, p));
+		for(int node:schedule.independentNodes){
+			for(int processor=0; processor<_processingCores; processor++){
+				nextSchedules.add(new Schedule(this, schedule, node, processor));
 			}
 		}
 		for(Schedule nextSchedule:nextSchedules){
@@ -151,7 +168,7 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
 				int fromGivenNode=bottomLevels[nodeId]+_nodeWeights[inneighbour];
 				//Farthest distance needed from bottom
 				bottomLevels[inneighbour]=bottomLevels[inneighbour]>fromGivenNode?bottomLevels[inneighbour]:fromGivenNode;
-				
+
 				//inneighbours.remove(inneighbour); //ordered access so don't actually need to remove
 				List<Integer> inneighboursChildren=NeighbourManagerHelper.getOutneighbours(inneighbour); //nodes with 1 on the node's row
 				inneighboursChildren.remove(Integer.valueOf(nodeId)); //Integer or will treat the int as index
@@ -195,17 +212,4 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
         return n;
     }
 
-    /**
-     * Creates an object type 1d list from primitive array
-     * 
-     * @param prim
-     * @return
-     */
-    private List<Integer> primToInt(int[] prim) {
-        ArrayList<Integer> n = new ArrayList<>();
-        for (int i: prim) {
-            n.add(i);
-        }
-        return n;
-    }
 }

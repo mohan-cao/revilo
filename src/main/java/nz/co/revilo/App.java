@@ -1,26 +1,16 @@
 package nz.co.revilo;
 
 import com.beust.jcommander.JCommander;
-import javafx.application.Application;
-import javafx.event.EventHandler;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.BorderPane;
-import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 import nz.co.revilo.CommandLine.CLIParameters;
-import nz.co.revilo.Gui.MainLauncher;
-import nz.co.revilo.Gui.MainLauncherController;
 import nz.co.revilo.Input.DotFileReader;
+import nz.co.revilo.Input.FileParser;
+import nz.co.revilo.Input.GxlFileReader;
 import nz.co.revilo.Output.DotFileProducer;
 import nz.co.revilo.Output.DotFileWriter;
 import nz.co.revilo.Scheduling.AlgorithmManager;
 import nz.co.revilo.Scheduling.BranchAndBoundAlgorithmManager;
-import nz.co.revilo.Scheduling.ImprovedTopologicalAlgorithmManager;
 
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.Arrays;
 
 /**
@@ -31,7 +21,7 @@ import java.util.Arrays;
  * @author Mohan Cao (file created by), Michael Kemp (pattern and fleshed out), Terran Kroft (Modified for CLI library), Abby Shen
  * @version alpha
  */
-public class App extends Application {
+public class App {
     public static final String DEFAULT_FILETYPE = ".dot";
     public static final String DEFAULT_OUTPUT_FILENAME = "-output.dot";
 
@@ -45,27 +35,25 @@ public class App extends Application {
     private boolean _visualise;
     private String _outputFilename;
 
-    private static long startingTime;
-    private static long endingTime;
-    private static boolean isDone; // to stop increasing time when we're done
+    // Fields
     private static AlgorithmManager manager;
-    private static DotFileReader reader;
+    private static FileParser reader;
     private static DotFileProducer output;
 
-    //GUI Stuff
-    private Stage primaryStage;
-    private BorderPane rootLayout;
-    private double xOffset = 0;
-    private double yOffset = 0;
+    public static AlgorithmManager getAlgorithmManager() {
+        return null;
+    }
+
+    public static int getExecCores() {
+        return _inst._numExecutionCores;
+    }
 
     /**
      * The one and only constructor which allows for the singleton pattern by never overriding the current instance
      *
      * @author Michael Kemp
      */
-
-
-    public App() {
+    private App() {
         // If there's no current instance then it's instantiated
         if (_inst == null) {
             _inst = this;
@@ -74,65 +62,6 @@ public class App extends Application {
             System.out.println("App was instantiated more than once");
             //TODO throw an informative exception to indicate error
         }
-    }
-
-    @Override
-    public void start(Stage primaryStage) throws Exception {
-        this.primaryStage = primaryStage;
-        this.primaryStage.initStyle(StageStyle.UNDECORATED);
-        this.primaryStage.setTitle("Revilo");
-        try {
-            // Load root layout from fxml file.
-            FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(MainLauncher.class.getResource("/Main.fxml"));
-            MainLauncherController mlc = new MainLauncherController(_inst);
-            loader.setController(mlc);
-            rootLayout = loader.load();
-
-            rootLayout.setOnMousePressed(new EventHandler<MouseEvent>() {
-                @Override
-                public void handle(MouseEvent event) {
-                    xOffset = event.getSceneX();
-                    yOffset = event.getSceneY();
-                }
-            });
-
-            rootLayout.setOnMouseDragged(new EventHandler<MouseEvent>() {
-                @Override
-                public void handle(MouseEvent event) {
-                    primaryStage.setX(event.getScreenX() - xOffset);
-                    primaryStage.setY(event.getScreenY() - yOffset);
-                }
-            });
-
-            // Show the scene containing the root layout.
-            Scene scene = new Scene(rootLayout);
-            primaryStage.setScene(scene);
-            primaryStage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static App getInstance() {
-        return _inst;
-    }
-
-    public static AlgorithmManager getAlgorithmManager() {return manager;} //access data from it
-
-    public static int getExecCores() {
-        return _inst._numExecutionCores;
-    }
-
-    public static double getRunningTime() {
-        double elapsed;
-        if (isDone) {
-            elapsed = ((endingTime - startingTime) / 1000.0); // incl. tenths of second
-        } else {
-            long now = System.currentTimeMillis();
-            elapsed = ((now - startingTime) / 1000.0); // incl. tenths of second
-        }
-        return elapsed;
     }
 
     /**
@@ -177,41 +106,44 @@ public class App extends Application {
 
             // Sets the output filename if one is given, otherwise uses default
             if (params.getOutputName() == null) {
-                int fileNameLocation = _inst._inputFilename.toLowerCase().lastIndexOf(DEFAULT_FILETYPE);
-                String fileNameWithoutExtension = _inst._inputFilename.substring(0, fileNameLocation);
+                String temp = _inst._inputFilename;
+                if (_inst._inputFilename.toUpperCase().contains("GXL")) {
+                    temp = _inst._inputFilename.substring(0, _inst._inputFilename.length() - 4) + ".dot";
+                }
+                int fileNameLocation = temp.toLowerCase().lastIndexOf(DEFAULT_FILETYPE);
+                String fileNameWithoutExtension = temp.substring(0, fileNameLocation);
                 _inst._outputFilename = fileNameWithoutExtension + DEFAULT_OUTPUT_FILENAME;
             } else {
                 _inst._outputFilename = params.getOutputName();
             }
         }
 
-
-        // Parse file and give it algorithm manager to give results to. @Michael Kemp
-        manager = new BranchAndBoundAlgorithmManager(_inst._numExecutionCores);
-        reader = new DotFileReader(_inst._inputFilename);
-
-        // Output to file @Michael Kemp
-        output = new DotFileWriter(_inst._outputFilename);
-        manager.inform(output);
-
+        // Starts visualisation if requested
+//        System.out.println("This is the schedule called " + _inst._outputFilename + " processed on " + _inst._numParallelProcessors + " core(s).");
         if (_inst._visualise) {
 //            System.out.println("There is a visualisation outputted.");
-                Application.launch();
-        } else {
-            startParsing();
         }
 
-    }
+        // Parse file and give it algorithm manager to give results to. @Michael Kemp
+        _inst.manager = new BranchAndBoundAlgorithmManager(_inst._numExecutionCores);
 
-    public static void startParsing() {
+        if (_inst._inputFilename.matches(".*gxl") || _inst._inputFilename.matches(".*GXL")) {
+            _inst.reader = new GxlFileReader(_inst._inputFilename);
+        } else {
+            _inst.reader = new DotFileReader(_inst._inputFilename);
+        }
+
+        // Output to file @Michael Kemp
+        _inst.output = new DotFileWriter(_inst._outputFilename);
+        _inst.manager.inform(_inst.output);
         try {
-            isDone = false;
-            startingTime = System.currentTimeMillis();
-            reader.startParsing(manager);
-            endingTime = System.currentTimeMillis();
-            isDone = true;
+            _inst.reader.startParsing(_inst.manager);
         } catch (FileNotFoundException e) {
             throw new RuntimeException("Input file does not exist");
         }
+    }
+
+    public static void startParsing() {
+
     }
 }

@@ -1,15 +1,14 @@
 digraph "outputRandom_Nodes_10_Density_1.90_CCR_10.00_WeightType_Random" {
-<<<<<<< HEAD
-		0		[Weight=6,Start=0,Processor=1];
-		3		[Weight=10,Start=26,Processor=1];
-		4		[Weight=3,Start=11,Processor=1];
-		9		[Weight=8,Start=55,Processor=1];
-		1		[Weight=5,Start=6,Processor=1];
-		2		[Weight=5,Start=14,Processor=1];
-		5		[Weight=7,Start=19,Processor=1];
-		6		[Weight=8,Start=36,Processor=1];
-		7		[Weight=3,Start=44,Processor=1];
-		8		[Weight=8,Start=47,Processor=1];
+		0		[Weight=6,Start=0,Processor=0];
+		3		[Weight=10,Start=40,Processor=1];
+		4		[Weight=3,Start=6,Processor=0];
+		9		[Weight=8,Start=38,Processor=0];
+		1		[Weight=5,Start=9,Processor=0];
+		2		[Weight=5,Start=14,Processor=0];
+		5		[Weight=7,Start=33,Processor=2];
+		6		[Weight=8,Start=19,Processor=0];
+		7		[Weight=3,Start=27,Processor=0];
+		8		[Weight=8,Start=30,Processor=0];
 		0 -> 3	[Weight=34];
 		0 -> 4	[Weight=24];
 		0 -> 9	[Weight=44];

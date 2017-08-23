@@ -1,37 +1,42 @@
 package nz.co.revilo.Scheduling;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
-
-import nz.co.revilo.Scheduling.BranchAndBoundAlgorithmManager;
+import java.util.*;
 
 /**
- * Represents a schedule
+ * Represents a schedule.
+ *
+ * ClosedSet tuple:
+ * Tuple A - Node start time
+ * Tuple B - Processor number
+ * --
+ * ProcessorLists tuple:
+ * Tuple A - Node ID
+ * Tuple B - Start time
  * 
  * @author Abby S
+ * @author Mohan Cao
  */
 public class Schedule {
 	int[] finishTimes;
 	int totalIdleTime=0;
 	int lowerBound;
 	int scheduledWeight = 0;
+	int _scheduleStructureId = -1;
 	BranchAndBoundAlgorithmManager bnb;
-	Set<Integer> openSet=new HashSet<>(); //need to assign to processor
-	Map<Integer,Tuple> closedSet=new HashMap<>(); //done nodes
-	Set<Integer> independentSet=new HashSet<>(); //nodes it depends on are done
+	Set<Integer> openNodes=new HashSet<>(); //need to assign to processor
+	Map<Integer,Tuple<Integer,Integer>> closedNodes=new HashMap<>(); //done nodes
+	Set<Integer> independentNodes=new HashSet<>(); //nodes it depends on are done
+	Map<Integer,Set<Tuple<Integer,Integer>>> scheduleStructure; //map of processor to tasks assigned on each processor
 
 	/**
 	 * Create new schedule object
 	 * 
 	 * @author Abby S
 	 * 
-	 * @param bnb
-	 * @param parentSchedule
-	 * @param nodeId
-	 * @param processor
+	 * @param bnb the branch and bound algorithm manager that is being used
+	 * @param parentSchedule the parent schedule that is being used
+	 * @param nodeId the node id added to the current schedule
+	 * @param processor the processor that the node is being added on
 	 */
 	public Schedule(BranchAndBoundAlgorithmManager bnb, Schedule parentSchedule, int nodeId, int processor){
 		int startTime=0;
@@ -42,18 +47,17 @@ public class Schedule {
 		//scheduling on a root node
 		if(parentSchedule==null){
 			//initialise data structures
-			for(int node=0; node<bnb.numNodes; node++) openSet.add(node);
-			independentSet.addAll(bnb.sources);
+			for(int node=0; node<bnb.numNodes; node++) openNodes.add(node);
+			independentNodes.addAll(bnb.sources);
 			lowerBound=bnb.bottomLevels[nodeId];
-				//System.out.println(independentSet + "  " + nodeId);
 		} else { //adding to a schedule
 			cloneParentSchedule(parentSchedule);
 
 			//when parents are done
 			for(int parent:NeighbourManagerHelper.getInneighbours(nodeId)){
-				Tuple parentAssignment=closedSet.get(parent);
-				int dataReadyTime=parentAssignment._startTime + bnb._nodeWeights[parent];
-				if(processor!=parentAssignment._processor) {
+				Tuple<Integer,Integer> parentAssignment=closedNodes.get(parent);
+				int dataReadyTime=parentAssignment.getA() + bnb._nodeWeights[parent];
+				if(processor!=parentAssignment.getB()) {
 					dataReadyTime+=bnb._arcWeights[parent][nodeId];
 				}
 				startTime=dataReadyTime>startTime?dataReadyTime:startTime;
@@ -64,28 +68,66 @@ public class Schedule {
 			addedIdleTime=startTime-finishTimes[processor]; //added by this node
 			totalIdleTime+=addedIdleTime;//total processor idle time
 
-			//TODO: cost function. 
-			//Does this actually work as a heuristic?			
+			//TODO: cost function. Does this actually work as a heuristic?			
 			int perfectLoadBalancing=(bnb.totalNodeWeights+totalIdleTime)/bnb._processingCores;
 			lowerBound=(startTime+bnb.bottomLevels[nodeId])>perfectLoadBalancing?(startTime+bnb.bottomLevels[nodeId]):perfectLoadBalancing;
-			
-			//this will only remove the very slow ones that have already exceeded upper bound
-			//lowerBound=getMaxFinishTime();
 		}
 
+		//create schedule structure map for structure id comparison
+		createScheduleStructureMap(bnb);
 
 		//update data structures
-		closedSet.put(nodeId, new Tuple(startTime, processor));
-		openSet.remove(nodeId);		
-		independentSet.remove(nodeId);
+		closedNodes.put(nodeId, new Tuple<>(startTime, processor));
+		openNodes.remove(nodeId);		
+		independentNodes.remove(nodeId);
 		updateIndependentChildren(nodeId);
 		finishTimes[processor]+=addedIdleTime+bnb._nodeWeights[nodeId];
+
+		//update schedule structure
+		Set<Tuple<Integer,Integer>> setToAdd = scheduleStructure.get(processor);
+		setToAdd.add(new Tuple<>(nodeId, startTime));
+		scheduleStructure.put(processor,setToAdd);
+		_scheduleStructureId = generateScheduleStructureId();
+	}
+
+	/**
+	 * create schedule structure map for id comparison
+	 * @param bnb
+	 * 
+	 * @author Abby S
+	 * @author Mohan Cao
+	 */
+	private void createScheduleStructureMap(BranchAndBoundAlgorithmManager bnb) {
+		scheduleStructure = new HashMap<>();
+		for(int i=0;i<bnb._processingCores;i++){
+			//set of tuples assigned on each processor
+			scheduleStructure.put(i,new HashSet<>());
+		}
+		
+		//Add all assigned nodes to schedule structure map
+		for(Integer assignedNode : closedNodes.keySet()){
+			int assignedStartTime = closedNodes.get(assignedNode).getA();
+			int assignedProcessor = closedNodes.get(assignedNode).getB();
+			scheduleStructure.get(assignedProcessor).add(new Tuple<>(assignedNode,assignedStartTime));
+		}
+	}
+
+	/**
+	 * Generates id for identifying the structure of this schedule
+	 * To be compared to existing structures for mirrors
+	 * 
+	 * @return
+	 */
+	private int generateScheduleStructureId(){
+		Set<Set<Tuple<Integer,Integer>>> set = new HashSet<>();
+		set.addAll(scheduleStructure.values());
+		return set.hashCode();
 	}
 
 	/**
 	 * 
 	 * Get finish time of slowest processor
-	 * This determins the finish time of the schedule
+	 * This determines the finish time of the schedule
 	 * 
 	 * @author Abby S
 	 * 
@@ -98,8 +140,12 @@ public class Schedule {
 		return max;
 	}
 
+	//TODO: remove if unused
 	public boolean isBounded(int maxFinishTime) {
-		return this.lowerBound >= maxFinishTime;
+		if(this.lowerBound >= maxFinishTime){
+			return true;
+		}
+		return false;
 	}
 
 	/**
@@ -113,32 +159,32 @@ public class Schedule {
 	private void cloneParentSchedule(Schedule parentSchedule) {
 		//clone finishTimes
 		for(int i=0; i<bnb._processingCores;i++) finishTimes[i]=parentSchedule.finishTimes[i];
-		
+
 		//clone idleTime
 		totalIdleTime=parentSchedule.totalIdleTime;
 
 		Integer element;
 		//clone openSet
-		Iterator<Integer> iterator=parentSchedule.openSet.iterator();
-		for(int n=0; n<parentSchedule.openSet.size();n++){
+		Iterator<Integer> iterator=parentSchedule.openNodes.iterator();
+		for(int n=0; n<parentSchedule.openNodes.size();n++){
 			element=iterator.next();
-			openSet.add(element);
+			openNodes.add(element);
 		}
 
 		//clone closedSet
 		Integer nodeKey;
-		iterator=parentSchedule.closedSet.keySet().iterator();
-		for(int n=0; n<parentSchedule.closedSet.keySet().size();n++){
+		iterator=parentSchedule.closedNodes.keySet().iterator();
+		for(int n=0; n<parentSchedule.closedNodes.keySet().size();n++){
 			nodeKey=iterator.next();
-			Tuple t = parentSchedule.closedSet.get(nodeKey);
-			closedSet.put(nodeKey, new Tuple(t._startTime, t._processor));
+			Tuple<Integer,Integer> t = parentSchedule.closedNodes.get(nodeKey);
+			closedNodes.put(nodeKey, new Tuple<>(t.getA(), t.getB()));
 		}
 
 		//clone openSet
-		iterator=parentSchedule.independentSet.iterator();
-		for(int n=0; n<parentSchedule.independentSet.size();n++){
+		iterator=parentSchedule.independentNodes.iterator();
+		for(int n=0; n<parentSchedule.independentNodes.size();n++){
 			element=iterator.next();
-			independentSet.add(element);
+			independentNodes.add(element);
 		}
 	}
 
@@ -153,48 +199,71 @@ public class Schedule {
 		for(int child:NeighbourManagerHelper.getOutneighbours(parent)){
 			boolean waitingForParent=false;
 			for(int p:NeighbourManagerHelper.getInneighbours(child)){
-				if(openSet.contains(p)){
+				if(openNodes.contains(p)){
 					waitingForParent=true; //still waiting on a parent
 					break; //move to next child node
 				}
 			}
 			if(!waitingForParent) {
-				independentSet.add(child); //not waiting on any parents
-				//System.out.println("Adding "+child);
+				independentNodes.add(child); //not waiting on any parents
 			}
 		}
 	}
 
+	// TODO: design decision to not compare Schedule objects
+
+	/**
+	 * Method to show current schedule in a string form
+	 * 
+	 * TODO: delete if unused
+	 * 
+	 * @author Abby S
+	 * 
+	 */
 	@Override
 	public String toString(){
-		return "Printing schedule with " + closedSet.keySet() + " closed, and " + openSet + " open. Independent " + independentSet;
+		return "Printing schedule with " + closedNodes.keySet() + " closed, and " + openNodes + " open. Independent " + independentNodes;
 	}
 
 	/**
 	 * Tuple class to represent a start time and processor tuple
-	 * Used in scheduling on a node
+	 * Used in scheduling on a node.
+	 *
+	 * Genericized.
 	 * 
 	 * @author Abby S
+	 * @author Mohan Cao
 	 *
 	 */
-	public class Tuple {
-		int _startTime;
-		int _processor;
-		
-		public Tuple(int startTime, int processor){
-			_startTime=startTime;
-			_processor=processor;
+	public class Tuple<T,V> {
+		T _a;
+		V _b;
+
+		public Tuple(T a, V b){
+			_a = a;
+			_b = b;
+		}
+
+		public T getA(){
+			return _a;
+		}
+		public V getB(){
+			return _b;
 		}
 
 		@Override
 		public boolean equals(Object o) {
-			if(o.getClass() != this.getClass()) {
+			if(!(o instanceof Tuple)) {
 				return false;
 			}
 
 			Tuple t = (Tuple) o;
 
-			return (t._processor == this._processor) && (t._startTime == this._startTime);
+			return (t._a == this._a) && (t._b == this._b);
+		}
+		@Override
+		public int hashCode(){
+			return Objects.hash(_a,_b);
 		}
 	}
 }

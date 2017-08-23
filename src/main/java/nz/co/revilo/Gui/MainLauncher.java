@@ -22,7 +22,7 @@ public class MainLauncher extends Application{
 
     private Stage primaryStage;
     private BorderPane rootLayout;
-    App app = App.getInstance();
+//    App app = App.getInstance();
 
     private double xOffset = 0;
     private double yOffset = 0;
@@ -36,8 +36,8 @@ public class MainLauncher extends Application{
             // Load root layout from fxml file.
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(MainLauncher.class.getResource("/Main.fxml"));
-            MainLauncherController mlc = new MainLauncherController(app);
-            loader.setController(mlc);
+//            MainLauncherController mlc = new MainLauncherController(app);
+//            loader.setController(mlc);
             rootLayout = loader.load();
 
             rootLayout.setOnMousePressed(new EventHandler<MouseEvent>() {
