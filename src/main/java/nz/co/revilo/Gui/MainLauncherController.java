@@ -26,6 +26,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import nz.co.revilo.App;
 import nz.co.revilo.Output.ScheduleResultListener;
+import nz.co.revilo.Gui.GanttChart.ExtraData;
 
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
@@ -80,7 +81,7 @@ public class MainLauncherController implements Initializable, ScheduleResultList
     @FXML
     private BorderPane baseBp;
 
-    private StackedBarChart<Number, String> ganttChart;
+    private GanttChart<Number, String> ganttChart;
 
 
     @FXML
@@ -150,46 +151,59 @@ public class MainLauncherController implements Initializable, ScheduleResultList
     public void makeGantt() {
         NumberAxis xAxis = new NumberAxis();
         CategoryAxis yAxis = new CategoryAxis();
-        ArrayList<String> processorCat = new ArrayList<>();
-        for (int i = 1; i < App.getExecCores() + 1; i++) {
-            processorCat.add("Processor " + i);
+        ArrayList<String> processorCatStr = new ArrayList<>();
+        ArrayList<XYChart.Series> processorCat = new ArrayList<>();
+        for (int i = 0; i < App.getExecCores(); i++) {
+            processorCatStr.add("Processor " + i);
+            processorCat.add(new XYChart.Series()); // each processor has its own series
         }
-        yAxis.setCategories(FXCollections.observableArrayList(processorCat));
-        ganttChart = new StackedBarChart<Number, String>(xAxis, yAxis);
+        yAxis.setCategories(FXCollections.observableArrayList(processorCatStr));
+        ganttChart = new GanttChart<Number, String>(xAxis, yAxis);
 
-        XYChart.Series<Number, String> idleSeries = new XYChart.Series<>();
-        idleSeries.setName("Idle time");
+        for (int i = 0; i < _nodeNames.size(); i++) {
+            int psr = _nodeProcessor.get(i);
+            XYChart.Series psrCat = processorCat.get(psr);
+//            System.out.println("Node " + i + " starts at " + _nodeStarts.get(i) + " and goes for " + _nodeWeights.get(i) + " on processor " + psr);
+            psrCat.getData().add(new XYChart.Data(_nodeStarts.get(i), ("Processor " + psr), new ExtraData(_nodeWeights.get(i), "status-green")));
+        }
 
-
-        XYChart.Series<Number, String> a = new XYChart.Series<>();
-        a.setName("A");
-
-        XYChart.Series<Number, String> b = new XYChart.Series<>();
-        b.setName("B");
-
-        XYChart.Series<Number, String> c = new XYChart.Series<>();
-        c.setName("C");
-
-        XYChart.Series<Number, String> d = new XYChart.Series<>();
-        d.setName("D");
-
-        a.getData().add(new XYChart.Data<Number, String>(2, "Processor 1"));
-        b.getData().add(new XYChart.Data<Number, String>(2, "Processor 1"));
-        idleSeries.getData().add(new XYChart.Data<Number, String>(3, "Processor 2"));
-        c.getData().add(new XYChart.Data<Number, String>(3, "Processor 2"));
-        d.getData().add(new XYChart.Data<Number, String>(2, "Processor 2"));
-//        idleSeries.getData().add(new XYChart.Data<Number, String>(0.3, "Processor 1"));
+        for (XYChart.Series ps : processorCat) {
+            ganttChart.getData().add(ps);
+        }
 
 
+//        XYChart.Series<Number, String> idleSeries = new XYChart.Series<>();
+//        idleSeries.setName("Idle time");
+//
+//
+//        XYChart.Series<Number, String> a = new XYChart.Series<>();
+//        a.setName("A");
+//
+//        XYChart.Series<Number, String> b = new XYChart.Series<>();
+//        b.setName("B");
+//
+//        XYChart.Series<Number, String> c = new XYChart.Series<>();
+//        c.setName("C");
+//
+//        XYChart.Series<Number, String> d = new XYChart.Series<>();
+//        d.setName("D");
+//
+//        a.getData().add(new XYChart.Data<Number, String>(2, "Processor 1"));
+//        b.getData().add(new XYChart.Data<Number, String>(2, "Processor 1"));
+//        idleSeries.getData().add(new XYChart.Data<Number, String>(3, "Processor 2"));
+//        c.getData().add(new XYChart.Data<Number, String>(3, "Processor 2"));
+//        d.getData().add(new XYChart.Data<Number, String>(2, "Processor 2"));
+////        idleSeries.getData().add(new XYChart.Data<Number, String>(0.3, "Processor 1"));
 
-        ganttChart.getData().addAll(idleSeries, a, b, c, d);
+
+
+//        ganttChart.getData().addAll(idleSeries, a, b, c, d);
 
 
 
 
         ganttChart.setTitle(_graphName);
         mainPane.setCenter(ganttChart);
-        processorLabel.setText("test");
     }
 
 
