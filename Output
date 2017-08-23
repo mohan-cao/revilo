@@ -1,0 +1,10 @@
+digraph "outputMydiamond" {
+		a		[Weight=2,Start=0,Processor=0];
+		b		[Weight=2,Start=2,Processor=0];
+		c		[Weight=3,Start=3,Processor=1];
+		d		[Weight=2,Start=6,Processor=1];
+		a -> b	[Weight=2];
+		a -> c	[Weight=1];
+		b -> d	[Weight=2];
+		c -> d	[Weight=1];
+}

@@ -3,6 +3,8 @@ package nz.co.revilo.Scheduling;
 import nz.co.revilo.Input.ParseResultListener;
 import nz.co.revilo.Output.ScheduleResultListener;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Observable;
 
 /**
@@ -13,6 +15,7 @@ public abstract class AlgorithmManager extends Observable implements ParseResult
 
     int _processingCores;
     private ScheduleResultListener _listener;
+    private List<ScheduleResultListener> listeners = new ArrayList<>();;
     int[] _nodeWeights;
     boolean[][] _arcs;
     int[][] _arcWeights;
@@ -55,8 +58,12 @@ public abstract class AlgorithmManager extends Observable implements ParseResult
      * produced by the algorithm implementation (to use in output file creation).
      * @param listener
      */
+//    public void inform(ScheduleResultListener listener) {
+//        _listener = listener;
+//    }
+
     public void inform(ScheduleResultListener listener) {
-        _listener = listener;
+        listeners.add(listener);
     }
 
     /**
@@ -90,7 +97,7 @@ public abstract class AlgorithmManager extends Observable implements ParseResult
      * Getter for the associated ScheduleResultListener
      * @return listener associated with this algorithm manager
      */
-    protected ScheduleResultListener getListener() {
-        return _listener;
+    protected List<ScheduleResultListener> getListeners() {
+        return listeners;
     }
 }

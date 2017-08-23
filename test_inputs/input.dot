@@ -1,10 +1,10 @@
 digraph "mydiamond" {
     a   [Weight=2];
-	b   [Weight=3];
-	c   [Weight=1];
-	d   [Weight=4];
-	a -> c  [Weight=5];
-    a -> b  [Weight=3];
+	b   [Weight=2];
+	c   [Weight=3];
+	d   [Weight=2];
+	a -> c  [Weight=1];
+    a -> b  [Weight=2];
     b -> d  [Weight=2];
     c -> d  [Weight=1];
 }

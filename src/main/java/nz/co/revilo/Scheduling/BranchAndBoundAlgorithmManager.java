@@ -1,5 +1,7 @@
 package nz.co.revilo.Scheduling;
 
+import nz.co.revilo.Output.ScheduleResultListener;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -94,16 +96,19 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
 		}	
 		System.out.println("Optimal length found: "+optimalSchedule.getMaxFinishTime());
 
-		//pass to output
-		getListener().finalSchedule(
-				_graphName,
-				Arrays.asList(_nodeNames),
-				PrimitiveInterfaceHelper.primToBoolean2D(_arcs),
-				PrimitiveInterfaceHelper.primToInteger2D(_arcWeights),
-				PrimitiveInterfaceHelper.primToInteger1D(_nodeWeights),
-				nodeStartTimes,
-				nodeProcessors
-				);
+		//pass to outputs
+		for (ScheduleResultListener listener: getListeners()) {
+			listener.finalSchedule(
+					_graphName,
+					Arrays.asList(_nodeNames),
+					PrimitiveInterfaceHelper.primToBoolean2D(_arcs),
+					PrimitiveInterfaceHelper.primToInteger2D(_arcWeights),
+					PrimitiveInterfaceHelper.primToInteger1D(_nodeWeights),
+					nodeStartTimes,
+					nodeProcessors
+			);
+		}
+
 	}
 
 	/**

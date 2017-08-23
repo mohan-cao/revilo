@@ -33,7 +33,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.util.*;
 
-public class MainLauncherController implements Initializable {
+public class MainLauncherController implements Initializable, ScheduleResultListener {
 
     App app;
     protected String _graphName;
@@ -44,16 +44,13 @@ public class MainLauncherController implements Initializable {
     protected List<Integer> _nodeStarts;
     protected List<Integer> _nodeProcessor;
 
-    private ObservableList<Integer> observableStartTime;
     private Stage thisStage;
-
+    private GUIScheduleResult results;
 
 
     public MainLauncherController(App app) {
         _nodeStarts = new ArrayList<>();
         this.app = app;
-    // TODO is this the best way?
-
     }
 
     @FXML
@@ -83,8 +80,7 @@ public class MainLauncherController implements Initializable {
     @FXML
     private BorderPane baseBp;
 
-    @FXML
-    private StackedBarChart ganttChart;
+    private StackedBarChart<Number, String> ganttChart;
 
 
     @FXML
@@ -96,6 +92,19 @@ public class MainLauncherController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        app.getAlgorithmManager().inform(this);
+        results = new GUIScheduleResult();
+
+        //set up change listeners
+        results.isDoneProcessingProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                Platform.runLater(() -> {
+                    makeGantt();
+                });
+            }
+        });
+
 
 
         processorLabel.setText(App.getExecCores() + "");
@@ -127,6 +136,39 @@ public class MainLauncherController implements Initializable {
         }, 0, 50);
     }
 
+    @Override
+    public void finalSchedule(String graphName, List<String> nodeNames, List<List<Boolean>> arcs, List<List<Integer>> arcWeights, List<Integer> nodeWeights, List<Integer> nodeStarts, List<Integer> nodeProcessor) {
+        _graphName = graphName;
+        _nodeNames = nodeNames;
+        _nodeWeights = nodeWeights;
+        _nodeStarts = nodeStarts;
+        _nodeProcessor = nodeProcessor;
+
+        results.setIsDoneProcessing(true);
+    }
+
+    public void makeGantt() {
+        NumberAxis xAxis = new NumberAxis();
+        CategoryAxis yAxis = new CategoryAxis();
+        ArrayList<String> processorCat = new ArrayList<>();
+        for (int i = 1; i < App.getExecCores() + 1; i++) {
+            processorCat.add("Processor " + i);
+        }
+        yAxis.setCategories(FXCollections.observableArrayList(processorCat));
+        ganttChart = new StackedBarChart<Number, String>(xAxis, yAxis);
+
+        XYChart.Series<Number, String> idleSeries = new XYChart.Series<>();
+        idleSeries.setName("Idle time");
+
+
+
+
+
+
+        ganttChart.setTitle(_graphName);
+        mainPane.setCenter(ganttChart);
+        processorLabel.setText("test");
+    }
 
 
 /*
