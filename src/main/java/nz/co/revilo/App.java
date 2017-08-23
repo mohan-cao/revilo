@@ -217,6 +217,7 @@ public class App extends Application {
 
             // Show the scene containing the root layout.
             Scene scene = new Scene(rootLayout);
+            scene.getStylesheets().add("/main.css");
             primaryStage.setScene(scene);
             primaryStage.show();
         } catch (IOException e) {
