@@ -33,7 +33,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.util.*;
 
-public class MainLauncherController implements Initializable, ScheduleResultListener {
+public class MainLauncherController implements Initializable {
 
     App app;
     protected String _graphName;
@@ -47,51 +47,15 @@ public class MainLauncherController implements Initializable, ScheduleResultList
     private ObservableList<Integer> observableStartTime;
     private Stage thisStage;
 
-    @Override
-    final public void finalSchedule(String graphName, List<String> nodeNames, List<List<Boolean>> arcs, List<List<Integer>> arcWeights, List<Integer> nodeWeights, List<Integer> nodeStarts, List<Integer> nodeProcessor) {
-        // Sets data structure
-        _graphName = graphName;
-        _nodeNames = nodeNames;
-        _arcs = arcs;
-        _arcWeights = arcWeights;
-        _nodeWeights = nodeWeights;
-        _nodeStarts = nodeStarts;
-//        Task task = new Task<Void>() {
-//            @Override
-//            public Void call() throws Exception {
-//                for (int i : nodeStarts) {
-//                    System.out.println("adding " + i);
-//                    observableStartTime.add(i);
-//                }
-//                return null;
-//            }
-//        };
 
-        for (int i : nodeStarts) {
-            System.out.println("adding " + i);
-            observableStartTime.add(i);
-        }
-        _nodeProcessor = nodeProcessor;
-        System.out.println("Inform success!" + processorLabel + _graphName);
-        //this can't affect the GUI AT ALL and IDK HOW
-    }
 
     public MainLauncherController(App app) {
         _nodeStarts = new ArrayList<>();
         this.app = app;
-        app.getAlgorithmManager().inform(this);
     // TODO is this the best way?
-//        Task task = new Task<Void>() {
-//            @Override
-//            public Void call() throws Exception {
-//                App.startParsing();
-//                return null;
-//            }
-        };
 
-//        Thread thread = new Thread(task);
-//        thread.start();
-//    }
+    }
+
     @FXML
     private Button closeBtn;
 
@@ -133,24 +97,26 @@ public class MainLauncherController implements Initializable, ScheduleResultList
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
-        observableStartTime = FXCollections.observableArrayList(_nodeStarts);
-        observableStartTime.addListener(new ListChangeListener<Integer>() {
-            @Override
-            public void onChanged(Change<? extends Integer> c) {
-                System.out.println("STUFF ADDED");
-                processorLabel.setText("meme");
-            }
-        });
-        processorLabel.setText(App.getExecCores() + "");
-        app.startParsing();
 
+        processorLabel.setText(App.getExecCores() + "");
+//        app.startParsing();
+        Task task = new Task<Void>() {
+            @Override
+            public Void call() throws Exception {
+                App.startParsing();
+                return null;
+            }
+        };
+
+        Thread thread = new Thread(task);
+        thread.start();
         Timer timer = new Timer();
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
                 Platform.runLater(new Runnable() {
                     public void run() {
-//                        timeLabel.setText(String.format("%.1f", App.getRunningTime()));
+                        timeLabel.setText(String.format("%.2f", App.getRunningTime()));
                         bestLabel.setText(App.getAlgorithmManager().getUpperBound() + "");
                         branchesLabel.setText(App.getAlgorithmManager().getBrokenTrees() + "");
 //                        timeLabel.setText(app.getRunningTime() + "");

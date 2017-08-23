@@ -18,7 +18,7 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
 	int[] bottomLevels;
 	int numNodes;
 	int totalNodeWeights;
-	private int upperBound;
+//	private int upperBound; //parent has this instead
 	private Schedule optimalSchedule;
 	private List<Integer> nodeStartTimes=new ArrayList<>();
 	private List<Integer> nodeProcessors=new ArrayList<>();
@@ -117,12 +117,14 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
 		//TODO: not strict enough?
 		if(schedule.lowerBound>=upperBound){
 			schedule=null; //garbage collect that schedule
+			brokenTrees++;
 			return; //break tree at this point
 		}
 
 		//compare to existing schedule structures and remove if duplicate
 		if(existingScheduleStructures.contains(schedule._scheduleStructureId)){
 			schedule=null; //garbage collect that schedule
+			brokenTrees++;
 			return; //break tree at this point
 		} else {
 			existingScheduleStructures.add(schedule._scheduleStructureId);

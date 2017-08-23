@@ -1,7 +1,17 @@
 package nz.co.revilo;
 
 import com.beust.jcommander.JCommander;
+import javafx.application.Application;
+import javafx.event.EventHandler;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.BorderPane;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import nz.co.revilo.CommandLine.CLIParameters;
+import nz.co.revilo.Gui.MainLauncher;
+import nz.co.revilo.Gui.MainLauncherController;
 import nz.co.revilo.Input.DotFileReader;
 import nz.co.revilo.Input.FileParser;
 import nz.co.revilo.Input.GxlFileReader;
@@ -11,6 +21,7 @@ import nz.co.revilo.Scheduling.AlgorithmManager;
 import nz.co.revilo.Scheduling.BranchAndBoundAlgorithmManager;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Arrays;
 
 /**
@@ -21,7 +32,7 @@ import java.util.Arrays;
  * @author Mohan Cao (file created by), Michael Kemp (pattern and fleshed out), Terran Kroft (Modified for CLI library), Abby Shen
  * @version alpha
  */
-public class App {
+public class App extends Application {
     public static final String DEFAULT_FILETYPE = ".dot";
     public static final String DEFAULT_OUTPUT_FILENAME = "-output.dot";
 
@@ -35,17 +46,37 @@ public class App {
     private boolean _visualise;
     private String _outputFilename;
 
+    private static long startingTime;
+    private static long endingTime;
+    private static boolean isDone;
     // Fields
     private static AlgorithmManager manager;
     private static FileParser reader;
     private static DotFileProducer output;
 
+    //GUI Stuff
+    private Stage primaryStage;
+    private BorderPane rootLayout;
+    private double xOffset = 0;
+    private double yOffset = 0;
+
     public static AlgorithmManager getAlgorithmManager() {
-        return null;
+        return manager;
     }
 
     public static int getExecCores() {
         return _inst._numExecutionCores;
+    }
+
+    public static double getRunningTime() {
+        double elapsed;
+        if (isDone) {
+            elapsed = ((endingTime - startingTime) / 1000.0); // incl. tenths of second
+        } else {
+            long now = System.currentTimeMillis();
+            elapsed = ((now - startingTime) / 1000.0); // incl. tenths of second
+        }
+        return elapsed;
     }
 
     /**
@@ -53,7 +84,7 @@ public class App {
      *
      * @author Michael Kemp
      */
-    private App() {
+    public App() {
         // If there's no current instance then it's instantiated
         if (_inst == null) {
             _inst = this;
@@ -125,25 +156,72 @@ public class App {
         }
 
         // Parse file and give it algorithm manager to give results to. @Michael Kemp
-        _inst.manager = new BranchAndBoundAlgorithmManager(_inst._numExecutionCores);
+        manager = new BranchAndBoundAlgorithmManager(_inst._numExecutionCores);
 
         if (_inst._inputFilename.matches(".*gxl") || _inst._inputFilename.matches(".*GXL")) {
-            _inst.reader = new GxlFileReader(_inst._inputFilename);
+            reader = new GxlFileReader(_inst._inputFilename);
         } else {
-            _inst.reader = new DotFileReader(_inst._inputFilename);
+            reader = new DotFileReader(_inst._inputFilename);
         }
 
         // Output to file @Michael Kemp
-        _inst.output = new DotFileWriter(_inst._outputFilename);
-        _inst.manager.inform(_inst.output);
+        output = new DotFileWriter(_inst._outputFilename);
+        manager.inform(output);
+        if (_inst._visualise) {
+            Application.launch();
+        } else {
+            startParsing();
+        }
+    }
+
+    public static void startParsing() {
         try {
-            _inst.reader.startParsing(_inst.manager);
+            isDone = false;
+            startingTime = System.currentTimeMillis();
+            reader.startParsing(manager);
+            endingTime = System.currentTimeMillis();
+            isDone = true;
         } catch (FileNotFoundException e) {
             throw new RuntimeException("Input file does not exist");
         }
     }
 
-    public static void startParsing() {
+    @Override
+    public void start(Stage primaryStage) throws Exception {
+        this.primaryStage = primaryStage;
+        this.primaryStage.initStyle(StageStyle.UNDECORATED);
+        this.primaryStage.setTitle("Revilo");
+        try {
+            // Load root layout from fxml file.
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(MainLauncher.class.getResource("/Main.fxml"));
+            MainLauncherController mlc = new MainLauncherController(this);
+            loader.setController(mlc);
+            rootLayout = loader.load();
 
+            rootLayout.setOnMousePressed(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    xOffset = event.getSceneX();
+                    yOffset = event.getSceneY();
+                }
+            });
+
+            rootLayout.setOnMouseDragged(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    primaryStage.setX(event.getScreenX() - xOffset);
+                    primaryStage.setY(event.getScreenY() - yOffset);
+                }
+            });
+
+            // Show the scene containing the root layout.
+            Scene scene = new Scene(rootLayout);
+            primaryStage.setScene(scene);
+            primaryStage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
+
 }

@@ -19,7 +19,7 @@ public abstract class AlgorithmManager extends Observable implements ParseResult
     String[] _nodeNames;
     String _graphName;
 
-    int brokenTrees;
+    long brokenTrees;
     int upperBound;
     Schedule optimalSchedule;
 
@@ -32,7 +32,7 @@ public abstract class AlgorithmManager extends Observable implements ParseResult
         brokenTrees = 0;
     }
 
-    public int getBrokenTrees() {
+    public long getBrokenTrees() {
         return brokenTrees;
     }
 
