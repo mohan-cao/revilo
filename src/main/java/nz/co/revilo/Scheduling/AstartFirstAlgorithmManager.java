@@ -89,11 +89,13 @@ public class AstartFirstAlgorithmManager extends AlgorithmManager {
                         newTask._processor = processorNum;
                         newSchedule._processorLastUsed.set(processorNum, childSchedule._processorLastUsed.get(processorNum) + _nodeWeights[task._taskNum]);
 
+                        newSchedule._schedulable.remove(newTask);
+                        newSchedule._scheduled.add(newTask);
 
                         //Check if unschedulables are schedulable
 
                         blah._subSchedules.add(newSchedule);
-                        currentLevel.add(newSchedule);
+                        currentLevel.add(newSchedule);//TODO next level idiot
                     }
                 }
             }
