@@ -116,6 +116,7 @@ public class MainLauncherController implements Initializable {
             public void run() {
                 Platform.runLater(new Runnable() {
                     public void run() {
+                        memoryLabel.setText((Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory())/1024/1024+"");
                         timeLabel.setText(String.format("%.2f", App.getRunningTime()));
                         bestLabel.setText(App.getAlgorithmManager().getUpperBound() + "");
                         branchesLabel.setText(App.getAlgorithmManager().getBrokenTrees() + "");
