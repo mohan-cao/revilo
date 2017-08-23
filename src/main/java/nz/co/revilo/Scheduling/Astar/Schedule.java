@@ -15,6 +15,16 @@ public class Schedule implements Cloneable {
     public Schedule() {
     }
 
+    public int cost() {
+        int cost = 0;
+        for (Integer processorCost : _processorLastUsed) {
+            if (processorCost > cost) {
+                cost = processorCost;
+            }
+        }
+        return cost;
+    }
+
     private Schedule(Set<Task> scheduled, Set<Task> schedulable, Set<Task> unschedulable, List<Integer> processorLastUsed) {
         _scheduled = new HashSet<>(scheduled);
         _schedulable = new HashSet<>(schedulable);

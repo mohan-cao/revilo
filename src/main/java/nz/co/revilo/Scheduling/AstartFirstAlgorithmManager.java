@@ -75,16 +75,16 @@ public class AstartFirstAlgorithmManager extends AlgorithmManager {
             root._schedulable.add(new Task(schedulableTask));
         }
         //Sets when the processors were last used
-        root._processorLastUsed = new ArrayList<>(getProcessingCores());
+        root._processorLastUsed = new ArrayList<>(_processingCores);
         for (int processor = 0; processor < _processingCores; processor++) {
-            root._processorLastUsed.set(processor, 0);
+            root._processorLastUsed.add(0);
         }
 
         //Iterative BFS
         //Initialise each level
         List<List<Schedule>> levels = new ArrayList<>(numTasks + 1);
         for (int level = 0; level <= numTasks; level++) {
-            levels.set(level, new ArrayList<>());
+            levels.add(new ArrayList<>());
         }
         //Calculate
         for (int level = 0; level < numTasks; level++) {
@@ -123,10 +123,10 @@ public class AstartFirstAlgorithmManager extends AlgorithmManager {
                                 }
                             }
                         }
+                        System.out.println(drt);
 
                         newTask._start = drt;
 
-                        //TODO Update processor last used, update task start
                         newSchedule._processorLastUsed.set(processorNum, drt);
 
                         //Move task to scheduled from schedulable
@@ -157,6 +157,14 @@ public class AstartFirstAlgorithmManager extends AlgorithmManager {
                 }
             }
         }
+
+        int temp = levels.get(levels.size() - 1).get(0).cost();
+        for (Schedule s : levels.get(levels.size() - 1)) {
+            if (s.cost() < temp) {
+                temp = s.cost();
+            }
+        }
+        System.out.println(temp);
     }
 
     private void updateDependencies(List<Integer> parentDependcies, int target) {
