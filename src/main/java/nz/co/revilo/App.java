@@ -90,7 +90,7 @@ public class App extends Application {
             _inst = this;
             // If there is then throw a warning
         } else {
-            System.out.println("App was instantiated more than once");
+            //System.out.println("App was instantiated more than once");
             //TODO throw an informative exception to indicate error
         }
     }
