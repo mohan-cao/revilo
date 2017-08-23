@@ -161,6 +161,28 @@ public class MainLauncherController implements Initializable, ScheduleResultList
         idleSeries.setName("Idle time");
 
 
+        XYChart.Series<Number, String> a = new XYChart.Series<>();
+        a.setName("A");
+
+        XYChart.Series<Number, String> b = new XYChart.Series<>();
+        b.setName("B");
+
+        XYChart.Series<Number, String> c = new XYChart.Series<>();
+        c.setName("C");
+
+        XYChart.Series<Number, String> d = new XYChart.Series<>();
+        d.setName("D");
+
+        a.getData().add(new XYChart.Data<Number, String>(2, "Processor 1"));
+        b.getData().add(new XYChart.Data<Number, String>(2, "Processor 1"));
+        idleSeries.getData().add(new XYChart.Data<Number, String>(3, "Processor 2"));
+        c.getData().add(new XYChart.Data<Number, String>(3, "Processor 2"));
+        d.getData().add(new XYChart.Data<Number, String>(2, "Processor 2"));
+//        idleSeries.getData().add(new XYChart.Data<Number, String>(0.3, "Processor 1"));
+
+
+
+        ganttChart.getData().addAll(idleSeries, a, b, c, d);
 
 
 
