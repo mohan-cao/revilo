@@ -112,12 +112,22 @@ public class AstartFirstAlgorithmManager extends AlgorithmManager {
 
                         //Determine data ready time
                         int drt = childSchedule._processorLastUsed.get(processorNum);
-                        for (Integer dependency : partialDependencies.get(newTask._taskNum)) {
-                            //TODO
+                        for (Task t : childSchedule._scheduled) {
+                            if (_arcs[t._taskNum][newTask._taskNum]) {
+                                int temp = t._start + _nodeWeights[t._taskNum];
+                                if (t._processor != processorNum) {
+                                    temp += _arcWeights[t._taskNum][newTask._taskNum];
+                                }
+                                if (drt < temp) {
+                                    drt = temp;
+                                }
+                            }
                         }
 
+                        newTask._start = drt;
+
                         //TODO Update processor last used, update task start
-                        newSchedule._processorLastUsed.set(processorNum, childSchedule._processorLastUsed.get(processorNum) + _nodeWeights[task._taskNum]);
+                        newSchedule._processorLastUsed.set(processorNum, drt);
 
                         //Move task to scheduled from schedulable
                         newSchedule._schedulable.remove(newTask);
