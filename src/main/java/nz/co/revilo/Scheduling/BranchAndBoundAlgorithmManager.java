@@ -64,9 +64,11 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
             rootSchedules.add(newSchedule);
         }
 
-        upperBound = totalNodeWeights + 1; //TODO: is this a good upper bound?
         //Take a greedy path down the tree to find a more realistic upper bound
         upperBound = greedyUpperBound();
+        if ((totalNodeWeights + 1) < upperBound) {
+            upperBound = totalNodeWeights + 1;
+        }
 
         calculateBottomLevels();
 
@@ -327,6 +329,7 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
         }
 
         //Return the greedy cost
+        System.out.println("done pre proc");
         return levels.get(levels.size() - 1).get(0).cost();
     }
 }
