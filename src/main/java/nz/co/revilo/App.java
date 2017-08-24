@@ -174,7 +174,7 @@ public class App {
 
         // Checks for an insufficient number of arguments
         if (args.length < MINIMUM_EXPECTED_ARGUMENTS) {
-            throw new RuntimeException("Insufficient arguments given. Needs at least [input file] [# processors]");
+            throw new RuntimeException("Insufficient arguments given. Needs [input file] [# processors]");
         } else {
 
             // Parses the arguments
