@@ -1,6 +1,6 @@
 package nz.co.revilo;
 
-import nz.co.revilo.Scheduling.BranchAndBoundAlgorithmManager;
+import nz.co.revilo.Scheduling.BranchNBound.BranchAndBoundAlgorithmManager;
 import org.junit.Before;
 import org.junit.Test;
 

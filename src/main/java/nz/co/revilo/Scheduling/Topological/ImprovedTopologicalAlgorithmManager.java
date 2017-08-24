@@ -1,6 +1,7 @@
-package nz.co.revilo.Scheduling;
+package nz.co.revilo.Scheduling.Topological;
 
 import nz.co.revilo.Output.ScheduleResultListener;
+import nz.co.revilo.Scheduling.AlgorithmManager;
 
 import java.util.*;
 

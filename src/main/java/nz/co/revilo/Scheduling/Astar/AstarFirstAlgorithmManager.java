@@ -1,8 +1,7 @@
-package nz.co.revilo.Scheduling;
+package nz.co.revilo.Scheduling.Astar;
 
 import nz.co.revilo.Output.ScheduleResultListener;
-import nz.co.revilo.Scheduling.Astar.AstarSchedule;
-import nz.co.revilo.Scheduling.Astar.AstarTask;
+import nz.co.revilo.Scheduling.AlgorithmManager;
 
 import java.util.*;
 

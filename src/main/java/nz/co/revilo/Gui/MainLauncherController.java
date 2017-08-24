@@ -19,7 +19,7 @@ import nz.co.revilo.App;
 import nz.co.revilo.Gui.GanttChart.ExtraData;
 import nz.co.revilo.Output.NewOptimalResultListener;
 import nz.co.revilo.Output.ScheduleResultListener;
-import nz.co.revilo.Scheduling.BnBSchedule;
+import nz.co.revilo.Scheduling.BranchNBound.BnBSchedule;
 
 import java.net.URL;
 import java.util.*;

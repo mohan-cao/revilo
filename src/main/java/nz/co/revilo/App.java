@@ -10,7 +10,7 @@ import nz.co.revilo.Input.GxlFileReader;
 import nz.co.revilo.Output.DotFileProducer;
 import nz.co.revilo.Output.DotFileWriter;
 import nz.co.revilo.Scheduling.AlgorithmManager;
-import nz.co.revilo.Scheduling.BranchAndBoundAlgorithmManager;
+import nz.co.revilo.Scheduling.BranchNBound.BranchAndBoundAlgorithmManager;
 
 import java.io.FileNotFoundException;
 import java.util.Arrays;

@@ -15,14 +15,14 @@ import java.util.Observable;
  */
 public abstract class AlgorithmManager extends Observable implements ParseResultListener {
 
-    int _processingCores;
-    long brokenTrees;
-    int upperBound; // used in subclasses
-    int[] _nodeWeights;
-    boolean[][] _arcs;
-    int[][] _arcWeights;
-    String[] _nodeNames;
-    String _graphName;
+    protected int _processingCores;
+    protected long brokenTrees;
+    protected int upperBound; // used in subclasses
+    protected int[] _nodeWeights;
+    protected boolean[][] _arcs;
+    protected int[][] _arcWeights;
+    protected String[] _nodeNames;
+    protected String _graphName;
     private NewOptimalResultListener optimalListener;
     private List<ScheduleResultListener> listeners = new ArrayList<>();
 
