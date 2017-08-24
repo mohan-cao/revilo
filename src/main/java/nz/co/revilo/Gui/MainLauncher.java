@@ -21,6 +21,10 @@ public class MainLauncher extends Application{
     private double yOffset = 0;
     App app = App.getInstance();
 
+    public Stage getPrimaryStage() {
+        return primaryStage;
+    }
+
     @Override
     public void start(Stage primaryStage) throws Exception {
         this.primaryStage = primaryStage;
@@ -30,7 +34,7 @@ public class MainLauncher extends Application{
             // Load root layout from fxml file.
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(getClass().getResource("/Main.fxml"));
-            MainLauncherController mlc = new MainLauncherController(app);
+            MainLauncherController mlc = new MainLauncherController(app, this);
             loader.setController(mlc);
             rootLayout = loader.load();
 
