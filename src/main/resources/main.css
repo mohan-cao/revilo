@@ -10,11 +10,11 @@
 }
 
 .default-color0.chart-bar {
-    -fx-background-color: rgba(0,0,0,0); /* hide idle series */
+    -fx-background-color: rgba(0, 0, 0, 0); /* hide idle series */
 }
 
 .status-green {
-    -fx-background-color:rgba(22,80,225,0.7);
+    -fx-background-color: rgba(22, 80, 225, 0.7);
     -fx-border-color: white;
     -fx-padding: 15px;
 }
@@ -32,9 +32,8 @@
     -fx-border-color: white;
 }
 
-
 .scroll-bar:horizontal .track,
-.scroll-bar:vertical .track{
+.scroll-bar:vertical .track {
     -fx-background-color: white;
     -fx-border-color: white;
 }
@@ -55,7 +54,9 @@
     -fx-shape: "M 0 0 L 4 8 L 8 0 Z";
     -fx-padding: 0.25em;
     -fx-rotate: 0;
-} /* https://farrukhobaid.wordpress.com/2013/01/16/dark-scrollbar-skin-for-javafx/ */
+}
+
+/* https://farrukhobaid.wordpress.com/2013/01/16/dark-scrollbar-skin-for-javafx/ */
 
 .scroll-bar:vertical .decrement-arrow {
     -fx-background-color: #dedede;

@@ -5,6 +5,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.concurrent.Task;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.chart.CategoryAxis;
@@ -12,22 +13,19 @@ import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.event.ActionEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import nz.co.revilo.App;
+import nz.co.revilo.Gui.GanttChart.ExtraData;
 import nz.co.revilo.Output.NewOptimalResultListener;
 import nz.co.revilo.Output.ScheduleResultListener;
-import nz.co.revilo.Gui.GanttChart.ExtraData;
-import nz.co.revilo.Scheduling.Schedule;
+import nz.co.revilo.Scheduling.BnBSchedule;
 
 import java.net.URL;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class MainLauncherController implements Initializable, ScheduleResultListener, NewOptimalResultListener {
 
-    App app;
     protected String _graphName;
     protected List<String> _nodeNames;
     protected List<List<Boolean>> _arcs;
@@ -35,11 +33,37 @@ public class MainLauncherController implements Initializable, ScheduleResultList
     protected List<Integer> _nodeWeights;
     protected List<Integer> _nodeStarts;
     protected List<Integer> _nodeProcessor;
-
+    App app;
     private Stage thisStage;
     private GUIScheduleResult results;
     private MainLauncher ml;
-
+    @FXML
+    private Button closeBtn;
+    @FXML
+    private Button hideBtn;
+    @FXML
+    private Label processorLabel;
+    @FXML
+    private Label memoryLabel;
+    @FXML
+    private Label timeLabel;
+    @FXML
+    private Label branchesLabel;
+    @FXML
+    private Label bestLabel;
+    @FXML
+    private Label graphNameLabel;
+    @FXML
+    private Label systemLabel;
+    @FXML
+    private Label statusLabel;
+    @FXML
+    private BorderPane ganttPane;
+    @FXML
+    private BorderPane baseBp;
+    private GanttChart<Number, String> ganttChart;
+    private ArrayList<String> processorCatStr;
+    private ArrayList<XYChart.Series> processorCat;
 
     public MainLauncherController(App app, MainLauncher ml) {
         _nodeStarts = new ArrayList<>();
@@ -47,47 +71,6 @@ public class MainLauncherController implements Initializable, ScheduleResultList
         this.ml = ml;
 
     }
-
-    @FXML
-    private Button closeBtn;
-
-    @FXML
-    private Button hideBtn;
-
-    @FXML
-    private Label processorLabel;
-
-    @FXML
-    private Label memoryLabel;
-
-    @FXML
-    private Label timeLabel;
-
-    @FXML
-    private Label branchesLabel;
-
-    @FXML
-    private Label bestLabel;
-
-    @FXML
-    private Label graphNameLabel;
-
-    @FXML
-    private Label systemLabel;
-
-    @FXML
-    private Label statusLabel;
-
-    @FXML
-    private BorderPane ganttPane;
-
-    @FXML
-    private BorderPane baseBp;
-
-    private GanttChart<Number, String> ganttChart;
-
-    private ArrayList<String> processorCatStr;
-    private ArrayList<XYChart.Series> processorCat;
 
     @FXML
     private void closeRevilo(ActionEvent event) {
@@ -102,8 +85,8 @@ public class MainLauncherController implements Initializable, ScheduleResultList
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        app.getAlgorithmManager().inform(this);
-        app.getAlgorithmManager().optimalInform(this);
+        App.getAlgorithmManager().inform(this);
+        App.getAlgorithmManager().optimalInform(this);
         results = new GUIScheduleResult();
         //set up change listeners
         results.isDoneProcessingProperty().addListener(new ChangeListener<Boolean>() {
@@ -137,8 +120,8 @@ public class MainLauncherController implements Initializable, ScheduleResultList
                 Platform.runLater(new Runnable() {
                     public void run() {
                         // calculate current used memory
-                        long currentMemory = Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory();
-                        memoryLabel.setText((currentMemory)  / (1024l * 1024l) + ""); //needs to be better
+                        long currentMemory = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
+                        memoryLabel.setText((currentMemory) / (1024l * 1024l) + ""); //needs to be better
                         timeLabel.setText(String.format("%.2f", App.getRunningTime()));
 //                        timeLabel.setText(new SimpleDateFormat("mm:ss:SS").format(new Date(App.getRunningTime())));
                         bestLabel.setText(App.getAlgorithmManager().getUpperBound() + "");
@@ -217,17 +200,16 @@ public class MainLauncherController implements Initializable, ScheduleResultList
         }
 
 
-
     }
 
     @Override
-    public void newOptimal(Schedule optimal) {
+    public void newOptimal(BnBSchedule optimal) {
         _graphName = App.getAlgorithmManager().getGraphName();
         _nodeNames = App.getAlgorithmManager().getNodeNames();
         _nodeWeights = App.getAlgorithmManager().getNodeWeights();
         _nodeStarts = new ArrayList<>();
         _nodeProcessor = new ArrayList<>();
-        for(int nodeId=0; nodeId< _nodeWeights.size(); nodeId++){
+        for (int nodeId = 0; nodeId < _nodeWeights.size(); nodeId++) {
             _nodeStarts.add(optimal.getClosedNodes().get(nodeId).getA());//start times
             _nodeProcessor.add(optimal.getClosedNodes().get(nodeId).getB());//processors scheduled on
         }
@@ -240,8 +222,6 @@ public class MainLauncherController implements Initializable, ScheduleResultList
         });
 
     }
-
-
 
 
 }
