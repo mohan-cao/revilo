@@ -41,11 +41,11 @@ public class DotFileReader extends FileParser {
     public static final int FIRST_MATCH = 1;
     public static final int FILE_CANT_BE_READ_EXIT_STATUS = 1;
 
-    HashMap<String, Integer> _nodeNames;
-    List<Integer> _nodeWeights;
-    HashMap<String, HashMap<String, Integer>> _arcs;
-    String[] _nodeNamesList;
-    String _graphName;
+    private HashMap<String, Integer> _nodeNames;
+    private List<Integer> _nodeWeights;
+    private HashMap<String, HashMap<String, Integer>> _arcs;
+    private String[] _nodeNamesList;
+    private String _graphName;
 
     private ParseResultListener _listener;
 

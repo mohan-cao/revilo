@@ -39,11 +39,11 @@ public class GxlFileReader extends FileParser {
     // First match found by matcher
     public static final int FIRST_MATCH = 1;
 
-    HashMap<String, Integer> _nodeNames;
-    List<Integer> _nodeWeights;
-    HashMap<String, HashMap<String, Integer>> _arcs;
-    String[] _nodeNamesList;
-    String _graphName;
+    private HashMap<String, Integer> _nodeNames;
+    private List<Integer> _nodeWeights;
+    private HashMap<String, HashMap<String, Integer>> _arcs;
+    private String[] _nodeNamesList;
+    private String _graphName;
 
     private ParseResultListener _listener;
 
