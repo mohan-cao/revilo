@@ -253,7 +253,9 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
                 currentLevel.add(root);
             }
 
+            //How to determine which node will go first
             List<Integer> DataReadyTimes = new ArrayList<>();
+            List<Task> DataReadyTasks = new ArrayList<>();
 
 
             //For every schedule in the level
