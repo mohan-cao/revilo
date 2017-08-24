@@ -236,7 +236,7 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
             root._processorLastUsed.add(0);
         }
 
-        //Iterative BFS
+        //Iterative DFS
         //Initialise each level
         List<List<AstarSchedule>> levels = new ArrayList<>(numTasks + 1);
         for (int level = 0; level <= numTasks; level++) {
@@ -247,10 +247,12 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
             //Load current and next level
             List<AstarSchedule> currentLevel = levels.get(level);
             List<AstarSchedule> nextLevel = levels.get(level + 1);
+
             //Special case for first level
             if (level == 0) {
-                levels.get(0).add(root);
+                currentLevel.add(root);
             }
+
             //For every schedule in the level
             //for (int child = 0; child < 1; child++) {
             //Load it
