@@ -74,6 +74,7 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
             System.out.println("no difference");
         } else {
             System.out.println("greedy wins");
+            upperBound++;
         }
 
         calculateBottomLevels();
