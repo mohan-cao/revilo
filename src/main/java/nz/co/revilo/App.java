@@ -191,7 +191,7 @@ public class App {
                     throw new RuntimeException("Insufficient processors to solve problem");
                 }
             } catch (NumberFormatException nfe) {
-                throw new RuntimeException("Invalid number of processors" + nfe.getMessage());
+                throw new RuntimeException("Invalid number of processors");
             }
 
             // Sets the number of cores to do the scheduling on
