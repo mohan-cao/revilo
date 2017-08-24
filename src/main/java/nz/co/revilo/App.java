@@ -2,16 +2,8 @@ package nz.co.revilo;
 
 import com.beust.jcommander.JCommander;
 import javafx.application.Application;
-import javafx.event.EventHandler;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.BorderPane;
-import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 import nz.co.revilo.CommandLine.CLIParameters;
 import nz.co.revilo.Gui.MainLauncher;
-import nz.co.revilo.Gui.MainLauncherController;
 import nz.co.revilo.Input.DotFileReader;
 import nz.co.revilo.Input.FileParser;
 import nz.co.revilo.Input.GxlFileReader;
@@ -21,7 +13,6 @@ import nz.co.revilo.Scheduling.AlgorithmManager;
 import nz.co.revilo.Scheduling.BranchAndBoundAlgorithmManager;
 
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.Arrays;
 
 /**
@@ -172,12 +163,6 @@ public class App {
             } else {
                 _inst._outputFilename = params.getOutputName();
             }
-        }
-
-        // Starts visualisation if requested
-//        System.out.println("This is the schedule called " + _inst._outputFilename + " processed on " + _inst._numParallelProcessors + " core(s).");
-        if (_inst._visualise) {
-//            System.out.println("There is a visualisation outputted.");
         }
 
         // Parse file and give it algorithm manager to give results to. @Michael Kemp

@@ -68,6 +68,11 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
         upperBound = greedyUpperBound();
         if ((totalNodeWeights + 1) < upperBound) {
             upperBound = totalNodeWeights + 1;
+            System.out.println("topological cost was better");
+        } else if ((totalNodeWeights + 1) == upperBound) {
+            System.out.println("no difference");
+        } else {
+            System.out.println("greedy wins");
         }
 
         calculateBottomLevels();
@@ -114,7 +119,6 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
      * @author Abby S, Terran K
      */
     private void bnb(BnBSchedule schedule) {
-        //TODO: not strict enough?
         if (schedule.lowerBound >= upperBound) { //>= @ Michael K, huge optimisation
             schedule = null; //garbage collect that schedule
             brokenTrees++; //this tree has broken
@@ -188,7 +192,7 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
 
     /**
      * Calculates an upper bound using a greedy algorithm
-     *
+     * @author Michael Kemp
      * @return an upper bound
      */
     private int greedyUpperBound() {
