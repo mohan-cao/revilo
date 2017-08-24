@@ -193,25 +193,21 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
         //Number of Tasks
         int numTasks = _nodeWeights.length;
 
-        //Sort Tasks into start, middle and end sets
+        //Sort Tasks into start and other tasks
         Set<Integer> startTasks = new HashSet<>();
-        Set<Integer> endTasks = new HashSet<>();
-        Set<Integer> middleTasks = new HashSet<>();
+        Set<Integer> otherTasks = new HashSet<>();
         for (int task = 0; task < numTasks; task++) {
             startTasks.add(task);
-            endTasks.add(task);
-            middleTasks.add(task);
+            otherTasks.add(task);
         }
         for (int fromTask = 0; fromTask < numTasks; fromTask++) {
             for (int toTask = 0; toTask < numTasks; toTask++) {
                 if (_arcs[fromTask][toTask]) {
                     startTasks.remove(toTask);
-                    endTasks.remove(fromTask);
                 }
             }
         }
-        middleTasks.removeAll(endTasks);
-        middleTasks.removeAll(startTasks);
+        otherTasks.removeAll(startTasks);
 
         //Determine partial dependencies for every task
         List<List<Integer>> partialDependencies = new ArrayList<>();
