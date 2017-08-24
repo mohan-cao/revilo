@@ -18,9 +18,9 @@ import java.util.List;
 /**
  * DotFileGraphReader is an adaptor pattern for using the
  *
- * Implementation of DotFileParser based on using GraphStream to represent graphs and read in input.
+ * Implementation of FileParser based on using GraphStream to represent graphs and read in input.
  */
-public class DotFileGraphReader extends DotFileParser {
+public class DotFileGraphReader extends FileParser {
 
     HashMap<String, Integer> nodeNames;
     List<Integer> nodeWeights;

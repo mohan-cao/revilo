@@ -91,8 +91,12 @@ public class App {
 
             // Sets the output filename if one is given, otherwise uses default
             if (params.getOutputName() == null) {
-                int fileNameLocation = _inst._inputFilename.toLowerCase().lastIndexOf(DEFAULT_FILETYPE);
-                String fileNameWithoutExtension = _inst._inputFilename.substring(0, fileNameLocation);
+                String temp = _inst._inputFilename;
+                if (_inst._inputFilename.toUpperCase().contains("GXL")) {
+                    temp = _inst._inputFilename.substring(0, _inst._inputFilename.length() - 4) + ".dot";
+                }
+                int fileNameLocation = temp.toLowerCase().lastIndexOf(DEFAULT_FILETYPE);
+                String fileNameWithoutExtension = temp.substring(0, fileNameLocation);
                 _inst._outputFilename = fileNameWithoutExtension + DEFAULT_OUTPUT_FILENAME;
             } else {
                 _inst._outputFilename = params.getOutputName();
@@ -108,6 +112,13 @@ public class App {
         // Parse file and give it algorithm manager to give results to. @Michael Kemp
         AlgorithmManager manager = new AstartFirstAlgorithmManager(_inst._numExecutionCores);
         DotFileReader reader = new DotFileReader(_inst._inputFilename);
+        AlgorithmManager manager = new BranchAndBoundAlgorithmManager(_inst._numExecutionCores);
+        FileParser reader;
+        if (_inst._inputFilename.matches(".*gxl") || _inst._inputFilename.matches(".*GXL")) {
+            reader = new GxlFileReader(_inst._inputFilename);
+        } else {
+            reader = new DotFileReader(_inst._inputFilename);
+        }
 
         // Output to file @Michael Kemp
         DotFileProducer output = new DotFileWriter(_inst._outputFilename);

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gxl>
+	<graph id="Random_Nodes_10_Density_0.20_CCR_1.00_WeightType_Random">
+		<attr name="No of nodes">
+			<int>10</int>
+		</attr>
+		<attr name="No of edges">
+			<int>2</int>
+		</attr>
+		<attr name="Density">
+			<float>0.2</float>
+		</attr>
+		<attr name="CCR">
+			<float>1.0</float>
+		</attr>
+		<attr name="Node concurrency">
+			<int>-1</int>
+		</attr>
+		<attr name="Total sequential time">
+			<int>52</int>
+		</attr>
+		<node id="0">
+			<attr name="Weight">
+				<int>7</int>
+			</attr>
+		</node>
+		<node id="1">
+			<attr name="Weight">
+				<int>7</int>
+			</attr>
+		</node>
+		<node id="2">
+			<attr name="Weight">
+				<int>2</int>
+			</attr>
+		</node>
+		<node id="3">
+			<attr name="Weight">
+				<int>6</int>
+			</attr>
+		</node>
+		<node id="4">
+			<attr name="Weight">
+				<int>6</int>
+			</attr>
+		</node>
+		<node id="5">
+			<attr name="Weight">
+				<int>2</int>
+			</attr>
+		</node>
+		<node id="6">
+			<attr name="Weight">
+				<int>9</int>
+			</attr>
+		</node>
+		<node id="7">
+			<attr name="Weight">
+				<int>7</int>
+			</attr>
+		</node>
+		<node id="8">
+			<attr name="Weight">
+				<int>4</int>
+			</attr>
+		</node>
+		<node id="9">
+			<attr name="Weight">
+				<int>2</int>
+			</attr>
+		</node>
+		<edge from="1" to="8">
+			<attr name="Weight">
+				<int>26</int>
+			</attr>
+		</edge>
+		<edge from="3" to="8">
+			<attr name="Weight">
+				<int>26</int>
+			</attr>
+		</edge>
+	</graph>
+</gxl>
