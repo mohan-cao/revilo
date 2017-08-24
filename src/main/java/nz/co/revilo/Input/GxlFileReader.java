@@ -12,13 +12,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * DotFileReader is a class that extends FileParser it's purpose is to read the file and place the digraph in to a
+ * GxlFileReader is a class that extends FileParser it's purpose is to read the file and place the digraph in to a
  * data-structure and give it to a ParseResultListener.
- * <p>
- * At the moment this is just a skeleton and needs to be fleshed out but a data structure needs to be determined
  *
  * @author Michael Kemp
- * @version Beta
+ * @version 1.0
  */
 public class GxlFileReader extends FileParser {
 
@@ -34,8 +32,10 @@ public class GxlFileReader extends FileParser {
     public static final String NODE_LINE_MATCH = "[\\s]*<node id=\".*\">[\\s]*";
     public static final String GRAPH_NAME_LINE_MATCH = "[\\s]*<graph id=\".*\">[\\s]*";
     public static final String WEIGHT_LINE_MATCH = "[\\s]*<attr name=\"Weight\">[\\s]*";
+
     // Default weight for arcs and nodes if not defined
     public static final int DEFAULT_WEIGHT = -1;
+
     // First match found by matcher
     public static final int FIRST_MATCH = 1;
 
@@ -49,7 +49,7 @@ public class GxlFileReader extends FileParser {
 
     /**
      * Constructs a DotFileReader with the filename to read
-     *
+     * @author Michael Kemp
      * @param filename is the name of the file to open
      */
     public GxlFileReader(String filename) {
@@ -58,7 +58,7 @@ public class GxlFileReader extends FileParser {
 
     /**
      * Initiates reading the file and interpreting it as a DAG then informs the listener of the read graph data.
-     *
+     * @author Michael Kemp
      * @param newListener To inform of parsing results
      * @throws FileNotFoundException Thrown if the file name given doesn't exist
      */
@@ -205,7 +205,7 @@ public class GxlFileReader extends FileParser {
 
     /**
      * Opens the file given in the filename
-     *
+     * @author Michael Kemp
      * @return BufferedReader of the file
      * @throws FileNotFoundException
      */
