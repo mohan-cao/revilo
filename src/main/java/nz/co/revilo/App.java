@@ -28,6 +28,9 @@ public class App {
     public static final String DEFAULT_FILETYPE = ".dot";
     public static final String DEFAULT_OUTPUT_FILENAME = "-output.dot";
     public static final double MILLISECONDS_PER_SECOND = 1000.0;
+    public static final int MINIMUM_EXPECTED_ARGUMENTS = 2;
+    public static final int FILENAME_ARGUMENT_PLACEMENT = 0;
+    public static final int LENGTH_OF_DOT_FILE_EXTENSION = 4;
 
     // Instance of the singleton pattern
     private static App _inst = null;
@@ -134,15 +137,15 @@ public class App {
         CLIParameters params = new CLIParameters();
 
         // Checks for an insufficient number of arguments
-        if (args.length < 2) {
+        if (args.length < MINIMUM_EXPECTED_ARGUMENTS) {
             throw new RuntimeException("Insufficient arguments given. Needs [input file] [# processors]");
         } else {
             // Parses the arguments
-            String[] optionalArgs = Arrays.copyOfRange(args, 2, args.length);
+            String[] optionalArgs = Arrays.copyOfRange(args, MINIMUM_EXPECTED_ARGUMENTS, args.length);
             JCommander.newBuilder().addObject(params).build().parse(optionalArgs);
 
             // Set the input filename
-            _inst._inputFilename = args[0];
+            _inst._inputFilename = args[FILENAME_ARGUMENT_PLACEMENT];
             try {
                 // Set the number of cores the problem has
                 _inst._numExecutionCores = Integer.parseInt(args[1]);
@@ -158,7 +161,7 @@ public class App {
             if (params.getOutputName() == null) {
                 String temp = _inst._inputFilename;
                 if (_inst._inputFilename.toUpperCase().contains("GXL")) {
-                    temp = _inst._inputFilename.substring(0, _inst._inputFilename.length() - 4) + ".dot";
+                    temp = _inst._inputFilename.substring(0, _inst._inputFilename.length() - LENGTH_OF_DOT_FILE_EXTENSION) + ".dot";
                 }
                 int fileNameLocation = temp.toLowerCase().lastIndexOf(DEFAULT_FILETYPE);
                 String fileNameWithoutExtension = temp.substring(0, fileNameLocation);
