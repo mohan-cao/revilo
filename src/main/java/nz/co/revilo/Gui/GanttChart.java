@@ -1,5 +1,11 @@
 package nz.co.revilo.Gui;
-//https://stackoverflow.com/questions/27975898/gantt-chart-from-scratch
+
+/**
+ * This class was designed by user: Roland from StackOverflow
+ * https://stackoverflow.com/questions/27975898/gantt-chart-from-scratch
+ * It will be made into a separate JAR file as a library instead.
+ */
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -7,14 +13,19 @@ import java.util.List;
 import javafx.beans.NamedArg;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.geometry.Pos;
+import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.chart.Axis;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.ValueAxis;
 import javafx.scene.chart.XYChart;
+import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 
 public class GanttChart<X,Y> extends XYChart<X,Y> {
 
@@ -45,7 +56,9 @@ public class GanttChart<X,Y> extends XYChart<X,Y> {
 
     }
 
-    private double blockHeight = 25;
+
+    private double blockHeight = 50;
+
 
     public GanttChart(@NamedArg("xAxis") Axis<X> xAxis, @NamedArg("yAxis") Axis<Y> yAxis) {
         this(xAxis, yAxis, FXCollections.<Series<X, Y>>observableArrayList());
@@ -105,7 +118,6 @@ public class GanttChart<X,Y> extends XYChart<X,Y> {
                         region.setScaleShape(false);
                         region.setCenterShape(false);
                         region.setCacheShape(false);
-
                         block.setLayoutX(x);
                         block.setLayoutY(y);
                     }

@@ -4,16 +4,26 @@ import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Bounds;
+import javafx.geometry.Pos;
+import javafx.scene.Group;
+import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.event.ActionEvent;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import nz.co.revilo.App;
 import nz.co.revilo.Output.NewOptimalResultListener;
@@ -196,24 +206,40 @@ public class MainLauncherController implements Initializable, ScheduleResultList
     public void updateGantt() {
         ArrayList<String> processorCatStr = new ArrayList<>();
         ArrayList<XYChart.Series> processorCat = new ArrayList<>();
+        ArrayList<ArrayList<String>> pcatName = new ArrayList<>();
 
         for (int i = 0; i < App.getExecCores(); i++) {
             processorCatStr.add("Processor " + i);
             processorCat.add(new XYChart.Series()); // each processor has its own series
+            pcatName.add(new ArrayList<>());
         }
 
 
         for (int i = 0; i < _nodeStarts.size(); i++) { //using node starts as not all nodes might be set yet
             int psr = _nodeProcessor.get(i);
             XYChart.Series psrCat = processorCat.get(psr);
-//            System.out.println("Node " + i + " starts at " + _nodeStarts.get(i) + " and goes for " + _nodeWeights.get(i) + " on processor " + psr);
-            psrCat.getData().add(new XYChart.Data(_nodeStarts.get(i), ("Processor " + psr), new ExtraData(_nodeWeights.get(i), "status-green")));
+            ArrayList<String> pcat = pcatName.get(psr);
+            XYChart.Data data = new XYChart.Data(_nodeStarts.get(i), ("Processor " + psr), new ExtraData(_nodeWeights.get(i), "status-green"));
+            String iterNodeName = _nodeNames.get(i);
+
+            psrCat.getData().add(data);
+            pcat.add(iterNodeName);
         }
 
         ganttChart.getData().clear();
-
         for (XYChart.Series ps : processorCat) {
+            int iterI = processorCat.indexOf(ps);
             ganttChart.getData().add(ps);
+            ObservableList<XYChart.Data> data = ps.getData();
+            for (XYChart.Data d: data) {
+                int iterJ = data.indexOf(d);
+                StackPane bar = (StackPane) d.getNode();
+                String node = pcatName.get(iterI).get(iterJ);
+                Text t = new Text(node);
+                bar.getChildren().add(t);
+                bar.setAlignment(t, Pos.TOP_LEFT);
+
+            }
         }
 
 
@@ -241,7 +267,29 @@ public class MainLauncherController implements Initializable, ScheduleResultList
 
     }
 
-
+//    private void addTextToSchedule(XYChart.Data<Number, String> data) {
+//        final Node node = data.getNode();
+//        final Text dataText = new Text("hey");
+//        node.parentProperty().addListener(new ChangeListener<Parent>() {
+//            @Override
+//            public void changed(ObservableValue<? extends Parent> observable, Parent oldValue, Parent newValue) {
+//                Group parentGroup = (Group) newValue;
+//                parentGroup.getChildren().add(dataText);
+//            }
+//        });
+//
+//        node.boundsInParentProperty().addListener(new ChangeListener<Bounds>() {
+//            @Override
+//            public void changed(ObservableValue<? extends Bounds> observable, Bounds oldValue, Bounds bounds) {
+//                dataText.setLayoutX(
+//                  Math.round(bounds.getMinX() + bounds.getWidth() / 2 - dataText.prefWidth(-1)/2)
+//                );
+//                dataText.setLayoutY(
+//                        Math.round(bounds.getMinY() - dataText.prefHeight(-1)/2)
+//                );
+//            }
+//        });
+//    }
 
 
 }
