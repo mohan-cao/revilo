@@ -38,11 +38,13 @@ public class MainLauncherController implements Initializable, ScheduleResultList
 
     private Stage thisStage;
     private GUIScheduleResult results;
+    private MainLauncher ml;
 
 
-    public MainLauncherController(App app) {
+    public MainLauncherController(App app, MainLauncher ml) {
         _nodeStarts = new ArrayList<>();
         this.app = app;
+        this.ml = ml;
 
     }
 
@@ -91,6 +93,11 @@ public class MainLauncherController implements Initializable, ScheduleResultList
     private void closeRevilo(ActionEvent event) {
         Platform.exit();
         System.exit(0);
+    }
+
+    @FXML
+    private void minimizeRevilo(ActionEvent event) {
+        ml.getPrimaryStage().setIconified(true);
     }
 
     @Override
@@ -235,9 +242,6 @@ public class MainLauncherController implements Initializable, ScheduleResultList
     }
 
 
-/*
-    @FXML
-    void hideRevilo(MouseEvent event) {
-    }*/
+
 
 }
