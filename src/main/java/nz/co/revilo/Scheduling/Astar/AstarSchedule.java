@@ -5,14 +5,14 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class Schedule implements Cloneable {
-    public Set<Task> _scheduled = new HashSet<>();
-    public Set<Task> _schedulable = new HashSet<>();
-    public Set<Task> _unschedulable = new HashSet<>();
-    public List<Schedule> _subSchedules = new ArrayList<>();
+public class AstarSchedule implements Cloneable {
+    public Set<AstarTask> _scheduled = new HashSet<>();
+    public Set<AstarTask> _schedulable = new HashSet<>();
+    public Set<AstarTask> _unschedulable = new HashSet<>();
+    public List<AstarSchedule> _subSchedules = new ArrayList<>();
     public ArrayList<Integer> _processorLastUsed = new ArrayList<>();
 
-    public Schedule() {
+    public AstarSchedule() {
     }
 
     public int cost() {
@@ -25,14 +25,14 @@ public class Schedule implements Cloneable {
         return cost;
     }
 
-    private Schedule(Set<Task> scheduled, Set<Task> schedulable, Set<Task> unschedulable, List<Integer> processorLastUsed) {
+    private AstarSchedule(Set<AstarTask> scheduled, Set<AstarTask> schedulable, Set<AstarTask> unschedulable, List<Integer> processorLastUsed) {
         _scheduled = new HashSet<>(scheduled);
         _schedulable = new HashSet<>(schedulable);
         _unschedulable = new HashSet<>(unschedulable);
         _processorLastUsed = new ArrayList<>(processorLastUsed);
     }
 
-    public Schedule clone() {
-        return new Schedule(_scheduled, _schedulable, _unschedulable, _processorLastUsed);
+    public AstarSchedule clone() {
+        return new AstarSchedule(_scheduled, _schedulable, _unschedulable, _processorLastUsed);
     }
 }

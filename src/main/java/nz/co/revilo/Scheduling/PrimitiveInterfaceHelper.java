@@ -9,7 +9,7 @@ public class PrimitiveInterfaceHelper {
 	 * @param primMatrix the primitive boolean 2d matrix
 	 * @return b the reference type list
 	 */
-	static List<List<Boolean>> primToBoolean2D(boolean[][] primMatrix) {
+	public static List<List<Boolean>> primToBoolean2D(boolean[][] primMatrix) {
 		List<List<Boolean>> booleanMatrix = new ArrayList<>();
 		for (int row = 0; row < primMatrix.length; row++) {
 			booleanMatrix.add(new ArrayList<>());
@@ -25,7 +25,7 @@ public class PrimitiveInterfaceHelper {
 	 * @param primMatrix the primitive int 2d matrix
 	 * @return n the reference type list
 	 */
-	static List<List<Integer>> primToInteger2D(int[][] primMatrix) {
+	public static List<List<Integer>> primToInteger2D(int[][] primMatrix) {
 		List<List<Integer>> integerMatrix = new ArrayList<>();
 		for (int row = 0; row < primMatrix.length; row++) {
 			integerMatrix.add(new ArrayList<>());
@@ -42,7 +42,7 @@ public class PrimitiveInterfaceHelper {
 	 * @param primArray
 	 * @return
 	 */
-	static List<Integer> primToInteger1D(int[] primArray) {
+	public static List<Integer> primToInteger1D(int[] primArray) {
 		ArrayList<Integer> integerList = new ArrayList<>();
 		for (int i: primArray) {
 			integerList.add(i);

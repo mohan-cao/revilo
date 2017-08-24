@@ -102,7 +102,7 @@ public class ImprovedTopologicalAlgorithmManager extends AlgorithmManager {
 //        System.out.println("start times:" + nodeStartTime);
 //        System.out.println("node weights: " + Arrays.toString(_nodeWeights));
 
-        for (ScheduleResultListener listener: getListeners()) {
+        for (ScheduleResultListener listener : getListeners()) {
             listener.finalSchedule(
                     _graphName,
                     Arrays.asList(_nodeNames),

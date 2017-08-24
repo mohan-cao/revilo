@@ -1,9 +1,12 @@
 package nz.co.revilo.Scheduling;
 
-import nz.co.revilo.Scheduling.Astar.Schedule;
-import nz.co.revilo.Scheduling.Astar.Task;
+import nz.co.revilo.Output.ScheduleResultListener;
+import nz.co.revilo.Scheduling.Astar.AstarSchedule;
+import nz.co.revilo.Scheduling.Astar.AstarTask;
 
 import java.util.*;
+
+import static nz.co.revilo.Scheduling.PrimitiveInterfaceHelper.*;
 
 public class AstarFirstAlgorithmManager extends AlgorithmManager {
 
@@ -62,15 +65,15 @@ public class AstarFirstAlgorithmManager extends AlgorithmManager {
 
         //Initialises root schedule
         //Adds tasks
-        Schedule root = new Schedule();
+        AstarSchedule root = new AstarSchedule();
         for (int unschedulableTask : middleTasks) {
-            root._unschedulable.add(new Task(unschedulableTask));
+            root._unschedulable.add(new AstarTask(unschedulableTask));
         }
         for (int unschedulableTask : endTasks) {
-            root._unschedulable.add(new Task(unschedulableTask));
+            root._unschedulable.add(new AstarTask(unschedulableTask));
         }
         for (int schedulableTask : startTasks) {
-            root._schedulable.add(new Task(schedulableTask));
+            root._schedulable.add(new AstarTask(schedulableTask));
         }
         //Sets when the processors were last used
         root._processorLastUsed = new ArrayList<>(_processingCores);
@@ -80,15 +83,15 @@ public class AstarFirstAlgorithmManager extends AlgorithmManager {
 
         //Iterative BFS
         //Initialise each level
-        List<List<Schedule>> levels = new ArrayList<>(numTasks + 1);
+        List<List<AstarSchedule>> levels = new ArrayList<>(numTasks + 1);
         for (int level = 0; level <= numTasks; level++) {
             levels.add(new ArrayList<>());
         }
         //Calculate
         for (int level = 0; level < numTasks; level++) {
             //Load current and next level
-            List<Schedule> currentLevel = levels.get(level);
-            List<Schedule> nextLevel = levels.get(level + 1);
+            List<AstarSchedule> currentLevel = levels.get(level);
+            List<AstarSchedule> nextLevel = levels.get(level + 1);
             //Special case for first level
             if (level == 0) {
                 levels.get(0).add(root);
@@ -96,21 +99,21 @@ public class AstarFirstAlgorithmManager extends AlgorithmManager {
             //For every schedule in the level
             for (int child = 0; child < currentLevel.size(); child++) {
                 //Load it
-                Schedule childSchedule = currentLevel.get(child);
+                AstarSchedule childSchedule = currentLevel.get(child);
                 //Then for every processor
                 for (int processorNum = 0; processorNum < _processingCores; processorNum++) {
                     //And for every task that can be scheduled
-                    for (Task task : childSchedule._schedulable) {
+                    for (AstarTask task : childSchedule._schedulable) {
                         //Clone
-                        Schedule newSchedule = childSchedule.clone();
-                        Task newTask = task.clone();
+                        AstarSchedule newSchedule = childSchedule.clone();
+                        AstarTask newTask = task.clone();
 
                         //Set processor
                         newTask._processor = processorNum;
 
                         //Determine data ready time
                         int drt = childSchedule._processorLastUsed.get(processorNum);
-                        for (Task t : childSchedule._scheduled) {
+                        for (AstarTask t : childSchedule._scheduled) {
                             if (_arcs[t._taskNum][newTask._taskNum]) {
                                 int temp = t._start + _nodeWeights[t._taskNum];
                                 if (t._processor != processorNum) {
@@ -131,11 +134,11 @@ public class AstarFirstAlgorithmManager extends AlgorithmManager {
                         newSchedule._scheduled.add(newTask);
 
                         //Check if unschedulables are schedulable
-                        for (Task unshedulable : newSchedule._unschedulable) {
+                        for (AstarTask unshedulable : newSchedule._unschedulable) {
                             boolean schedulable = true;
                             int taskNum = unshedulable._taskNum;
                             for (Integer dependency : partialDependencies.get(taskNum)) {
-                               if (!newSchedule._scheduled.contains(new Task(dependency))) {
+                                if (!newSchedule._scheduled.contains(new AstarTask(dependency))) {
                                    schedulable = false;
                                    break;
                                }
@@ -156,8 +159,8 @@ public class AstarFirstAlgorithmManager extends AlgorithmManager {
 
         //Find the lowest cost schedule
         int temp = levels.get(levels.size() - 1).get(0).cost();
-        Schedule best = levels.get(levels.size() - 1).get(0);
-        for (Schedule s : levels.get(levels.size() - 1)) {
+        AstarSchedule best = levels.get(levels.size() - 1).get(0);
+        for (AstarSchedule s : levels.get(levels.size() - 1)) {
             if (s.cost() < temp) {
                 temp = s.cost();
                 best = s;
@@ -167,15 +170,17 @@ public class AstarFirstAlgorithmManager extends AlgorithmManager {
         //Convert to output format
         List<Integer> starts = new ArrayList<>();
         List<Integer> processors = new ArrayList<>();
-        List<Task> tasks = new ArrayList<>(best._scheduled);
+        List<AstarTask> tasks = new ArrayList<>(best._scheduled);
         Collections.sort(tasks);
-        for (Task scheduled : tasks) {
+        for (AstarTask scheduled : tasks) {
             starts.add(scheduled._start);
             processors.add(scheduled._processor);
         }
 
         //Hand output schedule to output listener
-        getListener().finalSchedule(_graphName, Arrays.asList(_nodeNames), primToBool2D(_arcs), primToInt2D(_arcWeights), primToInt(_nodeWeights), starts, processors);
+        for (ScheduleResultListener l : getListeners()) {
+            l.finalSchedule(_graphName, Arrays.asList(_nodeNames), primToBoolean2D(_arcs), primToInteger2D(_arcWeights), primToInteger1D(_nodeWeights), starts, processors);
+        }
     }
 
     private void updateDependencies(List<Integer> parentDependcies, int target) {
@@ -187,45 +192,5 @@ public class AstarFirstAlgorithmManager extends AlgorithmManager {
                 updateDependencies(newParentDependencies, toTask);
             }
         }
-    }
-
-    /**
-     * Creates an object type 2d bool list from primitive array
-     * @param prim the primitive boolean 2d array
-     * @return b the reference type list
-     */
-    public List<List<Boolean>> primToBool2D(boolean[][] prim) {
-        List<List<Boolean>> b = new ArrayList<>();
-        for (int i = 0; i < prim.length; i++) {
-            b.add(new ArrayList<>());
-            for (int j = 0; j < prim[i].length; j++) {
-                b.get(i).add(prim[i][j]);
-            }
-        }
-        return b;
-    }
-
-    /**
-     * Creates an object type 2d int list from primitive array
-     * @param prim the primitive int 2d array
-     * @return n the reference type list
-     */
-    public List<List<Integer>> primToInt2D(int[][] prim) {
-        List<List<Integer>> n = new ArrayList<>();
-        for (int i = 0; i < prim.length; i++) {
-            n.add(new ArrayList<>());
-            for (int j = 0; j < prim[i].length; j++) {
-                n.get(i).add(prim[i][j]);
-            }
-        }
-        return n;
-    }
-
-    public List<Integer> primToInt(int[] prim) {
-        ArrayList<Integer> n = new ArrayList<>();
-        for (int i: prim) {
-            n.add(i);
-        }
-        return n;
     }
 }

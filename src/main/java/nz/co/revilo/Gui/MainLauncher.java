@@ -14,12 +14,12 @@ import nz.co.revilo.App;
 
 import java.io.IOException;
 
-public class MainLauncher extends Application{
+public class MainLauncher extends Application {
+    App app = App.getInstance();
     private Stage primaryStage;
     private BorderPane rootLayout;
     private double xOffset = 0;
     private double yOffset = 0;
-    App app = App.getInstance();
 
     public Stage getPrimaryStage() {
         return primaryStage;
