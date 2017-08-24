@@ -11,10 +11,16 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
 import nz.co.revilo.App;
+import nz.co.revilo.GraphArt.*;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainLauncher extends Application{
+
+    Graph graph = new Graph();
+
     private Stage primaryStage;
     private BorderPane rootLayout;
     private double xOffset = 0;
@@ -51,9 +57,17 @@ public class MainLauncher extends Application{
             });
 
             // Show the scene containing the root layout.
-            Scene scene = new Scene(rootLayout);
-            scene.getStylesheets().add("/main.css");
+
+            /* SECTION FOR GRAPH TEST*/
+            BorderPane root = new BorderPane();
+            graph = new Graph();
+            root.setCenter(graph.getScrollPane());
+            Scene scene = new Scene(root, 1024, 768);
+            /*END*/
+//            Scene scene = new Scene(rootLayout);
+//            scene.getStylesheets().add("/main.css");
             primaryStage.setScene(scene);
+
             primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
                 @Override
                 public void handle(WindowEvent event) {
@@ -63,8 +77,32 @@ public class MainLauncher extends Application{
                 }
             });
             primaryStage.show();
+            addGraphComponents();
+            LayoutManager layout = new RandomLayout(graph);
+            layout.execute();
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private void addGraphComponents() {
+        GraphModel model = graph.getModel();
+        graph.beginUpdate();
+        List<String> names = App.getAlgorithmManager().getNodeNames();
+        boolean[][] arcs = App.getAlgorithmManager().getArcs();
+        for (String node: names) {
+            model.addNodeItem(node, NodeType.CIRCLE);
+        }
+
+        for (int i = 0; i < names.size(); i++) {
+            boolean[] row = arcs[i];
+            for (int j = 0; j < names.size(); j++) {
+                if (arcs[i][j] == true) {
+                    model.addEdge(names.get(i), names.get(j));
+                }
+            }
+        }
+//        model.addNodeItem("01", NodeType.CIRCLE);
+        graph.endUpdate();
     }
 }

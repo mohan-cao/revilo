@@ -50,6 +50,8 @@ public abstract class AlgorithmManager extends Observable implements ParseResult
         return _graphName;
     }
 
+    public boolean[][] getArcs() {return _arcs; }
+
     public List<String> getNodeNames(){
         return new ArrayList<>(Arrays.asList(_nodeNames));
     }
