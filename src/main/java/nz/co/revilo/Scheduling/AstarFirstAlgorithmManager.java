@@ -8,12 +8,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class AstartFirstAlgorithmManager extends AlgorithmManager {
+public class AstarFirstAlgorithmManager extends AlgorithmManager {
 
     int numTasks;
     private List<Set<Integer>> completeDependencies;
 
-    public AstartFirstAlgorithmManager(int processingCores) {
+    public AstarFirstAlgorithmManager(int processingCores) {
         super(processingCores);
     }
 
@@ -103,7 +103,7 @@ public class AstartFirstAlgorithmManager extends AlgorithmManager {
                 //Then for every processor
                 for (int processorNum = 0; processorNum < _processingCores; processorNum++) {
                     //And for every task that can be scheduled
-                    for (Task task : root._schedulable) {
+                    for (Task task : childSchedule._schedulable) {
                         //Clone
                         Schedule newSchedule = childSchedule.clone();
                         Task newTask = task.clone();
@@ -135,20 +135,19 @@ public class AstartFirstAlgorithmManager extends AlgorithmManager {
 
                         //Check if unschedulables are schedulable
                         for (Task unshedulable : newSchedule._unschedulable) {
-                            //Assume it is schedulable
                             boolean schedulable = true;
-                            //Until a counter case is found
-                            for (Integer dependency : partialDependencies.get(unshedulable._taskNum)) {
-                                if (!newSchedule._scheduled.contains(dependency)) {
-                                    schedulable = false;
-                                    break; //If a counter case is found then we can move on
-                                }
+                            int taskNum = unshedulable._taskNum;
+                            for (Integer dependency : partialDependencies.get(taskNum)) {
+                               if (!newSchedule._scheduled.contains(new Task(dependency))) {
+                                   schedulable = false;
+                                   break;
+                               }
                             }
                             if (schedulable) {
-                                newSchedule._unschedulable.remove(unshedulable);
                                 newSchedule._schedulable.add(unshedulable);
                             }
                         }
+                        newSchedule._unschedulable.removeAll(newSchedule._schedulable);
 
                         //Put new sub schedule in parent and the level below
                         childSchedule._subSchedules.add(newSchedule);
