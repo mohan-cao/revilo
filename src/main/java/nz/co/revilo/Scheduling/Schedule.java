@@ -21,7 +21,7 @@ public class Schedule {
 	int totalIdleTime=0;
 	int lowerBound;
 	int scheduledWeight = 0;
-	int _scheduleStructureId = -1;
+	String _scheduleStructureId = "";
 	BranchAndBoundAlgorithmManager bnb;
 	Set<Integer> openNodes=new HashSet<>(); //need to assign to processor
 	Map<Integer,Tuple<Integer,Integer>> closedNodes=new HashMap<>(); //done nodes
@@ -118,10 +118,22 @@ public class Schedule {
 	 * 
 	 * @return
 	 */
-	private int generateScheduleStructureId(){
-		Set<Set<Tuple<Integer,Integer>>> set = new HashSet<>();
-		set.addAll(scheduleStructure.values());
-		return set.hashCode();
+	private String generateScheduleStructureId(){
+		String[] ids = new String[bnb._processingCores];
+		Arrays.fill(ids, " ");
+		for(int p=0; p<bnb._processingCores; p++){
+			Set<Tuple<Integer,Integer>> set = scheduleStructure.get(p);
+			if(set.size()==0) continue;
+			List<Tuple<Integer,Integer>> list = new ArrayList<>(set);
+			Collections.sort(list);
+			for(Tuple<Integer,Integer> t:list){
+				ids[p]+=t.hashCode();
+			}
+		}
+		Arrays.sort(ids);
+		return Arrays.toString(ids);
+		//Set<Set<Tuple<Integer,Integer>>> set = new HashSet<>();
+		//set.addAll(scheduleStructure.values());
 	}
 
 	/**
@@ -235,7 +247,7 @@ public class Schedule {
 	 * @author Mohan Cao
 	 *
 	 */
-	public class Tuple<T,V> {
+	public class Tuple<T,V> implements Comparable<Tuple<T, V>>{
 		T _a;
 		V _b;
 
@@ -264,6 +276,17 @@ public class Schedule {
 		@Override
 		public int hashCode(){
 			return Objects.hash(_a,_b);
+		}
+
+		@Override
+		public int compareTo(Tuple<T, V> o) {
+			Tuple<T, V> tuple = (Tuple<T, V>)o;
+			if((int)this.getA()<(int)tuple.getA()){
+				return -1;
+			} else if((int)this.getA()>(int)tuple.getA()){
+				return 1;
+			}
+			return 0;
 		}
 	}
 }

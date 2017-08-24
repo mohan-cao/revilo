@@ -22,7 +22,7 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
 	private Schedule optimalSchedule;
 	private List<Integer> nodeStartTimes=new ArrayList<>();
 	private List<Integer> nodeProcessors=new ArrayList<>();
-	private List<Integer> existingScheduleStructures=new ArrayList<>();
+	private List<String> existingScheduleStructures=new ArrayList<>();
 
 	public BranchAndBoundAlgorithmManager(int processingCores) {
 		super(processingCores);
@@ -133,9 +133,10 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
 		//reached end of a valid schedule. Never broke off, so is optimal
 		if(schedule.openNodes.isEmpty()){			
 			//TODO: doing this to make sure only optimal schedules get through
-			if(schedule.getMaxFinishTime()<=upperBound){
+			if(schedule.getMaxFinishTime()<upperBound){
 				optimalSchedule=schedule;
 				upperBound=schedule.getMaxFinishTime();
+				System.out.println(upperBound);
 				return;
 			}
 		}
@@ -178,5 +179,5 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
 				}
 			}
 		}	
-	}
 }
+	}
