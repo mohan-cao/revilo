@@ -25,7 +25,7 @@ import java.util.Arrays;
  */
 public class App {
     // Constants
-    public static final String DEFAULT_FILETYPE = ".dot";
+    public static final String DEFAULT_FILE_EXTENSION = ".dot";
     public static final String DEFAULT_OUTPUT_FILENAME = "-output.dot";
     public static final double MILLISECONDS_PER_SECOND = 1000.0;
     public static final int MINIMUM_EXPECTED_ARGUMENTS = 2;
@@ -67,8 +67,8 @@ public class App {
 
     /**
      * Gets the algorithm manager we are using for visualization purposes.
-     * @Terran Kroft
-     * @return
+     * @author Terran Kroft
+     * @return current algorithm manager
      */
     public static AlgorithmManager getAlgorithmManager() {
         return _manager;
@@ -76,8 +76,8 @@ public class App {
 
     /**
      * Get the number of processors used
-     * @Terran Kroft*
-     * @return
+     * @author Terran Kroft
+     * @return num cores to execute on
      */
     public static int getExecCores() {
         return _inst._numExecutionCores;
@@ -85,8 +85,8 @@ public class App {
 
     /**
      * Get the file name of the graph dot/gxl file
-     * @Terran Kroft
-     * @return
+     * @author Terran Kroft
+     * @return input file name
      */
     public static String getInputFileName() {
         return _inst._inputFilename;
@@ -95,8 +95,8 @@ public class App {
     /**
      * Get the length that the algorithm has been running for, unless it is
      * already done, then get the final time
-     * @Terran Kroft
-     * @return
+     * @author Terran Kroft
+     * @return Time spent on solving
      */
     public static double getRunningTime() {
         double elapsed;
@@ -111,8 +111,8 @@ public class App {
 
     /**
      * Gets the current running instance for visualization purposes
-     * @Terran Kroft
-     * @return
+     * @author Terran Kroft
+     * @return App instance
      */
     public static App getInstance() {
         return _inst;
@@ -166,7 +166,7 @@ public class App {
      * visualisation, threads to execute on and name of the output file
      *
      * @param args from CLI
-     * @Author Terran Kroft, Michael Kemp
+     * @author Terran Kroft, Michael Kemp
      */
     private static void processArguments(String[] args) {
         // Instantiates a new parameters container
@@ -213,7 +213,7 @@ public class App {
                 }
 
                 // Append input file name with default suffix
-                int fileNameLocation = workingInputFilename.toLowerCase().lastIndexOf(DEFAULT_FILETYPE);
+                int fileNameLocation = workingInputFilename.toLowerCase().lastIndexOf(DEFAULT_FILE_EXTENSION);
                 String fileNameWithoutExtension = workingInputFilename.substring(0, fileNameLocation);
                 _inst._outputFilename = fileNameWithoutExtension + DEFAULT_OUTPUT_FILENAME;
 
