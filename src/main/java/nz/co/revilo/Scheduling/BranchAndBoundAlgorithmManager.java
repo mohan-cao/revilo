@@ -277,6 +277,28 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
             List<Integer> DataReadyTimes = new ArrayList<>();
             List<Task> DataReadyTasks = new ArrayList<>();
 
+            //Populate data ready tasks and times
+            for (Task schedulable : newSchedule._schedulable) {
+                Task newTask = schedulable.clone();
+                int drt = 0;
+                for (int processorNum = 0; processorNum < getProcessingCores(); processorNum++) {
+                    int workingDrt = childSchedule._processorLastUsed.get(processorNum);
+                    for (Task t : newSchedule._scheduled) {
+                        if (_arcs[t._taskNum][newTask._taskNum]) {
+                            int temp = t._start + _nodeWeights[t._taskNum];
+                            if (t._processor != processorNum) {
+                                temp += _arcWeights[t._taskNum][newTask._taskNum];
+                            }
+                            if (workingDrt < drt) {
+                                drt = workingDrt;
+                            }
+                        }
+                    }
+                }
+
+                DataReadyTasks.add(newTask);
+                DataReadyTimes.add(drt);
+            }
 
             //For every schedule in the level
             //for (int child = 0; child < 1; child++) {
@@ -288,13 +310,13 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
             //for (Task task : childSchedule._schedulable) {
             //Clone
 
-            Task newTask = task.clone();
+
 
             //Set processor
             newTask._processor = processorNum;
 
             //Determine data ready time
-            int drt = childSchedule._processorLastUsed.get(processorNum);
+           /* int drt = childSchedule._processorLastUsed.get(processorNum);
             for (Task t : childSchedule._scheduled) {
                 if (_arcs[t._taskNum][newTask._taskNum]) {
                     int temp = t._start + _nodeWeights[t._taskNum];
@@ -306,7 +328,7 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
                     }
                 }
             }
-
+*/
             newTask._start = drt;
 
             newSchedule._processorLastUsed.set(processorNum, (drt + _nodeWeights[newTask._taskNum]));
