@@ -42,14 +42,14 @@ public class App {
     private boolean _visualise;
     private String _outputFilename;
 
-    private static long startingTime;
-    private static long endingTime;
-    private static boolean isDone;
+    private static long _startingTime;
+    private static long _endingTime;
+    private static boolean _isDone;
 
     // Fields
-    private static AlgorithmManager manager;
-    private static FileParser reader;
-    private static DotFileProducer output;
+    private static AlgorithmManager _manager;
+    private static FileParser _reader;
+    private static DotFileProducer _output;
 
 
     /**
@@ -70,7 +70,7 @@ public class App {
      * @return
      */
     public static AlgorithmManager getAlgorithmManager() {
-        return manager;
+        return _manager;
     }
 
     /**
@@ -99,11 +99,11 @@ public class App {
      */
     public static double getRunningTime() {
         double elapsed;
-        if (isDone) {
-            elapsed = ((endingTime - startingTime) / MILLISECONDS_PER_SECOND); // incl. tenths of second
+        if (_isDone) {
+            elapsed = ((_endingTime - _startingTime) / MILLISECONDS_PER_SECOND); // incl. tenths of second
         } else {
             long now = System.currentTimeMillis();
-            elapsed = ((now - startingTime) / MILLISECONDS_PER_SECOND); // incl. tenths of second
+            elapsed = ((now - _startingTime) / MILLISECONDS_PER_SECOND); // incl. tenths of second
         }
         return elapsed;
     }
@@ -178,17 +178,17 @@ public class App {
         }
 
         // Parse file and give it algorithm manager to give results to. @Michael Kemp
-        manager = new BranchAndBoundAlgorithmManager(_inst._numExecutionCores);
+        _manager = new BranchAndBoundAlgorithmManager(_inst._numExecutionCores);
 
         if (_inst._inputFilename.matches(".*gxl") || _inst._inputFilename.matches(".*GXL")) {
-            reader = new GxlFileReader(_inst._inputFilename);
+            _reader = new GxlFileReader(_inst._inputFilename);
         } else {
-            reader = new DotFileReader(_inst._inputFilename);
+            _reader = new DotFileReader(_inst._inputFilename);
         }
 
         // Output to file @Michael Kemp
-        output = new DotFileWriter(_inst._outputFilename);
-        manager.inform(output);
+        _output = new DotFileWriter(_inst._outputFilename);
+        _manager.inform(_output);
 
         //Launch GUI if visualization is desired, otherwise just start parsing.
         if (_inst._visualise) {
@@ -203,11 +203,11 @@ public class App {
      */
     public static void startParsing() {
         try {
-            isDone = false;
-            startingTime = System.currentTimeMillis();
-            reader.startParsing(manager);
-            endingTime = System.currentTimeMillis();
-            isDone = true;
+            _isDone = false;
+            _startingTime = System.currentTimeMillis();
+            _reader.startParsing(_manager);
+            _endingTime = System.currentTimeMillis();
+            _isDone = true;
         } catch (FileNotFoundException e) {
             throw new RuntimeException("Input file does not exist");
         }
