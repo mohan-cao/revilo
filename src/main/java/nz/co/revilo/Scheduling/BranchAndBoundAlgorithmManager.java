@@ -20,8 +20,9 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
 	int totalNodeWeights;
 	private int upperBound;
 	private Schedule optimalSchedule;
-	private List<Integer> nodeStartTimes=new ArrayList<>();;
-	private List<Integer> nodeProcessors=new ArrayList<>();;
+	private List<Integer> nodeStartTimes=new ArrayList<>();
+	private List<Integer> nodeProcessors=new ArrayList<>();
+	private List<String> existingScheduleStructures=new ArrayList<>();
 
 	public BranchAndBoundAlgorithmManager(int processingCores) {
 		super(processingCores);
@@ -50,10 +51,24 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
 			totalNodeWeights+=_nodeWeights[nodeId];
 		}
 
-		for(int nodeId : sources) {
-			for(int p=0; p<_processingCores; p++){
-				Schedule newSchedule = new Schedule(this, null, nodeId, p);
+		/*
+		 * Definitely have sources as a row at start of each processor if there aren't more sources than cores
+		 * All others will just be permutations
+		 * If stack sources on same processor, will be less optimal
+		 */
+		if(sources.size()<=_processingCores){
+			int processor=0;
+			for(int nodeId : sources) {
+				Schedule newSchedule = new Schedule(this, null, nodeId, processor);
 				rootSchedules.add(newSchedule);
+				processor++;
+			}
+		} else {
+			for(int nodeId : sources) {
+				for(int processor=0; processor<_processingCores; processor++){
+					Schedule newSchedule = new Schedule(this, null, nodeId, processor);
+					rootSchedules.add(newSchedule);
+				}
 			}
 		}
 
@@ -75,8 +90,8 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
 	 */
 	private void returnResults() {
 		for(int nodeId=0; nodeId<numNodes; nodeId++){
-			nodeStartTimes.add(optimalSchedule.closedSet.get(nodeId)._startTime);//start times
-			nodeProcessors.add(optimalSchedule.closedSet.get(nodeId)._processor);//processors scheduled on
+			nodeStartTimes.add(optimalSchedule.closedNodes.get(nodeId).getA());//start times
+			nodeProcessors.add(optimalSchedule.closedNodes.get(nodeId).getB());//processors scheduled on
 		}	
 		System.out.println("Optimal length found: "+optimalSchedule.getMaxFinishTime());
 
@@ -95,33 +110,42 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
 	/**
 	 * bnb based on the current schedule s
 	 * 
-	 * @param s
+	 * @param schedule
 	 * 
 	 * @author Abby S
 	 */
-	private void bnb(Schedule s) {
+	private void bnb(Schedule schedule) {
 		//TODO: not strict enough?
-		if(s.lowerBound>=upperBound){
-			s=null; //garbage collect that schedule
+		if(schedule.lowerBound>=upperBound){
+			schedule=null; //garbage collect that schedule
 			return; //break tree at this point
+		}
+
+		//compare to existing schedule structures and remove if duplicate
+		if(existingScheduleStructures.contains(schedule._scheduleStructureId)){
+			schedule=null; //garbage collect that schedule
+			return; //break tree at this point
+		} else {
+			existingScheduleStructures.add(schedule._scheduleStructureId);
 		}
 
 		//found optimal for the root started with
 		//reached end of a valid schedule. Never broke off, so is optimal
-		if(s.openSet.isEmpty()){			
+		if(schedule.openNodes.isEmpty()){			
 			//TODO: doing this to make sure only optimal schedules get through
-			if(s.getMaxFinishTime()<=upperBound){
-				optimalSchedule=s;
-				upperBound=s.getMaxFinishTime();
+			if(schedule.getMaxFinishTime()<upperBound){
+				optimalSchedule=schedule;
+				upperBound=schedule.getMaxFinishTime();
+				System.out.println(upperBound);
 				return;
 			}
 		}
 
 		//continue DFS
 		List<Schedule> nextSchedules = new ArrayList<>();
-		for(int n:s.independentSet){
-			for(int p=0; p<_processingCores; p++){
-				nextSchedules.add(new Schedule(this, s, n, p));
+		for(int node:schedule.independentNodes){
+			for(int processor=0; processor<_processingCores; processor++){
+				nextSchedules.add(new Schedule(this, schedule, node, processor));
 			}
 		}
 		for(Schedule nextSchedule:nextSchedules){

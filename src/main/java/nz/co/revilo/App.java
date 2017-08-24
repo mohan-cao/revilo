@@ -93,8 +93,12 @@ public class App {
 
             // Sets the output filename if one is given, otherwise uses default
             if (params.getOutputName() == null) {
-                int fileNameLocation = _inst._inputFilename.toLowerCase().lastIndexOf(DEFAULT_FILETYPE);
-                String fileNameWithoutExtension = _inst._inputFilename.substring(0, fileNameLocation);
+                String temp = _inst._inputFilename;
+                if (_inst._inputFilename.toUpperCase().contains("GXL")) {
+                    temp = _inst._inputFilename.substring(0, _inst._inputFilename.length() - 4) + ".dot";
+                }
+                int fileNameLocation = temp.toLowerCase().lastIndexOf(DEFAULT_FILETYPE);
+                String fileNameWithoutExtension = temp.substring(0, fileNameLocation);
                 _inst._outputFilename = fileNameWithoutExtension + DEFAULT_OUTPUT_FILENAME;
             } else {
                 _inst._outputFilename = params.getOutputName();
