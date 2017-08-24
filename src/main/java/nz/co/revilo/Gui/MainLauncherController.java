@@ -1,5 +1,6 @@
 package nz.co.revilo.Gui;
 
+import com.sun.org.apache.xml.internal.resolver.readers.ExtendedXMLCatalogReader;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -24,6 +25,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import nz.co.revilo.App;
 import nz.co.revilo.Output.NewOptimalResultListener;
@@ -235,7 +237,10 @@ public class MainLauncherController implements Initializable, ScheduleResultList
                 int iterJ = data.indexOf(d);
                 StackPane bar = (StackPane) d.getNode();
                 String node = pcatName.get(iterI).get(iterJ);
-                Text t = new Text(node);
+                ExtraData nodeW = (ExtraData)d.getExtraValue();
+//                System.out.println(nodeW.getLength());
+                Text t = new Text(node + "\n(" + nodeW.getLength() + ")");
+                t.setTextAlignment(TextAlignment.CENTER);
                 bar.getChildren().add(t);
                 bar.setAlignment(t, Pos.TOP_LEFT);
 
