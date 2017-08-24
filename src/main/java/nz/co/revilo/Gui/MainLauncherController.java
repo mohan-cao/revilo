@@ -22,6 +22,7 @@ import nz.co.revilo.Gui.GanttChart.ExtraData;
 import nz.co.revilo.Scheduling.Schedule;
 
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class MainLauncherController implements Initializable, ScheduleResultListener, NewOptimalResultListener {
@@ -70,7 +71,7 @@ public class MainLauncherController implements Initializable, ScheduleResultList
     private Label graphNameLabel;
 
     @FXML
-    private BorderPane mainPane;
+    private BorderPane ganttPane;
 
     @FXML
     private BorderPane baseBp;
@@ -122,6 +123,7 @@ public class MainLauncherController implements Initializable, ScheduleResultList
                     public void run() {
                         memoryLabel.setText((Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory())/1024/1024+""); //needs to be better
                         timeLabel.setText(String.format("%.2f", App.getRunningTime()));
+//                        timeLabel.setText(new SimpleDateFormat("mm:ss:SS").format(new Date(App.getRunningTime())));
                         bestLabel.setText(App.getAlgorithmManager().getUpperBound() + "");
                         branchesLabel.setText(App.getAlgorithmManager().getBrokenTrees() + "");
                         graphNameLabel.setText("  " + App.getAlgorithmManager().getGraphName()); //padding
@@ -164,7 +166,7 @@ public class MainLauncherController implements Initializable, ScheduleResultList
         ganttChart = new GanttChart<Number, String>(xAxis, yAxis);
 
 
-        mainPane.setCenter(ganttChart);
+        ganttPane.setCenter(ganttChart);
     }
 
     public void updateGantt() {
