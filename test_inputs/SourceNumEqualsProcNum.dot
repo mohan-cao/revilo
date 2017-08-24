@@ -1,0 +1,23 @@
+digraph "SourceNumEqualsProcNum.dot" {
+	a	[weight=1];
+	b	[weight=1];
+	c	[weight=4];
+	d	[weight=5];
+	e	[weight=5];
+	f	[weight=5];
+	g	[weight=5];
+	h	[weight=5];
+	j	[weight=1];
+	a->b	[weight=0];
+	a->j	[weight=0];
+	j->d	[weight=5];
+	j->e	[weight=5];
+	j->f	[weight=5];
+	j->g	[weight=5];
+	j->h	[weight=5];
+	b->d	[weight=0];
+	b->e	[weight=5];
+	b->f	[weight=5];
+	b->g	[weight=5];
+	b->h	[weight=5];
+}

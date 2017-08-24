@@ -15,17 +15,16 @@ import java.util.Observable;
  */
 public abstract class AlgorithmManager extends Observable implements ParseResultListener {
 
-    int _processingCores;
+    protected int _processingCores;
+    protected long brokenTrees;
+    protected int upperBound; // used in subclasses
+    protected int[] _nodeWeights;
+    protected boolean[][] _arcs;
+    protected int[][] _arcWeights;
+    protected String[] _nodeNames;
+    protected String _graphName;
     private NewOptimalResultListener optimalListener;
-    private List<ScheduleResultListener> listeners = new ArrayList<>();;
-    int[] _nodeWeights;
-    boolean[][] _arcs;
-    int[][] _arcWeights;
-    String[] _nodeNames;
-    String _graphName;
-
-    long brokenTrees;
-    int upperBound; // used in subclasses
+    private List<ScheduleResultListener> listeners = new ArrayList<>();
 
     /**
      * Sets the number of processing cores the tasks must be scheduled on.
@@ -38,6 +37,7 @@ public abstract class AlgorithmManager extends Observable implements ParseResult
 
     /**
      * Get the number of branches broken (i.e. branches that have been deemed not as good)
+     *
      * @return
      */
     public long getBrokenTrees() {
@@ -46,6 +46,7 @@ public abstract class AlgorithmManager extends Observable implements ParseResult
 
     /**
      * Gets the upper bound value (current best)
+     *
      * @return current best
      */
     public int getUpperBound() {
@@ -54,6 +55,7 @@ public abstract class AlgorithmManager extends Observable implements ParseResult
 
     /**
      * Gets graph name.
+     *
      * @return the name of the graph
      */
     public String getGraphName() {
@@ -62,14 +64,16 @@ public abstract class AlgorithmManager extends Observable implements ParseResult
 
     /**
      * Getter for list of node names for easy Gantt setup
+     *
      * @return the list of node names
      */
-    public List<String> getNodeNames(){
+    public List<String> getNodeNames() {
         return new ArrayList<>(Arrays.asList(_nodeNames));
     }
 
     /**
      * Gets a tentative list of nodes for preliminary setup of Gantt Chart
+     *
      * @return
      */
     public List<Integer> getNodeWeights() {
@@ -90,11 +94,15 @@ public abstract class AlgorithmManager extends Observable implements ParseResult
     public void inform(ScheduleResultListener listener) {
         listeners.add(listener);
     }
-    public void optimalInform(NewOptimalResultListener listener) { optimalListener = listener; }
+
+    public void optimalInform(NewOptimalResultListener listener) {
+        optimalListener = listener;
+    }
 
     /**
-     *Retrieves NewOptimalResultListener whenever an algorithm (BnB) finds a graph length that is
+     * Retrieves NewOptimalResultListener whenever an algorithm (BnB) finds a graph length that is
      * better than the current one.
+     *
      * @return
      */
     public NewOptimalResultListener getOptimalListener() { return optimalListener; }

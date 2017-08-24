@@ -54,7 +54,7 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
         }
 
         /*
-         * Definitely have sources as a row at start of each processor if there aren't more sources than cores
+		 * Definitely have sources as a row at start of each processor if there aren't more sources than cores
 		 * All others will just be permutations
 		 * If stack sources on same processor, will be less optimal
 		 */
@@ -97,18 +97,18 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
         }
         System.out.println("Optimal length found: " + optimalSchedule.getMaxFinishTime());
 
-        //pass to outputs
-        for (ScheduleResultListener listener : getListeners()) {
-            listener.finalSchedule(
-                    _graphName,
-                    Arrays.asList(_nodeNames),
-                    PrimitiveInterfaceHelper.primToBoolean2D(_arcs),
-                    PrimitiveInterfaceHelper.primToInteger2D(_arcWeights),
-                    PrimitiveInterfaceHelper.primToInteger1D(_nodeWeights),
-                    nodeStartTimes,
-                    nodeProcessors
-            );
-        }
+		//pass to outputs
+		for (ScheduleResultListener listener : getListeners()) {
+			listener.finalSchedule(
+					_graphName,
+					Arrays.asList(_nodeNames),
+					PrimitiveInterfaceHelper.primToBoolean2D(_arcs),
+					PrimitiveInterfaceHelper.primToInteger2D(_arcWeights),
+					PrimitiveInterfaceHelper.primToInteger1D(_nodeWeights),
+					nodeStartTimes,
+					nodeProcessors
+			);
+		}
 
     }
 
@@ -151,17 +151,17 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
             }
         }
 
-        //continue DFS
-        List<BnBSchedule> nextSchedules = new ArrayList<>();
-        for (int node : schedule.independentNodes) {
-            for (int processor = 0; processor < _processingCores; processor++) {
-                nextSchedules.add(new BnBSchedule(this, schedule, node, processor));
-            }
-        }
-        for (BnBSchedule nextSchedule : nextSchedules) {
-            bnb(nextSchedule);
-        }
-    }
+		//continue DFS
+		List<BnBSchedule> nextSchedules = new ArrayList<>();
+		for(int node:schedule.independentNodes){
+			for(int processor=0; processor<_processingCores; processor++){
+				nextSchedules.add(new BnBSchedule(this, schedule, node, processor));
+			}
+		}
+		for (BnBSchedule nextSchedule : nextSchedules) {
+			bnb(nextSchedule);
+		}
+	}
 
     /**
      * Calculates bottom level of each node in the graph

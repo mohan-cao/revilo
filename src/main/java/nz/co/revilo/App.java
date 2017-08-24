@@ -46,47 +46,6 @@ public class App {
     private static DotFileProducer output;
 
 
-
-    /**
-     * Gets the algorithm manager we are using for visualization purposes.
-     * @return
-     */
-    public static AlgorithmManager getAlgorithmManager() {
-        return manager;
-    }
-
-    /**
-     * Get the number of processors used
-     * @return
-     */
-    public static int getExecCores() {
-        return _inst._numExecutionCores;
-    }
-
-    /**
-     * Get the file name of the graph dot/gxl file
-     * @return
-     */
-    public static String getInputFileName() {
-        return _inst._inputFilename;
-    }
-
-    /**
-     * Get the length that the algorithm has been running for, unless it is
-     * already done, then get the final time
-     * @return
-     */
-    public static double getRunningTime() {
-        double elapsed;
-        if (isDone) {
-            elapsed = ((endingTime - startingTime) / 1000.0); // incl. tenths of second
-        } else {
-            long now = System.currentTimeMillis();
-            elapsed = ((now - startingTime) / 1000.0); // incl. tenths of second
-        }
-        return elapsed;
-    }
-
     /**
      * The one and only constructor which allows for the singleton pattern by never overriding the current instance
      *
@@ -104,7 +63,52 @@ public class App {
     }
 
     /**
+     * Gets the algorithm manager we are using for visualization purposes.
+     *
+     * @return
+     */
+    public static AlgorithmManager getAlgorithmManager() {
+        return manager;
+    }
+
+    /**
+     * Get the number of processors used
+     *
+     * @return
+     */
+    public static int getExecCores() {
+        return _inst._numExecutionCores;
+    }
+
+    /**
+     * Get the file name of the graph dot/gxl file
+     *
+     * @return
+     */
+    public static String getInputFileName() {
+        return _inst._inputFilename;
+    }
+
+    /**
+     * Get the length that the algorithm has been running for, unless it is
+     * already done, then get the final time
+     *
+     * @return
+     */
+    public static double getRunningTime() {
+        double elapsed;
+        if (isDone) {
+            elapsed = ((endingTime - startingTime) / 1000.0); // incl. tenths of second
+        } else {
+            long now = System.currentTimeMillis();
+            elapsed = ((now - startingTime) / 1000.0); // incl. tenths of second
+        }
+        return elapsed;
+    }
+
+    /**
      * Gets the current running instance for visualization purposes
+     *
      * @return
      */
     public static App getInstance() {
@@ -200,7 +204,4 @@ public class App {
             throw new RuntimeException("Input file does not exist");
         }
     }
-
-
-
 }

@@ -6,16 +6,16 @@ import java.util.List;
 import java.util.Set;
 
 public class AstarSchedule implements Cloneable {
-    public Set<Task> _scheduled = new HashSet<>();
-    public Set<Task> _schedulable = new HashSet<>();
-    public Set<Task> _unschedulable = new HashSet<>();
+    public Set<AstarTask> _scheduled = new HashSet<>();
+    public Set<AstarTask> _schedulable = new HashSet<>();
+    public Set<AstarTask> _unschedulable = new HashSet<>();
     public List<AstarSchedule> _subSchedules = new ArrayList<>();
     public ArrayList<Integer> _processorLastUsed = new ArrayList<>();
 
     public AstarSchedule() {
     }
 
-    private AstarSchedule(Set<Task> scheduled, Set<Task> schedulable, Set<Task> unschedulable, List<Integer> processorLastUsed) {
+    private AstarSchedule(Set<AstarTask> scheduled, Set<AstarTask> schedulable, Set<AstarTask> unschedulable, List<Integer> processorLastUsed) {
         _scheduled = new HashSet<>(scheduled);
         _schedulable = new HashSet<>(schedulable);
         _unschedulable = new HashSet<>(unschedulable);
