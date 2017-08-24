@@ -28,7 +28,7 @@ public abstract class FileParser {
      * @author Michael Kemp
      * @return the filename of the file the FileParser is to parse/has parsed, as set in the constructor
      */
-    protected String getFilename() {
+    protected final String getFilename() {
         return _filename;
     }
 
