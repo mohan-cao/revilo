@@ -52,11 +52,15 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
 			totalNodeWeights+=_nodeWeights[nodeId];
 		}
 
+        /*
+         * Definitely have sources as a row at start of each processor if there aren't more sources than cores
+		 * All others will just be permutations
+		 * If stack sources on same processor, will be less optimal
+		 */
+        int processor = 0;
         for (int nodeId : sources) {
-            for (int processor = 0; processor < _processingCores; processor++) {
-                Schedule newSchedule = new Schedule(this, null, nodeId, processor);
-                rootSchedules.add(newSchedule);
-            }
+            Schedule newSchedule = new Schedule(this, null, nodeId, processor);
+            rootSchedules.add(newSchedule);
 		}
 
 		upperBound=totalNodeWeights + 1; //TODO: is this a good upper bound?
