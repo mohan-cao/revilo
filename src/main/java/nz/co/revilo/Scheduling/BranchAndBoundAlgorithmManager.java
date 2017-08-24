@@ -280,7 +280,7 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
             //Populate data ready tasks and times
             for (Task schedulable : newSchedule._schedulable) {
                 Task newTask = schedulable.clone();
-                int drt = 0;
+                int drt = Integer.MAX_VALUE;
                 for (int processorNum = 0; processorNum < getProcessingCores(); processorNum++) {
                     int workingDrt = childSchedule._processorLastUsed.get(processorNum);
                     for (Task t : newSchedule._scheduled) {
@@ -289,49 +289,35 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
                             if (t._processor != processorNum) {
                                 temp += _arcWeights[t._taskNum][newTask._taskNum];
                             }
-                            if (workingDrt < drt) {
-                                drt = workingDrt;
+                            if (temp > workingDrt) {
+                                workingDrt = temp;
                             }
                         }
                     }
+                    if (workingDrt < drt) {
+                        drt = workingDrt;
+                        newTask._processor = processorNum;
+                        newTask._start = workingDrt;
+                    }
                 }
-
                 DataReadyTasks.add(newTask);
                 DataReadyTimes.add(drt);
             }
 
-            //For every schedule in the level
-            //for (int child = 0; child < 1; child++) {
-            //Load it
-
-            //Then for every processor
-            //for (int processorNum = 0; processorNum < 1; processorNum++) {
-            //And for every task that can be scheduled
-            //for (Task task : childSchedule._schedulable) {
-            //Clone
-
-
-
-            //Set processor
-            newTask._processor = processorNum;
-
-            //Determine data ready time
-           /* int drt = childSchedule._processorLastUsed.get(processorNum);
-            for (Task t : childSchedule._scheduled) {
-                if (_arcs[t._taskNum][newTask._taskNum]) {
-                    int temp = t._start + _nodeWeights[t._taskNum];
-                    if (t._processor != processorNum) {
-                        temp += _arcWeights[t._taskNum][newTask._taskNum];
-                    }
-                    if (drt < temp) {
-                        drt = temp;
-                    }
+            //Find the lowest DRT of the nodes
+            int lowestDRT = Integer.MAX_VALUE;
+            int index = 0;
+            for (int i = 0; i < DataReadyTimes.size(); i++) {
+                if (DataReadyTimes.get(i) < lowestDRT) {
+                    lowestDRT = DataReadyTimes.get(i);
+                    index = i;
                 }
             }
-*/
-            newTask._start = drt;
 
-            newSchedule._processorLastUsed.set(processorNum, (drt + _nodeWeights[newTask._taskNum]));
+            Task newTask = DataReadyTasks.get(index);
+            newSchedule._processorLastUsed.set(newTask._processor, (newTask._start + _nodeWeights[newTask._taskNum]));
+
+
 
             //Move task to scheduled from schedulable
             newSchedule._schedulable.remove(newTask);
