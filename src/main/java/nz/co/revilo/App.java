@@ -11,6 +11,8 @@ import nz.co.revilo.Output.DotFileProducer;
 import nz.co.revilo.Output.DotFileWriter;
 import nz.co.revilo.Scheduling.AlgorithmManager;
 import nz.co.revilo.Scheduling.BranchAndBoundAlgorithmManager;
+import nz.co.revilo.Scheduling.ParallelBranchAndBoundAlgorithmManager;
+import pt.runtime.ParaTask;
 
 import java.io.FileNotFoundException;
 import java.util.Arrays;
@@ -138,9 +140,16 @@ public class App {
 
         // Process arguments given by the user
         processArguments(args);
-
+        
         // Start an AlgorithmManager
-        _manager = new BranchAndBoundAlgorithmManager(_inst._numExecutionCores);
+        if(_inst._numParallelProcessors > 1) {
+            ParaTask.setThreadPoolSize(ParaTask.ThreadPoolType.ALL, _inst._numParallelProcessors);
+            ParaTask.init();
+        	_manager = new ParallelBranchAndBoundAlgorithmManager(_inst._numExecutionCores);
+        } else {
+        	_manager = new BranchAndBoundAlgorithmManager(_inst._numExecutionCores);
+        	System.out.println("One Processor!");
+        }
 
         // Parse file and give it algorithm manager to give results to depending on the file extension
         if (_inst._inputFilename.toUpperCase().matches(".*GXL")) {
