@@ -257,6 +257,21 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
                 currentLevel.add(root);
             }
 
+            //Check if unschedulables are schedulable
+            for (Task unshedulable : newSchedule._unschedulable) {
+                boolean schedulable = true;
+                int taskNum = unshedulable._taskNum;
+                for (Integer dependency : partialDependencies.get(taskNum)) {
+                    if (!newSchedule._scheduled.contains(new Task(dependency))) {
+                        schedulable = false;
+                        break;
+                    }
+                }
+                if (schedulable) {
+                    newSchedule._schedulable.add(unshedulable);
+                }
+            }
+            newSchedule._unschedulable.removeAll(newSchedule._schedulable);
 
             //How to determine which node will go first
             List<Integer> DataReadyTimes = new ArrayList<>();
