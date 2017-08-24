@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" fx:id="mainPane" prefHeight="600.0" prefWidth="800.0"
+            style="-fx-background-color: #ffffff;" xmlns="http://javafx.com/javafx/8.0.111">
+    <right>
+        <ScrollPane hbarPolicy="NEVER" prefWidth="215.0" style="-fx-background-color: #ffffff; -fx-background: #ffffff;"
+                    BorderPane.alignment="CENTER">
+            <content>
+                <BorderPane fx:id="mainPane" style="-fx-background-color: #ffffff;">
+                    <center>
+                        <VBox spacing="5.0" style="-fx-background-color: #ffffff;" BorderPane.alignment="CENTER">
+                            <children>
+                                <AnchorPane maxHeight="80.0" maxWidth="190.0" prefHeight="90.0" prefWidth="190.0"
+                                            style="-fx-background-color: linear-gradient(from 0% 0% to 0% 100%, #fc2a19, #fc5fa6); -fx-background-radius: 5;">
+                                    <children>
+                                        <Label text="PROCESSORS" textFill="WHITE" AnchorPane.leftAnchor="5.0"
+                                               AnchorPane.topAnchor="5.0">
+                                            <font>
+                                                <Font name="SF UI Display Bold" size="13.0"/>
+                                            </font>
+                                        </Label>
+                                        <Label fx:id="processorLabel" alignment="BOTTOM_RIGHT" contentDisplay="RIGHT"
+                                               text="0" textAlignment="RIGHT" textFill="WHITE"
+                                               AnchorPane.bottomAnchor="8.0" AnchorPane.rightAnchor="5.0">
+                                            <font>
+                                                <Font name="SF UI Display Light" size="48.0"/>
+                                            </font>
+                                        </Label>
+                                        <Label layoutX="10.0" layoutY="10.0" text="PROCESSORS" textAlignment="RIGHT"
+                                               textFill="#ffffffcc" AnchorPane.bottomAnchor="5.0"
+                                               AnchorPane.rightAnchor="5.0">
+                                            <font>
+                                                <Font name="SF UI Display Medium" size="12.0"/>
+                                            </font>
+                                        </Label>
+                                    </children>
+                                </AnchorPane>
+                                <AnchorPane maxHeight="80.0" maxWidth="190.0" prefHeight="90.0" prefWidth="190.0"
+                                            style="-fx-background-color: linear-gradient(from 0% 0% to 0% 100%, #d56efd, #842abf); -fx-background-radius: 5;">
+                                    <children>
+                                        <Label text="PARALLEL PROCESSING" textFill="WHITE" AnchorPane.leftAnchor="5.0"
+                                               AnchorPane.topAnchor="5.0">
+                                            <font>
+                                                <Font name="SF UI Display Bold" size="13.0"/>
+                                            </font>
+                                        </Label>
+                                        <Label alignment="BOTTOM_RIGHT" contentDisplay="RIGHT" text="OFF"
+                                               textAlignment="RIGHT" textFill="WHITE" AnchorPane.bottomAnchor="8.0"
+                                               AnchorPane.rightAnchor="5.0">
+                                            <font>
+                                                <Font name="SF UI Display Light" size="48.0"/>
+                                            </font>
+                                        </Label>
+                                        <Label layoutX="10.0" layoutY="10.0" text="CORES" textAlignment="RIGHT"
+                                               textFill="#ffffffcc" AnchorPane.bottomAnchor="5.0"
+                                               AnchorPane.rightAnchor="5.0">
+                                            <font>
+                                                <Font name="SF UI Display Medium" size="12.0"/>
+                                            </font>
+                                        </Label>
+                                    </children>
+                                </AnchorPane>
+                                <AnchorPane maxHeight="80.0" maxWidth="190.0" prefHeight="90.0" prefWidth="190.0"
+                                            style="-fx-background-color: linear-gradient(from 0% 0% to 0% 100%, #19d7fb, #1e63ee); -fx-background-radius: 5;">
+                                    <children>
+                                        <Label text="CURRENT BEST" textFill="WHITE" AnchorPane.leftAnchor="5.0"
+                                               AnchorPane.topAnchor="5.0">
+                                            <font>
+                                                <Font name="SF UI Display Bold" size="13.0"/>
+                                            </font>
+                                        </Label>
+                                        <Label fx:id="bestLabel" alignment="BOTTOM_RIGHT" contentDisplay="RIGHT"
+                                               text="0" textAlignment="RIGHT" textFill="WHITE"
+                                               AnchorPane.bottomAnchor="8.0" AnchorPane.rightAnchor="5.0">
+                                            <font>
+                                                <Font name="SF UI Display Light" size="48.0"/>
+                                            </font>
+                                        </Label>
+                                        <Label layoutX="10.0" layoutY="10.0" text="UNITS" textAlignment="RIGHT"
+                                               textFill="#ffffffcc" AnchorPane.bottomAnchor="5.0"
+                                               AnchorPane.rightAnchor="5.0">
+                                            <font>
+                                                <Font name="SF UI Display Medium" size="12.0"/>
+                                            </font>
+                                        </Label>
+                                    </children>
+                                </AnchorPane>
+                                <AnchorPane maxHeight="80.0" maxWidth="190.0" prefHeight="90.0" prefWidth="190.0"
+                                            style="-fx-background-color: linear-gradient(from 0% 0% to 0% 100%, #fea700, #fa661e); -fx-background-radius: 5;">
+                                    <children>
+                                        <Label text="MEMORY USED" textFill="WHITE" AnchorPane.leftAnchor="5.0"
+                                               AnchorPane.topAnchor="5.0">
+                                            <font>
+                                                <Font name="SF UI Display Bold" size="13.0"/>
+                                            </font>
+                                        </Label>
+                                        <Label fx:id="memoryLabel" alignment="BOTTOM_RIGHT" contentDisplay="RIGHT"
+                                               text="0" textAlignment="RIGHT" textFill="WHITE"
+                                               AnchorPane.bottomAnchor="8.0" AnchorPane.rightAnchor="5.0">
+                                            <font>
+                                                <Font name="SF UI Display Light" size="48.0"/>
+                                            </font>
+                                        </Label>
+                                        <Label layoutX="10.0" layoutY="10.0" text="MB" textAlignment="RIGHT"
+                                               textFill="#ffffffcc" AnchorPane.bottomAnchor="5.0"
+                                               AnchorPane.rightAnchor="5.0">
+                                            <font>
+                                                <Font name="SF UI Display Medium" size="12.0"/>
+                                            </font>
+                                        </Label>
+                                    </children>
+                                </AnchorPane>
+                                <AnchorPane maxHeight="80.0" maxWidth="190.0" prefHeight="90.0" prefWidth="190.0"
+                                            style="-fx-background-color: linear-gradient(from 0% 0% to 0% 100%, #00d8eb, #008dcd); -fx-background-radius: 5;">
+                                    <children>
+                                        <Label text="BOUND BRANCHES" textFill="WHITE" AnchorPane.leftAnchor="5.0"
+                                               AnchorPane.topAnchor="5.0">
+                                            <font>
+                                                <Font name="SF UI Display Bold" size="13.0"/>
+                                            </font>
+                                        </Label>
+                                        <Label fx:id="branchesLabel" alignment="BOTTOM_RIGHT" contentDisplay="RIGHT"
+                                               text="0" textAlignment="RIGHT" textFill="WHITE"
+                                               AnchorPane.bottomAnchor="12.0" AnchorPane.rightAnchor="5.0">
+                                            <font>
+                                                <Font name="SF UI Display Light" size="36.0"/>
+                                            </font>
+                                        </Label>
+                                        <Label layoutX="10.0" layoutY="10.0" text="BRANCHES" textAlignment="RIGHT"
+                                               textFill="#ffffffcc" AnchorPane.bottomAnchor="5.0"
+                                               AnchorPane.rightAnchor="5.0">
+                                            <font>
+                                                <Font name="SF UI Display Medium" size="12.0"/>
+                                            </font>
+                                        </Label>
+                                    </children>
+                                </AnchorPane>
+                                <AnchorPane maxHeight="80.0" maxWidth="190.0" prefHeight="90.0" prefWidth="190.0"
+                                            style="-fx-background-color: linear-gradient(from 0% 0% to 0% 100%, #4cd964, #02b21f); -fx-background-radius: 5;">
+                                    <children>
+                                        <Label text="ELAPSED TIME" textFill="WHITE" AnchorPane.leftAnchor="5.0"
+                                               AnchorPane.topAnchor="5.0">
+                                            <font>
+                                                <Font name="SF UI Display Bold" size="13.0"/>
+                                            </font>
+                                        </Label>
+                                        <Label fx:id="timeLabel" alignment="BOTTOM_RIGHT" contentDisplay="RIGHT"
+                                               text="0" textAlignment="RIGHT" textFill="WHITE"
+                                               AnchorPane.bottomAnchor="8.0" AnchorPane.rightAnchor="5.0">
+                                            <font>
+                                                <Font name="SF UI Display Light" size="48.0"/>
+                                            </font>
+                                        </Label>
+                                        <Label layoutX="10.0" layoutY="10.0" text="SEC" textAlignment="RIGHT"
+                                               textFill="#ffffffcc" AnchorPane.bottomAnchor="5.0"
+                                               AnchorPane.rightAnchor="5.0">
+                                            <font>
+                                                <Font name="SF UI Display Medium" size="12.0"/>
+                                            </font>
+                                        </Label>
+                                    </children>
+                                </AnchorPane>
+                                <AnchorPane maxHeight="80.0" maxWidth="190.0" prefHeight="90.0" prefWidth="190.0"
+                                            style="-fx-background-color: linear-gradient(from 0% 0% to 0% 100%, #8a8a92, #dedede); -fx-background-radius: 5;">
+                                    <children>
+                                        <Label text="DOLOR SIT AMET" textFill="WHITE" AnchorPane.leftAnchor="5.0"
+                                               AnchorPane.topAnchor="5.0">
+                                            <font>
+                                                <Font name="SF UI Display Bold" size="13.0"/>
+                                            </font>
+                                        </Label>
+                                        <Label alignment="BOTTOM_RIGHT" contentDisplay="RIGHT" text="0"
+                                               textAlignment="RIGHT" textFill="WHITE" AnchorPane.bottomAnchor="8.0"
+                                               AnchorPane.rightAnchor="5.0">
+                                            <font>
+                                                <Font name="SF UI Display Light" size="48.0"/>
+                                            </font>
+                                        </Label>
+                                        <Label layoutX="10.0" layoutY="10.0" text="OLIVERS" textAlignment="RIGHT"
+                                               textFill="#ffffffcc" AnchorPane.bottomAnchor="5.0"
+                                               AnchorPane.rightAnchor="5.0">
+                                            <font>
+                                                <Font name="SF UI Display Medium" size="12.0"/>
+                                            </font>
+                                        </Label>
+                                    </children>
+                                </AnchorPane>
+                            </children>
+                            <padding>
+                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                            </padding>
+                        </VBox>
+                    </center>
+                </BorderPane>
+            </content>
+        </ScrollPane>
+    </right>
+    <center>
+        <BorderPane fx:id="ganttPane" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #ffffff;"
+                    BorderPane.alignment="CENTER"/>
+    </center>
+    <top>
+        <AnchorPane maxHeight="50.0" minHeight="50.0" prefHeight="200.0" prefWidth="200.0"
+                    style="-fx-background-color: #f1f1f1;" BorderPane.alignment="CENTER">
+            <children>
+                <Button fx:id="closeBtn" maxHeight="30.0" maxWidth="30.0" minHeight="30.0" minWidth="30.0"
+                        mnemonicParsing="false" onAction="#closeRevilo" prefHeight="30.0" prefWidth="30.0"
+                        style="-fx-background-radius: 10;" text="×" textAlignment="CENTER" textOverrun="CLIP"
+                        AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
+                    <font>
+                        <Font name="SF UI Display Light" size="20.0"/>
+                    </font>
+                    <padding>
+                        <Insets bottom="-2.0" left="-2.0" right="-2.0" top="-2.0"/>
+                    </padding>
+                </Button>
+                <Label text="REVILO" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="10.0"
+                       AnchorPane.topAnchor="0.0">
+                    <font>
+                        <Font name="SF UI Display Heavy" size="36.0"/>
+                    </font>
+                </Label>
+                <Label fx:id="graphNameLabel" layoutX="85.0" layoutY="23.0" maxHeight="24.0" prefHeight="24.0"
+                       prefWidth="575.0" style="-fx-background-color: #E5E5E5; -fx-background-radius: 5;"
+                       text="Placeholder text name" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="148.0"
+                       AnchorPane.rightAnchor="90.0" AnchorPane.topAnchor="10.0">
+                    <font>
+                        <Font name="System Font" size="14.0"/>
+                    </font>
+                    <opaqueInsets>
+                        <Insets bottom="1.0" left="1.0" right="1.0" top="1.0"/>
+                    </opaqueInsets>
+                    <padding>
+                        <Insets bottom="2.0" left="4.0" right="2.0" top="2.0"/>
+                    </padding>
+                </Label>
+                <Button fx:id="minimizeBtn" layoutX="10.0" layoutY="10.0" maxHeight="30.0" maxWidth="30.0"
+                        minHeight="30.0" minWidth="30.0" mnemonicParsing="false" onAction="#minimizeRevilo"
+                        prefHeight="30.0" prefWidth="30.0" style="-fx-background-radius: 10;" text="–"
+                        textAlignment="CENTER" textOverrun="CLIP" AnchorPane.rightAnchor="50.0">
+                    <font>
+                        <Font name="SF UI Display Light" size="20.0"/>
+                    </font>
+                    <padding>
+                        <Insets bottom="-2.0" left="-2.0" right="-2.0" top="-2.0"/>
+                    </padding>
+                </Button>
+            </children>
+        </AnchorPane>
+    </top>
+    <bottom>
+        <AnchorPane maxHeight="30.0" minHeight="30.0" prefHeight="200.0" prefWidth="200.0"
+                    style="-fx-background-color: #dedede;" BorderPane.alignment="CENTER">
+            <children>
+                <Label fx:id="statusLabel" layoutX="66.0" layoutY="16.0" maxHeight="24.0" prefHeight="24.0"
+                       prefWidth="575.0" style="-fx-background-color: #dedede; -fx-background-radius: 5;"
+                       text="Placeholder text name" AnchorPane.bottomAnchor="3.0" AnchorPane.leftAnchor="100.0"
+                       AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="3.0">
+                    <font>
+                        <Font name="System Font" size="12.0"/>
+                    </font>
+                    <opaqueInsets>
+                        <Insets bottom="1.0" left="1.0" right="1.0" top="1.0"/>
+                    </opaqueInsets>
+                    <padding>
+                        <Insets bottom="2.0" left="6.0" right="2.0" top="2.0"/>
+                    </padding>
+                </Label>
+                <Label fx:id="systemLabel" alignment="CENTER" layoutX="14.0" layoutY="17.0" text="COMPLETE"
+                       textAlignment="CENTER" AnchorPane.bottomAnchor="2.0" AnchorPane.leftAnchor="10.0"
+                       AnchorPane.rightAnchor="702.0" AnchorPane.topAnchor="2.0">
+                    <font>
+                        <Font name="System Bold" size="13.0"/>
+                    </font>
+                </Label>
+            </children>
+        </AnchorPane>
+    </bottom>
+</BorderPane>

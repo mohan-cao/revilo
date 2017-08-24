@@ -1,4 +1,7 @@
-package nz.co.revilo.Scheduling;
+package nz.co.revilo.Scheduling.Topological;
+
+import nz.co.revilo.Output.ScheduleResultListener;
+import nz.co.revilo.Scheduling.AlgorithmManager;
 
 import java.util.*;
 
@@ -15,6 +18,7 @@ public class ImprovedTopologicalAlgorithmManager extends AlgorithmManager {
     ArrayList<Integer> visited = new ArrayList<>();
     // information we have
     // graph name, node names, node weights, arcs, arcweights
+
     @Override
     protected void execute() {
 
@@ -99,15 +103,17 @@ public class ImprovedTopologicalAlgorithmManager extends AlgorithmManager {
 //        System.out.println("start times:" + nodeStartTime);
 //        System.out.println("node weights: " + Arrays.toString(_nodeWeights));
 
-        getListener().finalSchedule(
-                _graphName,
-                Arrays.asList(_nodeNames),
-                primToBool2D(_arcs),
-                primToInt2D(_arcWeights),
-                primToInt(_nodeWeights),
-                nodeStartTime,
-                processorName
-        );
+        for (ScheduleResultListener listener : getListeners()) {
+            listener.finalSchedule(
+                    _graphName,
+                    Arrays.asList(_nodeNames),
+                    primToBool2D(_arcs),
+                    primToInt2D(_arcWeights),
+                    primToInt(_nodeWeights),
+                    nodeStartTime,
+                    processorName
+            );
+        }
 
     }
 
@@ -116,7 +122,7 @@ public class ImprovedTopologicalAlgorithmManager extends AlgorithmManager {
      * @param prim the primitive boolean 2d array
      * @return b the reference type list
      */
-    private List<List<Boolean>> primToBool2D(boolean[][] prim) {
+    public List<List<Boolean>> primToBool2D(boolean[][] prim) {
         List<List<Boolean>> b = new ArrayList<>();
         for (int i = 0; i < prim.length; i++) {
             b.add(new ArrayList<>());
@@ -132,7 +138,7 @@ public class ImprovedTopologicalAlgorithmManager extends AlgorithmManager {
      * @param prim the primitive int 2d array
      * @return n the reference type list
      */
-    private List<List<Integer>> primToInt2D(int[][] prim) {
+    public List<List<Integer>> primToInt2D(int[][] prim) {
         List<List<Integer>> n = new ArrayList<>();
         for (int i = 0; i < prim.length; i++) {
             n.add(new ArrayList<>());
@@ -143,7 +149,7 @@ public class ImprovedTopologicalAlgorithmManager extends AlgorithmManager {
         return n;
     }
 
-    private List<Integer> primToInt(int[] prim) {
+    public List<Integer> primToInt(int[] prim) {
         ArrayList<Integer> n = new ArrayList<>();
         for (int i: prim) {
             n.add(i);

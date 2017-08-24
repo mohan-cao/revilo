@@ -1,0 +1,66 @@
+.button {
+    /*-fx-border-radius: 40 40 40 40;*/
+    -fx-background-radius: 15;
+    -fx-border-style: none;
+    -fx-background-color: #F1F1F1;
+}
+
+.button:hover {
+    -fx-background-color: #DEDEDE;
+}
+
+.default-color0.chart-bar {
+    -fx-background-color: rgba(0, 0, 0, 0); /* hide idle series */
+}
+
+.status-green {
+    -fx-background-color: rgba(22, 80, 225, 0.7);
+    -fx-border-color: white;
+    -fx-padding: 15px;
+}
+
+.scroll-pane {
+    -fx-background-color: white;
+}
+
+.scroll-bar {
+    -fx-background-color: white;
+}
+
+.increment-button, .decrement-button {
+    -fx-background-color: white;
+    -fx-border-color: white;
+}
+
+.scroll-bar:horizontal .track,
+.scroll-bar:vertical .track {
+    -fx-background-color: white;
+    -fx-border-color: white;
+}
+
+.scroll-bar:horizontal .thumb,
+.scroll-bar:vertical .thumb {
+    -fx-background-color: #dedede;
+    -fx-background-insets: 0 4 0 4;
+    -fx-background-radius: 2em;
+}
+
+.scroll-pane > .corner {
+    -fx-background-color: white;
+}
+
+.scroll-bar:vertical .increment-arrow {
+    -fx-background-color: #dedede;
+    -fx-shape: "M 0 0 L 4 8 L 8 0 Z";
+    -fx-padding: 0.25em;
+    -fx-rotate: 0;
+}
+
+/* https://farrukhobaid.wordpress.com/2013/01/16/dark-scrollbar-skin-for-javafx/ */
+
+.scroll-bar:vertical .decrement-arrow {
+    -fx-background-color: #dedede;
+    -fx-shape: "M 0 0 L 4 8 L 8 0 Z";
+    -fx-padding: 0.25em;
+    -fx-rotate: -180;
+}

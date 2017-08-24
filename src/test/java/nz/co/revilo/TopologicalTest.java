@@ -1,7 +1,6 @@
 package nz.co.revilo;
 
-import junit.framework.TestResult;
-import nz.co.revilo.Scheduling.ImprovedTopologicalAlgorithmManager;
+import nz.co.revilo.Scheduling.Topological.ImprovedTopologicalAlgorithmManager;
 import org.junit.Before;
 import org.junit.Test;
 
