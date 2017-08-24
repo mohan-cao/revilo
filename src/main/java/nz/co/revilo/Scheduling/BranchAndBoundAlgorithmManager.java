@@ -118,20 +118,20 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
 	 * 
 	 * @param schedule
 	 * 
-	 * @author Abby S
+	 * @author Abby S, Terran K
 	 */
 	private void bnb(Schedule schedule) {
 		//TODO: not strict enough?
 		if(schedule.lowerBound>=upperBound){
 			schedule=null; //garbage collect that schedule
-			brokenTrees++;
+			brokenTrees++; //this tree has broken
 			return; //break tree at this point
 		}
 
 		//compare to existing schedule structures and remove if duplicate
 		if(existingScheduleStructures.contains(schedule._scheduleStructureId)){
 			schedule=null; //garbage collect that schedule
-			brokenTrees++;
+			brokenTrees++; // this tree has broken
 			return; //break tree at this point
 		} else {
 			existingScheduleStructures.add(schedule._scheduleStructureId);
@@ -143,6 +143,8 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
 			//TODO: doing this to make sure only optimal schedules get through
 			if(schedule.getMaxFinishTime()<upperBound){
 				optimalSchedule=schedule;
+				// if OptimalListener is null it means that we're not actually asking for updates
+				// because we are likely not using a visualization
 				if (getOptimalListener() != null) {
 					getOptimalListener().newOptimal(optimalSchedule);
 				}
@@ -177,7 +179,7 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
 			List<Integer> inneighbours=NeighbourManagerHelper.getInneighbours(nodeId);
 
 			for(int inneighbour:inneighbours){
-				//bottom up add it's weight to child's
+				//bottom up add its weight to child's
 				int fromGivenNode=bottomLevels[nodeId]+_nodeWeights[inneighbour];
 				//Farthest distance needed from bottom
 				bottomLevels[inneighbour]=bottomLevels[inneighbour]>fromGivenNode?bottomLevels[inneighbour]:fromGivenNode;
@@ -193,36 +195,6 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
 	}
 	
 	
-    /**
-     * Creates an object type 2d bool list from primitive array
-     * @param prim the primitive boolean 2d array
-     * @return b the reference type list
-     */
-    private List<List<Boolean>> primToBool2D(boolean[][] prim) {
-        List<List<Boolean>> b = new ArrayList<>();
-        for (int i = 0; i < prim.length; i++) {
-            b.add(new ArrayList<>());
-            for (int j = 0; j < prim[i].length; j++) {
-                b.get(i).add(prim[i][j]);
-            }
-        }
-        return b;
-    }
 
-    /**
-     * Creates an object type 2d int list from primitive array
-     * @param prim the primitive int 2d array
-     * @return n the reference type list
-     */
-    private List<List<Integer>> primToInt2D(int[][] prim) {
-        List<List<Integer>> n = new ArrayList<>();
-        for (int i = 0; i < prim.length; i++) {
-            n.add(new ArrayList<>());
-            for (int j = 0; j < prim[i].length; j++) {
-                n.get(i).add(prim[i][j]);
-            }
-        }
-        return n;
-    }
 
 }

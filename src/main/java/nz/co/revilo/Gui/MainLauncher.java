@@ -34,6 +34,7 @@ public class MainLauncher extends Application{
             loader.setController(mlc);
             rootLayout = loader.load();
 
+            //Code to allow for dragging of window
             rootLayout.setOnMousePressed(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent event) {
@@ -42,6 +43,7 @@ public class MainLauncher extends Application{
                 }
             });
 
+            // code to allow dragging of window
             rootLayout.setOnMouseDragged(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent event) {
@@ -59,7 +61,6 @@ public class MainLauncher extends Application{
                 public void handle(WindowEvent event) {
                     Platform.exit();
                     System.exit(0);
-                    System.out.println("stop!");
                 }
             });
             primaryStage.show();

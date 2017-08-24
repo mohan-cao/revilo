@@ -29,7 +29,7 @@ import java.util.Arrays;
  * everything. It's not a final class name nor implementation, it purely exists to be a starting point in the program.
  * We should investigate a argument input library and output library.
  *
- * @author Mohan Cao (file created by), Michael Kemp (pattern and fleshed out), Terran Kroft (Modified for CLI library), Abby Shen
+ * @author Mohan Cao (file created by), Michael Kemp (pattern and fleshed out), Terran Kroft (CLI library, visualization integration), Abby Shen
  * @version alpha
  */
 public class App {
@@ -54,23 +54,37 @@ public class App {
     private static FileParser reader;
     private static DotFileProducer output;
 
-    //Data
-    private long startingMemory;
-
-    //GUI Stuff
 
 
+    /**
+     * Gets the algorithm manager we are using for visualization purposes.
+     * @return
+     */
     public static AlgorithmManager getAlgorithmManager() {
         return manager;
     }
 
+    /**
+     * Get the number of processors used
+     * @return
+     */
     public static int getExecCores() {
         return _inst._numExecutionCores;
     }
+
+    /**
+     * Get the file name of the graph dot/gxl file
+     * @return
+     */
     public static String getInputFileName() {
         return _inst._inputFilename;
     }
-    public static long getStartingMemory() {return _inst.startingMemory; }
+
+    /**
+     * Get the length that the algorithm has been running for, unless it is
+     * already done, then get the final time
+     * @return
+     */
     public static double getRunningTime() {
         double elapsed;
         if (isDone) {
@@ -98,6 +112,10 @@ public class App {
         }
     }
 
+    /**
+     * Gets the current running instance for visualization purposes
+     * @return
+     */
     public static App getInstance() {
         return _inst;
     }
@@ -117,7 +135,6 @@ public class App {
     public static void main(String[] args) {
         // Creates the singleton instance
         new App();
-        _inst.startingMemory = Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory();
 
         // Instantiates a new parameters container
         CLIParameters params = new CLIParameters();
@@ -175,6 +192,8 @@ public class App {
         // Output to file @Michael Kemp
         output = new DotFileWriter(_inst._outputFilename);
         manager.inform(output);
+
+        //Launch GUI if visualization is desired, otherwise just start parsing.
         if (_inst._visualise) {
             Application.launch(MainLauncher.class);
         } else {
@@ -182,6 +201,9 @@ public class App {
         }
     }
 
+    /**
+     * Algorithm to set up parsing of scheduling
+     */
     public static void startParsing() {
         try {
             isDone = false;
