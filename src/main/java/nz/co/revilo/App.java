@@ -64,6 +64,9 @@ public class App {
     public static int getExecCores() {
         return _inst._numExecutionCores;
     }
+    public static String getInputFileName() {
+        return _inst._inputFilename;
+    }
 
     public static double getRunningTime() {
         double elapsed;

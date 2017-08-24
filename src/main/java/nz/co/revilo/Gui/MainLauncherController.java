@@ -71,6 +71,12 @@ public class MainLauncherController implements Initializable, ScheduleResultList
     private Label graphNameLabel;
 
     @FXML
+    private Label systemLabel;
+
+    @FXML
+    private Label statusLabel;
+
+    @FXML
     private BorderPane ganttPane;
 
     @FXML
@@ -112,7 +118,9 @@ public class MainLauncherController implements Initializable, ScheduleResultList
                 return null;
             }
         };
-
+        graphNameLabel.setText(App.getInputFileName()); //padding
+        systemLabel.setText("PROCESSING");
+        statusLabel.setText("Starting up...");
         Thread thread = new Thread(task);
         thread.start();
         Timer timer = new Timer();
@@ -126,7 +134,6 @@ public class MainLauncherController implements Initializable, ScheduleResultList
 //                        timeLabel.setText(new SimpleDateFormat("mm:ss:SS").format(new Date(App.getRunningTime())));
                         bestLabel.setText(App.getAlgorithmManager().getUpperBound() + "");
                         branchesLabel.setText(App.getAlgorithmManager().getBrokenTrees() + "");
-                        graphNameLabel.setText("  " + App.getAlgorithmManager().getGraphName()); //padding
 
 //                        timeLabel.setText(app.getRunningTime() + "");
                     }
@@ -147,6 +154,14 @@ public class MainLauncherController implements Initializable, ScheduleResultList
         _nodeStarts = nodeStarts;
         _nodeProcessor = nodeProcessor;
 
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+//                graphNameLabel.setText("  Processing complete! " + App.getInputFileName() + " Optimal length: " + App.getAlgorithmManager().getUpperBound()); //padding
+                systemLabel.setText("COMPLETE");
+                statusLabel.setText("Optimal length: " + App.getAlgorithmManager().getUpperBound() + ". (Time taken: " + App.getRunningTime() + " seconds)");
+            }
+        });
         results.setIsDoneProcessing(true);
     }
 
@@ -211,6 +226,7 @@ public class MainLauncherController implements Initializable, ScheduleResultList
             @Override
             public void run() {
                 updateGantt();
+                statusLabel.setText("New optimal schedule found with length " + App.getAlgorithmManager().getUpperBound() + ".");
             }
         });
 
