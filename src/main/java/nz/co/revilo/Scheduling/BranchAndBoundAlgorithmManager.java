@@ -248,6 +248,9 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
             List<AstarSchedule> currentLevel = levels.get(level);
             List<AstarSchedule> nextLevel = levels.get(level + 1);
 
+            //Load parent schedule
+            AstarSchedule childSchedule = currentLevel.get(0);
+
             //Special case for first level
             if (level == 0) {
                 currentLevel.add(root);
@@ -261,7 +264,7 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
             //For every schedule in the level
             //for (int child = 0; child < 1; child++) {
             //Load it
-            AstarSchedule childSchedule = currentLevel.get(0);
+
             //Then for every processor
             //for (int processorNum = 0; processorNum < 1; processorNum++) {
             //And for every task that can be scheduled
