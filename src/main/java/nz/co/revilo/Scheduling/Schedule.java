@@ -280,7 +280,7 @@ public class Schedule {
 			Tuple<T, V> tuple = (Tuple<T, V>)o;
 			if((Integer)(this.getA())<(Integer)(tuple.getA())){
 				return -1;
-			} else if((int)this.getA()>(int)tuple.getA()){
+			} else if((Integer)(this.getA())>(Integer)(tuple.getA())){
 				return 1;
 			}
 			return 0;
