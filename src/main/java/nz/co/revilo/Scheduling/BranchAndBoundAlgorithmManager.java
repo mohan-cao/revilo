@@ -314,21 +314,17 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
                 }
             }
 
+            //Pick best task to schedule
             Task newTask = DataReadyTasks.get(index);
+            //Update schedule
             newSchedule._processorLastUsed.set(newTask._processor, (newTask._start + _nodeWeights[newTask._taskNum]));
-
-
-
             //Move task to scheduled from schedulable
             newSchedule._schedulable.remove(newTask);
             newSchedule._scheduled.add(newTask);
-
-
             //Put new sub schedule in parent and the level below
             childSchedule._subSchedules.add(newSchedule);
             nextLevel.add(newSchedule);
-                    }
-
+        }
 
         //Find the lowest cost schedule
         int temp = levels.get(levels.size() - 1).get(0).cost();
