@@ -2,7 +2,7 @@ package nz.co.revilo.Scheduling;
 
 import nz.co.revilo.Output.ScheduleResultListener;
 import nz.co.revilo.Scheduling.Astar.AstarSchedule;
-import nz.co.revilo.Scheduling.Astar.Task;
+import nz.co.revilo.Scheduling.Astar.AstarTask;
 
 import java.util.*;
 
@@ -24,7 +24,8 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
     private BnBSchedule optimalSchedule;
     private List<Integer> nodeStartTimes = new ArrayList<>();
     private List<Integer> nodeProcessors = new ArrayList<>();
-    private List<String> existingScheduleStructures = new ArrayList<>();
+    //private List<String> existingScheduleStructures = new ArrayList<>();
+    private Map<String, Void> existingScheduleStructures = new HashMap<>();
 
     public BranchAndBoundAlgorithmManager(int processingCores) {
         super(processingCores);
@@ -54,7 +55,7 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
         }
 
         /*
-		 * Definitely have sources as a row at start of each processor if there aren't more sources than cores
+         * Definitely have sources as a row at start of each processor if there aren't more sources than cores
 		 * All others will just be permutations
 		 * If stack sources on same processor, will be less optimal
 		 */
@@ -97,18 +98,18 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
         }
         System.out.println("Optimal length found: " + optimalSchedule.getMaxFinishTime());
 
-		//pass to outputs
-		for (ScheduleResultListener listener : getListeners()) {
-			listener.finalSchedule(
-					_graphName,
-					Arrays.asList(_nodeNames),
-					PrimitiveInterfaceHelper.primToBoolean2D(_arcs),
-					PrimitiveInterfaceHelper.primToInteger2D(_arcWeights),
-					PrimitiveInterfaceHelper.primToInteger1D(_nodeWeights),
-					nodeStartTimes,
-					nodeProcessors
-			);
-		}
+        //pass to outputs
+        for (ScheduleResultListener listener : getListeners()) {
+            listener.finalSchedule(
+                    _graphName,
+                    Arrays.asList(_nodeNames),
+                    PrimitiveInterfaceHelper.primToBoolean2D(_arcs),
+                    PrimitiveInterfaceHelper.primToInteger2D(_arcWeights),
+                    PrimitiveInterfaceHelper.primToInteger1D(_nodeWeights),
+                    nodeStartTimes,
+                    nodeProcessors
+            );
+        }
 
     }
 
@@ -126,12 +127,12 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
         }
 
         //compare to existing schedule structures and remove if duplicate
-        if (existingScheduleStructures.contains(schedule._scheduleStructureId)) {
+        if (existingScheduleStructures.containsKey(schedule._scheduleStructureId)) {
             schedule = null; //garbage collect that schedule
             brokenTrees++; // this tree has broken
             return; //break tree at this point
         } else {
-            existingScheduleStructures.add(schedule._scheduleStructureId);
+            existingScheduleStructures.put(schedule._scheduleStructureId, null);
         }
 
         //found optimal for the root started with
@@ -151,17 +152,17 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
             }
         }
 
-		//continue DFS
-		List<BnBSchedule> nextSchedules = new ArrayList<>();
-		for(int node:schedule.independentNodes){
-			for(int processor=0; processor<_processingCores; processor++){
-				nextSchedules.add(new BnBSchedule(this, schedule, node, processor));
-			}
-		}
-		for (BnBSchedule nextSchedule : nextSchedules) {
-			bnb(nextSchedule);
-		}
-	}
+        //continue DFS
+        List<BnBSchedule> nextSchedules = new ArrayList<>();
+        for (int node : schedule.independentNodes) {
+            for (int processor = 0; processor < _processingCores; processor++) {
+                nextSchedules.add(new BnBSchedule(this, schedule, node, processor));
+            }
+        }
+        for (BnBSchedule nextSchedule : nextSchedules) {
+            bnb(nextSchedule);
+        }
+    }
 
     /**
      * Calculates bottom level of each node in the graph
@@ -231,10 +232,10 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
         //Adds tasks
         AstarSchedule root = new AstarSchedule();
         for (int unschedulableTask : otherTasks) {
-            root._unschedulable.add(new Task(unschedulableTask));
+            root._unschedulable.add(new AstarTask(unschedulableTask));
         }
         for (int schedulableTask : startTasks) {
-            root._schedulable.add(new Task(schedulableTask));
+            root._schedulable.add(new AstarTask(schedulableTask));
         }
         //Sets when the processors were last used
         root._processorLastUsed = new ArrayList<>(_processingCores);
@@ -264,11 +265,11 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
             AstarSchedule newSchedule = childSchedule.clone();
 
             //Check if unschedulables are schedulable
-            for (Task unshedulable : newSchedule._unschedulable) {
+            for (AstarTask unshedulable : newSchedule._unschedulable) {
                 boolean schedulable = true;
                 int taskNum = unshedulable._taskNum;
                 for (Integer dependency : partialDependencies.get(taskNum)) {
-                    if (!newSchedule._scheduled.contains(new Task(dependency))) {
+                    if (!newSchedule._scheduled.contains(new AstarTask(dependency))) {
                         schedulable = false;
                         break;
                     }
@@ -281,15 +282,15 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
 
             //How to determine which node will go first
             List<Integer> DataReadyTimes = new ArrayList<>();
-            List<Task> DataReadyTasks = new ArrayList<>();
+            List<AstarTask> DataReadyTasks = new ArrayList<>();
 
             //Populate data ready tasks and times
-            for (Task schedulable : newSchedule._schedulable) {
-                Task newTask = schedulable.clone();
+            for (AstarTask schedulable : newSchedule._schedulable) {
+                AstarTask newTask = schedulable.clone();
                 int drt = Integer.MAX_VALUE;
                 for (int processorNum = 0; processorNum < getProcessingCores(); processorNum++) {
                     int workingDrt = childSchedule._processorLastUsed.get(processorNum);
-                    for (Task t : newSchedule._scheduled) {
+                    for (AstarTask t : newSchedule._scheduled) {
                         if (_arcs[t._taskNum][newTask._taskNum]) {
                             int temp = t._start + _nodeWeights[t._taskNum];
                             if (t._processor != processorNum) {
@@ -321,7 +322,7 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
             }
 
             //Pick best task to schedule
-            Task newTask = DataReadyTasks.get(index);
+            AstarTask newTask = DataReadyTasks.get(index);
             //Update schedule
             newSchedule._processorLastUsed.set(newTask._processor, (newTask._start + _nodeWeights[newTask._taskNum]));
             //Move task to scheduled from schedulable
