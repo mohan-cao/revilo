@@ -250,11 +250,13 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
 
             //Load parent schedule
             AstarSchedule childSchedule = currentLevel.get(0);
+            AstarSchedule newSchedule = childSchedule.clone();
 
             //Special case for first level
             if (level == 0) {
                 currentLevel.add(root);
             }
+
 
             //How to determine which node will go first
             List<Integer> DataReadyTimes = new ArrayList<>();
@@ -270,7 +272,7 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
             //And for every task that can be scheduled
             //for (Task task : childSchedule._schedulable) {
             //Clone
-            AstarSchedule newSchedule = childSchedule.clone();
+
             Task newTask = task.clone();
 
             //Set processor
@@ -298,21 +300,6 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
             newSchedule._schedulable.remove(newTask);
             newSchedule._scheduled.add(newTask);
 
-            //Check if unschedulables are schedulable
-            for (Task unshedulable : newSchedule._unschedulable) {
-                boolean schedulable = true;
-                int taskNum = unshedulable._taskNum;
-                for (Integer dependency : partialDependencies.get(taskNum)) {
-                    if (!newSchedule._scheduled.contains(new Task(dependency))) {
-                        schedulable = false;
-                        break;
-                    }
-                }
-                if (schedulable) {
-                    newSchedule._schedulable.add(unshedulable);
-                }
-            }
-            newSchedule._unschedulable.removeAll(newSchedule._schedulable);
 
             //Put new sub schedule in parent and the level below
             childSchedule._subSchedules.add(newSchedule);
