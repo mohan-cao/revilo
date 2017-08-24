@@ -24,6 +24,9 @@ import nz.co.revilo.Scheduling.BnBSchedule;
 import java.net.URL;
 import java.util.*;
 
+/**
+ * @author Terran Kroft
+ */
 public class MainLauncherController implements Initializable, ScheduleResultListener, NewOptimalResultListener {
 
     protected String _graphName;

@@ -8,7 +8,7 @@ import com.beust.jcommander.Parameter;
  * must be done for this.
  *
  * @author Terran Kroft
- * @version pre-alpha
+ * @version 1.0
  */
 public class CLIParameters {
 

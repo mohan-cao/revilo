@@ -21,11 +21,17 @@ import java.util.Arrays;
  * We should investigate a argument input library and output library.
  *
  * @author Mohan Cao (file created by), Michael Kemp (pattern and fleshed out), Terran Kroft (CLI library, visualization integration), Abby Shen
- * @version alpha
+ * @version 1.0
  */
 public class App {
-    public static final String DEFAULT_FILETYPE = ".dot";
+    // Constants
+    public static final String DEFAULT_FILE_EXTENSION = ".dot";
     public static final String DEFAULT_OUTPUT_FILENAME = "-output.dot";
+    public static final double MILLISECONDS_PER_SECOND = 1000.0;
+    public static final int MINIMUM_EXPECTED_ARGUMENTS = 2;
+    public static final int FILENAME_ARGUMENT_PLACEMENT = 0;
+    public static final int LENGTH_OF_DOT_FILE_EXTENSION = 4;
+    public static final int MIN_NUM_OF_PROBLEM_PROCESSORS = 1;
 
     // Instance of the singleton pattern
     private static App _inst = null;
@@ -37,13 +43,14 @@ public class App {
     private boolean _visualise;
     private String _outputFilename;
 
-    private static long startingTime;
-    private static long endingTime;
-    private static boolean isDone;
+    private static long _startingTime;
+    private static long _endingTime;
+    private static boolean _isDone;
+
     // Fields
-    private static AlgorithmManager manager;
-    private static FileParser reader;
-    private static DotFileProducer output;
+    private static AlgorithmManager _manager;
+    private static FileParser _reader;
+    private static DotFileProducer _output;
 
 
     /**
@@ -55,26 +62,22 @@ public class App {
         // If there's no current instance then it's instantiated
         if (_inst == null) {
             _inst = this;
-            // If there is then throw a warning
-        } else {
-            //System.out.println("App was instantiated more than once");
-            //TODO throw an informative exception to indicate error
         }
     }
 
     /**
      * Gets the algorithm manager we are using for visualization purposes.
-     *
-     * @return
+     * @author Terran Kroft
+     * @return current algorithm manager
      */
     public static AlgorithmManager getAlgorithmManager() {
-        return manager;
+        return _manager;
     }
 
     /**
      * Get the number of processors used
-     *
-     * @return
+     * @author Terran Kroft
+     * @return num cores to execute on
      */
     public static int getExecCores() {
         return _inst._numExecutionCores;
@@ -82,8 +85,8 @@ public class App {
 
     /**
      * Get the file name of the graph dot/gxl file
-     *
-     * @return
+     * @author Terran Kroft
+     * @return input file name
      */
     public static String getInputFileName() {
         return _inst._inputFilename;
@@ -92,24 +95,24 @@ public class App {
     /**
      * Get the length that the algorithm has been running for, unless it is
      * already done, then get the final time
-     *
-     * @return
+     * @author Terran Kroft
+     * @return Time spent on solving
      */
     public static double getRunningTime() {
         double elapsed;
-        if (isDone) {
-            elapsed = ((endingTime - startingTime) / 1000.0); // incl. tenths of second
+        if (_isDone) {
+            elapsed = ((_endingTime - _startingTime) / MILLISECONDS_PER_SECOND); // incl. tenths of second
         } else {
             long now = System.currentTimeMillis();
-            elapsed = ((now - startingTime) / 1000.0); // incl. tenths of second
+            elapsed = ((now - _startingTime) / MILLISECONDS_PER_SECOND); // incl. tenths of second
         }
         return elapsed;
     }
 
     /**
      * Gets the current running instance for visualization purposes
-     *
-     * @return
+     * @author Terran Kroft
+     * @return App instance
      */
     public static App getInstance() {
         return _inst;
@@ -125,68 +128,30 @@ public class App {
      * Instantiates an algorithm manager to be informed of read graph
      * Instantiates an output file writer to be informed of schedule
      *
+     * @author Michael Kemp, Terran Kroft (visualisation and later implementation of CLI)
+     *
      * @param args CLI args
      */
     public static void main(String[] args) {
         // Creates the singleton instance
         new App();
 
-        // Instantiates a new parameters container
-        CLIParameters params = new CLIParameters();
+        // Process arguments given by the user
+        processArguments(args);
 
-        // Checks for an insufficient number of arguments
-        if (args.length < 2) {
-            throw new RuntimeException("Insufficient arguments given. Needs [input file] [# processors]");
+        // Start an AlgorithmManager
+        _manager = new BranchAndBoundAlgorithmManager(_inst._numExecutionCores);
+
+        // Parse file and give it algorithm manager to give results to depending on the file extension
+        if (_inst._inputFilename.toUpperCase().matches(".*GXL")) {
+            _reader = new GxlFileReader(_inst._inputFilename);
         } else {
-            // Parses the arguments
-            String[] optionalArgs = Arrays.copyOfRange(args, 2, args.length);
-            JCommander.newBuilder().addObject(params).build().parse(optionalArgs);
-
-            // Set the input filename
-            _inst._inputFilename = args[0];
-            try {
-                // Set the number of cores the problem has
-                _inst._numExecutionCores = Integer.parseInt(args[1]);
-            } catch (NumberFormatException nfe) {
-                throw new RuntimeException("Invalid number of processors");
-            }
-            // Sets the number of cores to do the scheduling on
-            _inst._numParallelProcessors = params.getParallelCores();
-            // Sets the visualisation switch
-            _inst._visualise = params.getVisualise();
-
-            // Sets the output filename if one is given, otherwise uses default
-            if (params.getOutputName() == null) {
-                String temp = _inst._inputFilename;
-                if (_inst._inputFilename.toUpperCase().contains("GXL")) {
-                    temp = _inst._inputFilename.substring(0, _inst._inputFilename.length() - 4) + ".dot";
-                }
-                int fileNameLocation = temp.toLowerCase().lastIndexOf(DEFAULT_FILETYPE);
-                String fileNameWithoutExtension = temp.substring(0, fileNameLocation);
-                _inst._outputFilename = fileNameWithoutExtension + DEFAULT_OUTPUT_FILENAME;
-            } else {
-                _inst._outputFilename = params.getOutputName();
-            }
+            _reader = new DotFileReader(_inst._inputFilename);
         }
 
-        // Starts visualisation if requested
-//        System.out.println("This is the schedule called " + _inst._outputFilename + " processed on " + _inst._numParallelProcessors + " core(s).");
-        if (_inst._visualise) {
-//            System.out.println("There is a visualisation outputted.");
-        }
-
-        // Parse file and give it algorithm manager to give results to. @Michael Kemp
-        manager = new BranchAndBoundAlgorithmManager(_inst._numExecutionCores);
-
-        if (_inst._inputFilename.matches(".*gxl") || _inst._inputFilename.matches(".*GXL")) {
-            reader = new GxlFileReader(_inst._inputFilename);
-        } else {
-            reader = new DotFileReader(_inst._inputFilename);
-        }
-
-        // Output to file @Michael Kemp
-        output = new DotFileWriter(_inst._outputFilename);
-        manager.inform(output);
+        // Output to file by letting the manager know of the output generator
+        _output = new DotFileWriter(_inst._outputFilename);
+        _manager.inform(_output);
 
         //Launch GUI if visualization is desired, otherwise just start parsing.
         if (_inst._visualise) {
@@ -197,15 +162,79 @@ public class App {
     }
 
     /**
+     * Takes the input arguments given by the user and processes them: input filename, processors for problem,
+     * visualisation, threads to execute on and name of the output file
+     *
+     * @param args from CLI
+     * @author Terran Kroft, Michael Kemp
+     */
+    private static void processArguments(String[] args) {
+        // Instantiates a new parameters container
+        CLIParameters params = new CLIParameters();
+
+        // Checks for an insufficient number of arguments
+        if (args.length < MINIMUM_EXPECTED_ARGUMENTS) {
+            throw new RuntimeException("Insufficient arguments given. Needs [input file] [# processors]");
+        } else {
+
+            // Parses the arguments
+            String[] optionalArgs = Arrays.copyOfRange(args, MINIMUM_EXPECTED_ARGUMENTS, args.length);
+            JCommander.newBuilder().addObject(params).build().parse(optionalArgs);
+
+            // Set the input filename
+            _inst._inputFilename = args[FILENAME_ARGUMENT_PLACEMENT];
+
+            // Set the number of cores the problem has
+            try {
+                _inst._numExecutionCores = Integer.parseInt(args[1]);
+                if (_inst._numExecutionCores < MIN_NUM_OF_PROBLEM_PROCESSORS) {
+                    throw new RuntimeException("Insufficient processors to solve problem");
+                }
+            } catch (NumberFormatException nfe) {
+                throw new RuntimeException("Invalid number of processors");
+            }
+
+            // Sets the number of cores to do the scheduling on
+            _inst._numParallelProcessors = params.getParallelCores();
+            if (params.getParallelCores() < MIN_NUM_OF_PROBLEM_PROCESSORS) {
+                throw new RuntimeException("Need to allocate more threads for program to be able to run");
+            }
+
+            // Sets the visualisation switch
+            _inst._visualise = params.getVisualise();
+
+            // Sets the output filename if one is given, otherwise uses default
+            if (params.getOutputName() == null) {
+                String workingInputFilename = _inst._inputFilename;
+
+                // If it's a GXL input file then the output filename will need to remain a .dot file
+                if (workingInputFilename.toUpperCase().endsWith(".GXL")) {
+                    workingInputFilename = _inst._inputFilename.substring(0, _inst._inputFilename.length() - LENGTH_OF_DOT_FILE_EXTENSION) + ".dot";
+                }
+
+                // Append input file name with default suffix
+                int fileNameLocation = workingInputFilename.toLowerCase().lastIndexOf(DEFAULT_FILE_EXTENSION);
+                String fileNameWithoutExtension = workingInputFilename.substring(0, fileNameLocation);
+                _inst._outputFilename = fileNameWithoutExtension + DEFAULT_OUTPUT_FILENAME;
+
+                // Use given filename if available
+            } else {
+                _inst._outputFilename = params.getOutputName();
+            }
+        }
+    }
+
+    /**
      * Algorithm to set up parsing of scheduling
+     * @author Terran Kroft
      */
     public static void startParsing() {
         try {
-            isDone = false;
-            startingTime = System.currentTimeMillis();
-            reader.startParsing(manager);
-            endingTime = System.currentTimeMillis();
-            isDone = true;
+            _isDone = false;
+            _startingTime = System.currentTimeMillis();
+            _reader.startParsing(_manager);
+            _endingTime = System.currentTimeMillis();
+            _isDone = true;
         } catch (FileNotFoundException e) {
             throw new RuntimeException("Input file does not exist");
         }
