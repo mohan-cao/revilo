@@ -124,7 +124,7 @@
                                     <Font name="SF UI Display Light" size="48.0" />
                                  </font>
                               </Label>
-                              <Label layoutX="10.0" layoutY="10.0" text="SEC" textAlignment="RIGHT" textFill="#ffffffcc" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="5.0">
+                              <Label fx:id="timeUnits" layoutX="10.0" layoutY="10.0" text="SEC" textAlignment="RIGHT" textFill="#ffffffcc" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="5.0">
                                  <font>
                                     <Font name="SF UI Display Medium" size="12.0" />
                                  </font>

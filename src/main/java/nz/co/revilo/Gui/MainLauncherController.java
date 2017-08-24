@@ -68,6 +68,9 @@ public class MainLauncherController implements Initializable, ScheduleResultList
     private Label timeLabel;
 
     @FXML
+    private Label timeUnits;
+
+    @FXML
     private Label branchesLabel;
 
     @FXML
@@ -142,8 +145,15 @@ public class MainLauncherController implements Initializable, ScheduleResultList
                     public void run() {
                         // calculate current used memory
                         long currentMemory = Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory();
+                        double timeElapsed = App.getRunningTime();
                         memoryLabel.setText((currentMemory)  / (1024l * 1024l) + ""); //needs to be better
-                        timeLabel.setText(String.format("%.2f", App.getRunningTime()));
+                        timeLabel.setText(
+                                (timeElapsed>=60)?
+                                String.format("%.0f:%02.0f", timeElapsed/60, timeElapsed%60)
+                                :
+                                String.format("%.2f", timeElapsed)
+                        );
+                        timeUnits.setText((timeElapsed>=60)?"MIN":"SEC");
 //                        timeLabel.setText(new SimpleDateFormat("mm:ss:SS").format(new Date(App.getRunningTime())));
                         bestLabel.setText(App.getAlgorithmManager().getUpperBound() + "");
                         branchesLabel.setText(App.getAlgorithmManager().getBrokenTrees() + "");
