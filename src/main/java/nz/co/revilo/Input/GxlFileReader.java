@@ -160,8 +160,9 @@ public class GxlFileReader extends FileParser {
                 // Reads the next line in the file
                 line = reader.readLine();
             }
+            // Problems reading the file
         } catch (IOException e) {
-            //TODO Error handling
+            fileReadingError(e);
         }
 
         // Converts nodes from the generic type data structures to a primitive form

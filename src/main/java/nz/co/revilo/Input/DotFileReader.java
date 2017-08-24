@@ -39,7 +39,6 @@ public class DotFileReader extends FileParser {
 
     // First match found by matcher
     public static final int FIRST_MATCH = 1;
-    public static final int FILE_CANT_BE_READ_EXIT_STATUS = 1;
 
     private HashMap<String, Integer> _nodeNames;
     private List<Integer> _nodeWeights;
@@ -105,10 +104,7 @@ public class DotFileReader extends FileParser {
 
             // Problems reading the file
         } catch (IOException e) {
-            System.out.println("File could not be read");
-            System.out.println(e.getMessage());
-            System.out.println(e.getStackTrace());
-            System.exit(FILE_CANT_BE_READ_EXIT_STATUS);
+            fileReadingError(e);
         }
 
         // Converts nodes from the generic type data structures to a primitive form

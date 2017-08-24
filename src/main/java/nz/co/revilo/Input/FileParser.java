@@ -11,6 +11,7 @@ import java.io.FileNotFoundException;
  */
 public abstract class FileParser {
 
+    public static final int FILE_CANT_BE_READ_EXIT_STATUS = 1;
 
     private String _filename;
 
@@ -28,6 +29,13 @@ public abstract class FileParser {
      */
     protected String getFilename() {
         return _filename;
+    }
+
+    protected final void fileReadingError(Exception e) {
+        System.out.println("File could not be read");
+        System.out.println(e.getMessage());
+        System.out.println(e.getStackTrace());
+        System.exit(FILE_CANT_BE_READ_EXIT_STATUS);
     }
 
     /**
