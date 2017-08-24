@@ -21,11 +21,13 @@ import java.util.Arrays;
  * We should investigate a argument input library and output library.
  *
  * @author Mohan Cao (file created by), Michael Kemp (pattern and fleshed out), Terran Kroft (CLI library, visualization integration), Abby Shen
- * @version alpha
+ * @version 1.0
  */
 public class App {
+    // Constants
     public static final String DEFAULT_FILETYPE = ".dot";
     public static final String DEFAULT_OUTPUT_FILENAME = "-output.dot";
+    public static final double MILLISECONDS_PER_SECOND = 1000.0;
 
     // Instance of the singleton pattern
     private static App _inst = null;
@@ -40,6 +42,7 @@ public class App {
     private static long startingTime;
     private static long endingTime;
     private static boolean isDone;
+
     // Fields
     private static AlgorithmManager manager;
     private static FileParser reader;
@@ -55,10 +58,6 @@ public class App {
         // If there's no current instance then it's instantiated
         if (_inst == null) {
             _inst = this;
-            // If there is then throw a warning
-        } else {
-            //System.out.println("App was instantiated more than once");
-            //TODO throw an informative exception to indicate error
         }
     }
 
@@ -98,10 +97,10 @@ public class App {
     public static double getRunningTime() {
         double elapsed;
         if (isDone) {
-            elapsed = ((endingTime - startingTime) / 1000.0); // incl. tenths of second
+            elapsed = ((endingTime - startingTime) / MILLISECONDS_PER_SECOND); // incl. tenths of second
         } else {
             long now = System.currentTimeMillis();
-            elapsed = ((now - startingTime) / 1000.0); // incl. tenths of second
+            elapsed = ((now - startingTime) / MILLISECONDS_PER_SECOND); // incl. tenths of second
         }
         return elapsed;
     }
