@@ -1,16 +1,27 @@
 package nz.co.revilo;
 
 import com.beust.jcommander.JCommander;
+import javafx.application.Application;
+import javafx.event.EventHandler;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.BorderPane;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import nz.co.revilo.CommandLine.CLIParameters;
+import nz.co.revilo.Gui.MainLauncher;
+import nz.co.revilo.Gui.MainLauncherController;
 import nz.co.revilo.Input.DotFileReader;
 import nz.co.revilo.Input.FileParser;
 import nz.co.revilo.Input.GxlFileReader;
 import nz.co.revilo.Output.DotFileProducer;
 import nz.co.revilo.Output.DotFileWriter;
 import nz.co.revilo.Scheduling.AlgorithmManager;
-import nz.co.revilo.Scheduling.AstarFirstAlgorithmManager;
+import nz.co.revilo.Scheduling.BranchAndBoundAlgorithmManager;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Arrays;
 
 /**
@@ -18,7 +29,7 @@ import java.util.Arrays;
  * everything. It's not a final class name nor implementation, it purely exists to be a starting point in the program.
  * We should investigate a argument input library and output library.
  *
- * @author Mohan Cao (file created by), Michael Kemp (pattern and fleshed out), Terran Kroft (Modified for CLI library), Abby Shen
+ * @author Mohan Cao (file created by), Michael Kemp (pattern and fleshed out), Terran Kroft (CLI library, visualization integration), Abby Shen
  * @version alpha
  */
 public class App {
@@ -35,6 +46,56 @@ public class App {
     private boolean _visualise;
     private String _outputFilename;
 
+    private static long startingTime;
+    private static long endingTime;
+    private static boolean isDone;
+    // Fields
+    private static AlgorithmManager manager;
+    private static FileParser reader;
+    private static DotFileProducer output;
+
+
+
+    /**
+     * Gets the algorithm manager we are using for visualization purposes.
+     * @return
+     */
+    public static AlgorithmManager getAlgorithmManager() {
+        return manager;
+    }
+
+    /**
+     * Get the number of processors used
+     * @return
+     */
+    public static int getExecCores() {
+        return _inst._numExecutionCores;
+    }
+
+    /**
+     * Get the file name of the graph dot/gxl file
+     * @return
+     */
+    public static String getInputFileName() {
+        return _inst._inputFilename;
+    }
+
+    /**
+     * Get the length that the algorithm has been running for, unless it is
+     * already done, then get the final time
+     * @return
+     */
+    public static double getRunningTime() {
+        double elapsed;
+        if (isDone) {
+            elapsed = ((endingTime - startingTime) / 1000.0); // incl. tenths of second
+        } else {
+            long now = System.currentTimeMillis();
+            elapsed = ((now - startingTime) / 1000.0); // incl. tenths of second
+        }
+        return elapsed;
+    }
+
     /**
      * The one and only constructor which allows for the singleton pattern by never overriding the current instance
      *
@@ -46,9 +107,17 @@ public class App {
             _inst = this;
             // If there is then throw a warning
         } else {
-            System.out.println("App was instantiated more than once");
+            //System.out.println("App was instantiated more than once");
             //TODO throw an informative exception to indicate error
         }
+    }
+
+    /**
+     * Gets the current running instance for visualization purposes
+     * @return
+     */
+    public static App getInstance() {
+        return _inst;
     }
 
     /**
@@ -112,8 +181,8 @@ public class App {
         }
 
         // Parse file and give it algorithm manager to give results to. @Michael Kemp
-        AlgorithmManager manager = new AstarFirstAlgorithmManager(_inst._numExecutionCores);
-        FileParser reader;
+        manager = new BranchAndBoundAlgorithmManager(_inst._numExecutionCores);
+
         if (_inst._inputFilename.matches(".*gxl") || _inst._inputFilename.matches(".*GXL")) {
             reader = new GxlFileReader(_inst._inputFilename);
         } else {
@@ -121,10 +190,27 @@ public class App {
         }
 
         // Output to file @Michael Kemp
-        DotFileProducer output = new DotFileWriter(_inst._outputFilename);
+        output = new DotFileWriter(_inst._outputFilename);
         manager.inform(output);
+
+        //Launch GUI if visualization is desired, otherwise just start parsing.
+        if (_inst._visualise) {
+            Application.launch(MainLauncher.class);
+        } else {
+            startParsing();
+        }
+    }
+
+    /**
+     * Algorithm to set up parsing of scheduling
+     */
+    public static void startParsing() {
         try {
+            isDone = false;
+            startingTime = System.currentTimeMillis();
             reader.startParsing(manager);
+            endingTime = System.currentTimeMillis();
+            isDone = true;
         } catch (FileNotFoundException e) {
             throw new RuntimeException("Input file does not exist");
         }
