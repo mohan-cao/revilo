@@ -26,7 +26,7 @@ public class Schedule {
 	Set<Integer> openNodes=new HashSet<>(); //need to assign to processor
 	Map<Integer,Tuple<Integer,Integer>> closedNodes=new HashMap<>(); //done nodes
 	Set<Integer> independentNodes=new HashSet<>(); //nodes it depends on are done
-	Map<Integer,Set<Tuple<Integer,Integer>>> scheduleStructure; //map of processor to tasks assigned on each processor
+	Map<Integer,List<Tuple<Integer,Integer>>> scheduleStructure; //map of processor to tasks assigned on each processor
 
 	/**
 	 * Create new schedule object
@@ -84,9 +84,9 @@ public class Schedule {
 		finishTimes[processor]+=addedIdleTime+bnb._nodeWeights[nodeId];
 
 		//update schedule structure
-		Set<Tuple<Integer,Integer>> setToAdd = scheduleStructure.get(processor);
-		setToAdd.add(new Tuple<>(nodeId, startTime));
-		scheduleStructure.put(processor,setToAdd);
+		List<Tuple<Integer,Integer>> listToAdd = scheduleStructure.get(processor);
+		listToAdd.add(new Tuple<>(nodeId, startTime));
+		scheduleStructure.put(processor,listToAdd);
 		_scheduleStructureId = generateScheduleStructureId();
 	}
 
@@ -100,10 +100,10 @@ public class Schedule {
 	private void createScheduleStructureMap(BranchAndBoundAlgorithmManager bnb) {
 		scheduleStructure = new HashMap<>();
 		for(int i=0;i<bnb._processingCores;i++){
-			//set of tuples assigned on each processor
-			scheduleStructure.put(i,new HashSet<>());
+			//list of tuples assigned on each processor
+			scheduleStructure.put(i,new ArrayList<>());
 		}
-		
+
 		//Add all assigned nodes to schedule structure map
 		for(Integer assignedNode : closedNodes.keySet()){
 			int assignedStartTime = closedNodes.get(assignedNode).getA();
@@ -122,9 +122,7 @@ public class Schedule {
 		String[] ids = new String[bnb._processingCores];
 		Arrays.fill(ids, " ");
 		for(int p=0; p<bnb._processingCores; p++){
-			Set<Tuple<Integer,Integer>> set = scheduleStructure.get(p);
-			if(set.size()==0) continue;
-			List<Tuple<Integer,Integer>> list = new ArrayList<>(set);
+			List<Tuple<Integer,Integer>> list = scheduleStructure.get(p);
 			Collections.sort(list);
 			for(Tuple<Integer,Integer> t:list){
 				ids[p]+=t.hashCode();
@@ -132,8 +130,6 @@ public class Schedule {
 		}
 		Arrays.sort(ids);
 		return Arrays.toString(ids);
-		//Set<Set<Tuple<Integer,Integer>>> set = new HashSet<>();
-		//set.addAll(scheduleStructure.values());
 	}
 
 	/**
@@ -273,6 +269,7 @@ public class Schedule {
 
 			return (t._a == this._a) && (t._b == this._b);
 		}
+
 		@Override
 		public int hashCode(){
 			return Objects.hash(_a,_b);
@@ -281,7 +278,7 @@ public class Schedule {
 		@Override
 		public int compareTo(Tuple<T, V> o) {
 			Tuple<T, V> tuple = (Tuple<T, V>)o;
-			if((int)this.getA()<(int)tuple.getA()){
+			if((Integer)(this.getA())<(Integer)(tuple.getA())){
 				return -1;
 			} else if((int)this.getA()>(int)tuple.getA()){
 				return 1;
