@@ -16,7 +16,7 @@ import java.util.*;
  * @author Abby S
  * @author Mohan Cao
  */
-public class Schedule {
+public class BnBSchedule {
 	int[] finishTimes;
 	int totalIdleTime=0;
 	int lowerBound;
@@ -42,7 +42,7 @@ public class Schedule {
 	 * @param nodeId the node id added to the current schedule
 	 * @param processor the processor that the node is being added on
 	 */
-	public Schedule(BranchAndBoundAlgorithmManager bnb, Schedule parentSchedule, int nodeId, int processor){
+	public BnBSchedule(BranchAndBoundAlgorithmManager bnb, BnBSchedule parentSchedule, int nodeId, int processor) {
 		int startTime=0;
 		int addedIdleTime=0;
 		finishTimes = new int[bnb._processingCores];
@@ -154,10 +154,7 @@ public class Schedule {
 
 	//TODO: remove if unused
 	public boolean isBounded(int maxFinishTime) {
-		if(this.lowerBound >= maxFinishTime){
-			return true;
-		}
-		return false;
+		return this.lowerBound >= maxFinishTime;
 	}
 
 	/**
@@ -168,7 +165,7 @@ public class Schedule {
 	 * 
 	 * @param parentSchedule
 	 */
-	private void cloneParentSchedule(Schedule parentSchedule) {
+	private void cloneParentSchedule(BnBSchedule parentSchedule) {
 		//clone finishTimes
 		for(int i=0; i<bnb._processingCores;i++) finishTimes[i]=parentSchedule.finishTimes[i];
 
@@ -222,7 +219,7 @@ public class Schedule {
 		}
 	}
 
-	// TODO: design decision to not compare Schedule objects
+	// TODO: design decision to not compare BnBSchedule objects
 
 	/**
 	 * Method to show current schedule in a string form
@@ -281,7 +278,7 @@ public class Schedule {
 
 		@Override
 		public int compareTo(Tuple<T, V> o) {
-			Tuple<T, V> tuple = (Tuple<T, V>)o;
+			Tuple<T, V> tuple = o;
 			if((Integer)(this.getA())<(Integer)(tuple.getA())){
 				return -1;
 			} else if((Integer)(this.getA())>(Integer)(tuple.getA())){

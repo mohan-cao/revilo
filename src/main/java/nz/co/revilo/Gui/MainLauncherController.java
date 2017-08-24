@@ -5,6 +5,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.concurrent.Task;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.chart.CategoryAxis;
@@ -12,17 +13,15 @@ import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.event.ActionEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import nz.co.revilo.App;
+import nz.co.revilo.Gui.GanttChart.ExtraData;
 import nz.co.revilo.Output.NewOptimalResultListener;
 import nz.co.revilo.Output.ScheduleResultListener;
-import nz.co.revilo.Gui.GanttChart.ExtraData;
-import nz.co.revilo.Scheduling.Schedule;
+import nz.co.revilo.Scheduling.BnBSchedule;
 
 import java.net.URL;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class MainLauncherController implements Initializable, ScheduleResultListener, NewOptimalResultListener {
@@ -102,8 +101,8 @@ public class MainLauncherController implements Initializable, ScheduleResultList
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        app.getAlgorithmManager().inform(this);
-        app.getAlgorithmManager().optimalInform(this);
+        App.getAlgorithmManager().inform(this);
+        App.getAlgorithmManager().optimalInform(this);
         results = new GUIScheduleResult();
         //set up change listeners
         results.isDoneProcessingProperty().addListener(new ChangeListener<Boolean>() {
@@ -221,7 +220,7 @@ public class MainLauncherController implements Initializable, ScheduleResultList
     }
 
     @Override
-    public void newOptimal(Schedule optimal) {
+    public void newOptimal(BnBSchedule optimal) {
         _graphName = App.getAlgorithmManager().getGraphName();
         _nodeNames = App.getAlgorithmManager().getNodeNames();
         _nodeWeights = App.getAlgorithmManager().getNodeWeights();

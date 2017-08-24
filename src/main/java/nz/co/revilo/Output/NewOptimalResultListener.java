@@ -1,9 +1,9 @@
 package nz.co.revilo.Output;
 
-import nz.co.revilo.Scheduling.Schedule;
+import nz.co.revilo.Scheduling.BnBSchedule;
 
 public interface NewOptimalResultListener {
 
-    void newOptimal(Schedule optimal);
+    void newOptimal(BnBSchedule optimal);
 
 }
