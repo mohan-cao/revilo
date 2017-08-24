@@ -5,6 +5,9 @@ import javafx.collections.FXCollections;
 
 import java.util.List;
 
+/**
+ * @author Terran Kroft
+ */
 public class GUIScheduleResult {
     private BooleanProperty isDoneProcessing = new SimpleBooleanProperty();
     private StringProperty graphName = new SimpleStringProperty();

@@ -13,6 +13,11 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+/**
+ * @param <X>
+ * @param <Y>
+ * @author Terran Kroft
+ */
 public class GanttChart<X, Y> extends XYChart<X, Y> {
 
     private double blockHeight = 25;

@@ -12,6 +12,8 @@ import java.util.Observable;
 /**
  * Abstract class defining the data structures, and information to be used when implementing any algorithms as part of a
  * scheduling solution.
+ *
+ * @author Michael Kemp
  */
 public abstract class AlgorithmManager extends Observable implements ParseResultListener {
 
@@ -23,8 +25,8 @@ public abstract class AlgorithmManager extends Observable implements ParseResult
     protected int[][] _arcWeights;
     protected String[] _nodeNames;
     protected String _graphName;
-    private NewOptimalResultListener optimalListener;
-    private List<ScheduleResultListener> listeners = new ArrayList<>();
+    protected NewOptimalResultListener optimalListener;
+    protected List<ScheduleResultListener> listeners = new ArrayList<>();
 
     /**
      * Sets the number of processing cores the tasks must be scheduled on.

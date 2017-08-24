@@ -111,7 +111,7 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
 	 */
 	private void bnb(BnBSchedule schedule) {
 		//TODO: not strict enough?
-		if(schedule.lowerBound>=upperBound){
+		if (schedule.lowerBound >= upperBound) { //@Michael Kemp for >=
 			schedule=null; //garbage collect that schedule
 			brokenTrees++; //this tree has broken
 			return; //break tree at this point
