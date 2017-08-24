@@ -248,14 +248,14 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
             List<AstarSchedule> currentLevel = levels.get(level);
             List<AstarSchedule> nextLevel = levels.get(level + 1);
 
-            //Load parent schedule
-            AstarSchedule childSchedule = currentLevel.get(0);
-            AstarSchedule newSchedule = childSchedule.clone();
-
             //Special case for first level
             if (level == 0) {
                 currentLevel.add(root);
             }
+
+            //Load parent schedule
+            AstarSchedule childSchedule = currentLevel.get(0);
+            AstarSchedule newSchedule = childSchedule.clone();
 
             //Check if unschedulables are schedulable
             for (Task unshedulable : newSchedule._unschedulable) {
