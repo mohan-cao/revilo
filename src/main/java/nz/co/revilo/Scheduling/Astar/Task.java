@@ -1,7 +1,7 @@
 package nz.co.revilo.Scheduling.Astar;
 
 
-public class Task implements Cloneable {
+public class Task implements Cloneable, Comparable<Task> {
     public int _taskNum = -1;
     public int _start = -1;
     public int _processor = -1;
@@ -31,5 +31,10 @@ public class Task implements Cloneable {
     @Override
     public int hashCode() {
         return _taskNum;
+    }
+
+    @Override
+    public int compareTo(Task o) {
+        return Integer.compare(_taskNum, o._taskNum);
     }
 }

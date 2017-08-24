@@ -3,10 +3,7 @@ package nz.co.revilo.Scheduling;
 import nz.co.revilo.Scheduling.Astar.Schedule;
 import nz.co.revilo.Scheduling.Astar.Task;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class AstarFirstAlgorithmManager extends AlgorithmManager {
 
@@ -157,13 +154,28 @@ public class AstarFirstAlgorithmManager extends AlgorithmManager {
             }
         }
 
+        //Find the lowest cost schedule
         int temp = levels.get(levels.size() - 1).get(0).cost();
+        Schedule best = levels.get(levels.size() - 1).get(0);
         for (Schedule s : levels.get(levels.size() - 1)) {
             if (s.cost() < temp) {
                 temp = s.cost();
+                best = s;
             }
         }
-        System.out.println(temp);
+
+        //Convert to output format
+        List<Integer> starts = new ArrayList<>();
+        List<Integer> processors = new ArrayList<>();
+        List<Task> tasks = new ArrayList<>(best._scheduled);
+        Collections.sort(tasks);
+        for (Task scheduled : tasks) {
+            starts.add(scheduled._start);
+            processors.add(scheduled._processor);
+        }
+
+        //Hand output schedule to output listener
+        getListener().finalSchedule(_graphName, Arrays.asList(_nodeNames), primToBool2D(_arcs), primToInt2D(_arcWeights), primToInt(_nodeWeights), starts, processors);
     }
 
     private void updateDependencies(List<Integer> parentDependcies, int target) {
@@ -175,5 +187,45 @@ public class AstarFirstAlgorithmManager extends AlgorithmManager {
                 updateDependencies(newParentDependencies, toTask);
             }
         }
+    }
+
+    /**
+     * Creates an object type 2d bool list from primitive array
+     * @param prim the primitive boolean 2d array
+     * @return b the reference type list
+     */
+    public List<List<Boolean>> primToBool2D(boolean[][] prim) {
+        List<List<Boolean>> b = new ArrayList<>();
+        for (int i = 0; i < prim.length; i++) {
+            b.add(new ArrayList<>());
+            for (int j = 0; j < prim[i].length; j++) {
+                b.get(i).add(prim[i][j]);
+            }
+        }
+        return b;
+    }
+
+    /**
+     * Creates an object type 2d int list from primitive array
+     * @param prim the primitive int 2d array
+     * @return n the reference type list
+     */
+    public List<List<Integer>> primToInt2D(int[][] prim) {
+        List<List<Integer>> n = new ArrayList<>();
+        for (int i = 0; i < prim.length; i++) {
+            n.add(new ArrayList<>());
+            for (int j = 0; j < prim[i].length; j++) {
+                n.get(i).add(prim[i][j]);
+            }
+        }
+        return n;
+    }
+
+    public List<Integer> primToInt(int[] prim) {
+        ArrayList<Integer> n = new ArrayList<>();
+        for (int i: prim) {
+            n.add(i);
+        }
+        return n;
     }
 }

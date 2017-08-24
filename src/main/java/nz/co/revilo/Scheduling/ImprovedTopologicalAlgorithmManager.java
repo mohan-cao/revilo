@@ -116,7 +116,7 @@ public class ImprovedTopologicalAlgorithmManager extends AlgorithmManager {
      * @param prim the primitive boolean 2d array
      * @return b the reference type list
      */
-    private List<List<Boolean>> primToBool2D(boolean[][] prim) {
+    public List<List<Boolean>> primToBool2D(boolean[][] prim) {
         List<List<Boolean>> b = new ArrayList<>();
         for (int i = 0; i < prim.length; i++) {
             b.add(new ArrayList<>());
@@ -132,7 +132,7 @@ public class ImprovedTopologicalAlgorithmManager extends AlgorithmManager {
      * @param prim the primitive int 2d array
      * @return n the reference type list
      */
-    private List<List<Integer>> primToInt2D(int[][] prim) {
+    public List<List<Integer>> primToInt2D(int[][] prim) {
         List<List<Integer>> n = new ArrayList<>();
         for (int i = 0; i < prim.length; i++) {
             n.add(new ArrayList<>());
@@ -143,7 +143,7 @@ public class ImprovedTopologicalAlgorithmManager extends AlgorithmManager {
         return n;
     }
 
-    private List<Integer> primToInt(int[] prim) {
+    public List<Integer> primToInt(int[] prim) {
         ArrayList<Integer> n = new ArrayList<>();
         for (int i: prim) {
             n.add(i);
