@@ -224,10 +224,7 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
         //Initialises root schedule
         //Adds tasks
         AstarSchedule root = new AstarSchedule();
-        for (int unschedulableTask : middleTasks) {
-            root._unschedulable.add(new Task(unschedulableTask));
-        }
-        for (int unschedulableTask : endTasks) {
+        for (int unschedulableTask : otherTasks) {
             root._unschedulable.add(new Task(unschedulableTask));
         }
         for (int schedulableTask : startTasks) {
