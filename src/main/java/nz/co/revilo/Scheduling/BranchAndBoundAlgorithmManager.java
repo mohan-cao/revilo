@@ -253,6 +253,9 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
                 currentLevel.add(root);
             }
 
+            List<Integer> DataReadyTimes = new ArrayList<>();
+
+
             //For every schedule in the level
             //for (int child = 0; child < 1; child++) {
             //Load it
