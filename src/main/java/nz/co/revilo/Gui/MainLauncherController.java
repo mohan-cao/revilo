@@ -1,40 +1,32 @@
 package nz.co.revilo.Gui;
 
-import com.sun.org.apache.xml.internal.resolver.readers.ExtendedXMLCatalogReader;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.geometry.Bounds;
 import javafx.geometry.Pos;
-import javafx.scene.Group;
-import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.event.ActionEvent;
-import javafx.scene.control.Tooltip;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import nz.co.revilo.App;
+import nz.co.revilo.Gui.GanttChart.ExtraData;
 import nz.co.revilo.Output.NewOptimalResultListener;
 import nz.co.revilo.Output.ScheduleResultListener;
-import nz.co.revilo.Gui.GanttChart.ExtraData;
 import nz.co.revilo.Scheduling.Schedule;
 
 import java.net.URL;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class MainLauncherController implements Initializable, ScheduleResultListener, NewOptimalResultListener {
