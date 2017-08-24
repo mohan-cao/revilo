@@ -326,15 +326,7 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
             nextLevel.add(newSchedule);
         }
 
-        //Find the lowest cost schedule
-        int temp = levels.get(levels.size() - 1).get(0).cost();
-        for (AstarSchedule s : levels.get(levels.size() - 1)) {
-            if (s.cost() < temp) {
-                temp = s.cost();
-            }
-        }
-
         //Return the greedy cost
-        return temp;
+        return levels.get(levels.size() - 1).get(0).cost();
     }
 }
