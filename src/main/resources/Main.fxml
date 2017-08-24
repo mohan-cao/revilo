@@ -179,7 +179,7 @@
                   <Font name="SF UI Display Heavy" size="36.0" />
                </font>
             </Label>
-            <Label fx:id="graphNameLabel" layoutX="85.0" layoutY="23.0" maxHeight="24.0" prefHeight="24.0" prefWidth="575.0" style="-fx-background-color: #E5E5E5; -fx-background-radius: 5;" text="Placeholder text name" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="148.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="10.0">
+            <Label fx:id="graphNameLabel" layoutX="85.0" layoutY="23.0" maxHeight="24.0" prefHeight="24.0" prefWidth="575.0" style="-fx-background-color: #E5E5E5; -fx-background-radius: 5;" text="Placeholder text name" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="148.0" AnchorPane.rightAnchor="90.0" AnchorPane.topAnchor="10.0">
                <font>
                   <Font name="System Font" size="14.0" />
                </font>
@@ -190,6 +190,14 @@
                   <Insets bottom="2.0" left="4.0" right="2.0" top="2.0" />
                </padding>
             </Label>
+            <Button fx:id="minimizeBtn" layoutX="10.0" layoutY="10.0" maxHeight="30.0" maxWidth="30.0" minHeight="30.0" minWidth="30.0" mnemonicParsing="false" onAction="#minimizeRevilo" prefHeight="30.0" prefWidth="30.0" style="-fx-background-radius: 10;" text="–" textAlignment="CENTER" textOverrun="CLIP" AnchorPane.rightAnchor="50.0">
+               <font>
+                  <Font name="SF UI Display Light" size="20.0" />
+               </font>
+               <padding>
+                  <Insets bottom="-2.0" left="-2.0" right="-2.0" top="-2.0" />
+               </padding>
+            </Button>
          </children>
       </AnchorPane>
    </top>
