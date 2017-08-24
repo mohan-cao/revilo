@@ -1,4 +1,4 @@
-package nz.co.revilo.Scheduling.BranchNBound;
+package nz.co.revilo.Scheduling;
 
 import java.util.ArrayList;
 import java.util.List;

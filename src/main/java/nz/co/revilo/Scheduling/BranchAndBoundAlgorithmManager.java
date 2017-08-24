@@ -1,8 +1,6 @@
-package nz.co.revilo.Scheduling.BranchNBound;
+package nz.co.revilo.Scheduling;
 
 import nz.co.revilo.Output.ScheduleResultListener;
-import nz.co.revilo.Scheduling.AlgorithmManager;
-import nz.co.revilo.Scheduling.PrimitiveInterfaceHelper;
 
 import java.util.ArrayList;
 import java.util.Arrays;
