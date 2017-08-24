@@ -27,7 +27,7 @@ public class GxlFileReader extends FileParser {
     public static final Pattern NODE_NAME_MATCH = Pattern.compile("[\\s]*<node id=\"(.*)\">[\\s]*");
     public static final Pattern WEIGHT_INT_MATCH = Pattern.compile("[\\s]*<int>(.*)</int>[\\s]*");
 
-    // Regex for string matchers of line types
+    // Regex for string matchers of _line types
     public static final String ARC_LINE_MATCH = "[\\s]*<edge from=\".*\" to=\".*\">[\\s]*";
     public static final String NODE_LINE_MATCH = "[\\s]*<node id=\".*\">[\\s]*";
     public static final String GRAPH_NAME_LINE_MATCH = "[\\s]*<graph id=\".*\">[\\s]*";
@@ -46,6 +46,8 @@ public class GxlFileReader extends FileParser {
     private String _graphName;
 
     private ParseResultListener _listener;
+
+    private String _line;
 
     /**
      * Constructs a DotFileReader with the filename to read
@@ -73,92 +75,30 @@ public class GxlFileReader extends FileParser {
         _arcs = new HashMap<>();
 
         /*
-         Reads the file using regex by checking the line is of an expected format then extracts information from the lines by matching with regex
+         Reads the file using regex by checking the _line is of an expected format then extracts information from the lines by matching with regex
           */
         try {
-            //TODO Handle an empty file
-            //Note: regex might not work
-            String line = reader.readLine();
-            // Continue reading the file if there's a next line and the current line isn't a closing line
-            while (line != null) {
-                // Arcs
-                if (line.matches(ARC_LINE_MATCH)) {
-                    // Extracts information about the arc (from, to and weight)
-                    // Extracts which node the arc is from
-                    Matcher m = ARC_FROM_MATCH.matcher(line);
-                    m.find();
-                    String from = m.group(FIRST_MATCH);
-                    // Extracts which node the arc is to
-                    m = ARC_TO_MATCH.matcher(line);
-                    m.find();
-                    String to = m.group(FIRST_MATCH);
-                    // Extracts the weight of the arc
-                    line = reader.readLine();
-                    if (line != null && line.matches(WEIGHT_LINE_MATCH)) {
-                        line = reader.readLine();
-                        if (line != null) {
-                            m = WEIGHT_INT_MATCH.matcher(line);
-                            m.find();
-                            int weight = Integer.parseInt(m.group(FIRST_MATCH));
+            // Read the first _line
+            _line = reader.readLine();
 
-                            // Places information about the arc into data structures
-                            // If the from node isn't defined yet then it is temporarily created with a negative weight
-                            if (!_nodeNames.containsKey(from)) {
-                                _nodeWeights.set(_nodeNames.get(from), DEFAULT_WEIGHT);
-                            }
-                            // If the to node isn't defined yet then it is temporarily created with a negative weight
-                            if (!_nodeNames.containsKey(to)) {
-                                _nodeWeights.set(_nodeNames.get(to), DEFAULT_WEIGHT);
-                            }
-                            // If the from node doesn't have an arc list then one is made
-                            if (!_arcs.containsKey(from)) {
-                                _arcs.put(from, new HashMap<>());
-                            }
-                            // Replaces the weight information in the arc if it already exists otherwise creates the arc
-                            if (!_arcs.get(from).containsKey(to)) {
-                                _arcs.get(from).put(to, weight);
-                            } else {
-                                _arcs.get(from).replace(to, weight);
-                            }
-                        }
-                    }
+            // Continue reading the file if there's a next _line and the current _line isn't a closing _line
+            while (_line != null) {
+                // Arcs
+                if (_line.matches(ARC_LINE_MATCH)) {
+                    createArc(reader);
 
                     // Nodes
-                } else if (line.matches(NODE_LINE_MATCH)) {
-                    // Extracts the node name from the line
-                    Matcher m = NODE_NAME_MATCH.matcher(line);
-                    m.find();
-                    String name = m.group(FIRST_MATCH);
-
-                    line = reader.readLine();
-                    if (line != null && line.matches(WEIGHT_LINE_MATCH)) {
-                        line = reader.readLine();
-                        if (line != null) {
-                            // Extracts the node weight from the line
-                            m = WEIGHT_INT_MATCH.matcher(line);
-                            m.find();
-                            int weight = Integer.parseInt(m.group(FIRST_MATCH));
-                            // If the node exists the weight is updated else it is created and weight is recorded
-                            if (_nodeNames.containsKey(name)) {
-                                _nodeWeights.set(_nodeNames.get(name), weight);
-                            } else {
-                                _nodeNames.put(name, _nodeWeights.size());
-                                _nodeWeights.add(weight);
-                            }
-                        }
-                    }
+                } else if (_line.matches(NODE_LINE_MATCH)) {
+                    createNode(reader);
 
                     // Graph name
-                } else if (line.matches(GRAPH_NAME_LINE_MATCH)) {
-                    // Extracts the graph name from the line
-                    Matcher m = GRAPH_NAME_MATCH.matcher(line);
-                    m.find();
-                    // Sets the graph name
-                    _graphName = m.group(FIRST_MATCH);
+                } else if (_line.matches(GRAPH_NAME_LINE_MATCH)) {
+                    graphName();
+
                 }
 
-                // Reads the next line in the file
-                line = reader.readLine();
+                // Reads the next _line in the file
+                _line = reader.readLine();
             }
             // Problems reading the file
         } catch (IOException e) {
@@ -202,6 +142,101 @@ public class GxlFileReader extends FileParser {
 
         // Informs the listener about the freshly read graph
         _listener.ParsingResults(_graphName, _nodeNamesList, nodeWeightsPrimitive, arcsPrimitive, arcWeightsPrimitive);
+    }
+
+
+    /**
+     * Uses the currently loaded line to extract a graph name
+     *
+     * @author Michael Kemp
+     */
+    private void graphName() {
+        // Extracts the graph name from the _line
+        Matcher m = GRAPH_NAME_MATCH.matcher(_line);
+        m.find();
+        // Sets the graph name
+        _graphName = m.group(FIRST_MATCH);
+    }
+
+    /**
+     * Takes the file reader and creates a node if needed, if it already exists then the weight is updated
+     *
+     * @param reader
+     * @throws IOException
+     * @author Michael Kemp
+     */
+    private void createNode(BufferedReader reader) throws IOException {
+        // Extracts the node name from the _line
+        Matcher m = NODE_NAME_MATCH.matcher(_line);
+        m.find();
+        String name = m.group(FIRST_MATCH);
+
+        _line = reader.readLine();
+        if (_line != null && _line.matches(WEIGHT_LINE_MATCH)) {
+            _line = reader.readLine();
+            if (_line != null) {
+                // Extracts the node weight from the _line
+                m = WEIGHT_INT_MATCH.matcher(_line);
+                m.find();
+                int weight = Integer.parseInt(m.group(FIRST_MATCH));
+                // If the node exists the weight is updated else it is created and weight is recorded
+                if (_nodeNames.containsKey(name)) {
+                    _nodeWeights.set(_nodeNames.get(name), weight);
+                } else {
+                    _nodeNames.put(name, _nodeWeights.size());
+                    _nodeWeights.add(weight);
+                }
+            }
+        }
+    }
+
+    /**
+     * Takes the file reader and creates an arc (and even the nodes if necessary with default weights)
+     *
+     * @param reader
+     * @throws IOException
+     * @author Michael Kemp
+     */
+    private void createArc(BufferedReader reader) throws IOException {
+        // Extracts information about the arc (from, to and weight)
+        // Extracts which node the arc is from
+        Matcher m = ARC_FROM_MATCH.matcher(_line);
+        m.find();
+        String from = m.group(FIRST_MATCH);
+        // Extracts which node the arc is to
+        m = ARC_TO_MATCH.matcher(_line);
+        m.find();
+        String to = m.group(FIRST_MATCH);
+        // Extracts the weight of the arc
+        _line = reader.readLine();
+        if (_line != null && _line.matches(WEIGHT_LINE_MATCH)) {
+            _line = reader.readLine();
+            if (_line != null) {
+                m = WEIGHT_INT_MATCH.matcher(_line);
+                m.find();
+                int weight = Integer.parseInt(m.group(FIRST_MATCH));
+
+                // Places information about the arc into data structures
+                // If the from node isn't defined yet then it is temporarily created with a negative weight
+                if (!_nodeNames.containsKey(from)) {
+                    _nodeWeights.set(_nodeNames.get(from), DEFAULT_WEIGHT);
+                }
+                // If the to node isn't defined yet then it is temporarily created with a negative weight
+                if (!_nodeNames.containsKey(to)) {
+                    _nodeWeights.set(_nodeNames.get(to), DEFAULT_WEIGHT);
+                }
+                // If the from node doesn't have an arc list then one is made
+                if (!_arcs.containsKey(from)) {
+                    _arcs.put(from, new HashMap<>());
+                }
+                // Replaces the weight information in the arc if it already exists otherwise creates the arc
+                if (!_arcs.get(from).containsKey(to)) {
+                    _arcs.get(from).put(to, weight);
+                } else {
+                    _arcs.get(from).replace(to, weight);
+                }
+            }
+        }
     }
 
     /**
