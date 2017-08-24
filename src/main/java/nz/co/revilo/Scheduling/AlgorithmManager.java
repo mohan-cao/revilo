@@ -16,7 +16,6 @@ import java.util.Observable;
 public abstract class AlgorithmManager extends Observable implements ParseResultListener {
 
     int _processingCores;
-    private ScheduleResultListener _listener;
     private NewOptimalResultListener optimalListener;
     private List<ScheduleResultListener> listeners = new ArrayList<>();;
     int[] _nodeWeights;
@@ -26,8 +25,7 @@ public abstract class AlgorithmManager extends Observable implements ParseResult
     String _graphName;
 
     long brokenTrees;
-    int upperBound;
-    Schedule optimalSchedule;
+    int upperBound; // used in subclasses
 
     /**
      * Sets the number of processing cores the tasks must be scheduled on.
@@ -38,22 +36,42 @@ public abstract class AlgorithmManager extends Observable implements ParseResult
         brokenTrees = 0;
     }
 
+    /**
+     * Get the number of branches broken (i.e. branches that have been deemed not as good)
+     * @return
+     */
     public long getBrokenTrees() {
         return brokenTrees;
     }
 
+    /**
+     * Gets the upper bound value (current best)
+     * @return current best
+     */
     public int getUpperBound() {
         return upperBound;
     }
 
+    /**
+     * Gets graph name.
+     * @return the name of the graph
+     */
     public String getGraphName() {
         return _graphName;
     }
 
+    /**
+     * Getter for list of node names for easy Gantt setup
+     * @return the list of node names
+     */
     public List<String> getNodeNames(){
         return new ArrayList<>(Arrays.asList(_nodeNames));
     }
 
+    /**
+     * Gets a tentative list of nodes for preliminary setup of Gantt Chart
+     * @return
+     */
     public List<Integer> getNodeWeights() {
         return PrimitiveInterfaceHelper.primToInteger1D(_nodeWeights);
     }
@@ -66,17 +84,19 @@ public abstract class AlgorithmManager extends Observable implements ParseResult
 
     /**
      * Associates a ScheduleResultListener implementation to the AlgorithmManager, which will receive the final result as
-     * produced by the algorithm implementation (to use in output file creation).
+     * produced by the algorithm implementation (to use in output file creation or visualization).
      * @param listener
      */
-//    public void inform(ScheduleResultListener listener) {
-//        _listener = listener;
-//    }
-
     public void inform(ScheduleResultListener listener) {
         listeners.add(listener);
     }
     public void optimalInform(NewOptimalResultListener listener) { optimalListener = listener; }
+
+    /**
+     *Retrieves NewOptimalResultListener whenever an algorithm (BnB) finds a graph length that is
+     * better than the current one.
+     * @return
+     */
     public NewOptimalResultListener getOptimalListener() { return optimalListener; }
 
     /**

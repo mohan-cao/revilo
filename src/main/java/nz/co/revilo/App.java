@@ -54,6 +54,9 @@ public class App {
     private static FileParser reader;
     private static DotFileProducer output;
 
+    //Data
+    private long startingMemory;
+
     //GUI Stuff
 
 
@@ -67,7 +70,7 @@ public class App {
     public static String getInputFileName() {
         return _inst._inputFilename;
     }
-
+    public static long getStartingMemory() {return _inst.startingMemory; }
     public static double getRunningTime() {
         double elapsed;
         if (isDone) {
@@ -114,6 +117,7 @@ public class App {
     public static void main(String[] args) {
         // Creates the singleton instance
         new App();
+        _inst.startingMemory = Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory();
 
         // Instantiates a new parameters container
         CLIParameters params = new CLIParameters();

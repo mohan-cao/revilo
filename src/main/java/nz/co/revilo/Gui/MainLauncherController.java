@@ -129,7 +129,9 @@ public class MainLauncherController implements Initializable, ScheduleResultList
             public void run() {
                 Platform.runLater(new Runnable() {
                     public void run() {
-                        memoryLabel.setText((Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory())/1024/1024+""); //needs to be better
+                        // calculate current used memory
+                        long currentMemory = Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory();
+                        memoryLabel.setText((currentMemory)  / (1024l * 1024l) + ""); //needs to be better
                         timeLabel.setText(String.format("%.2f", App.getRunningTime()));
 //                        timeLabel.setText(new SimpleDateFormat("mm:ss:SS").format(new Date(App.getRunningTime())));
                         bestLabel.setText(App.getAlgorithmManager().getUpperBound() + "");
@@ -159,7 +161,7 @@ public class MainLauncherController implements Initializable, ScheduleResultList
             public void run() {
 //                graphNameLabel.setText("  Processing complete! " + App.getInputFileName() + " Optimal length: " + App.getAlgorithmManager().getUpperBound()); //padding
                 systemLabel.setText("COMPLETE");
-                statusLabel.setText("Optimal length: " + App.getAlgorithmManager().getUpperBound() + ". (Time taken: " + App.getRunningTime() + " seconds)");
+                statusLabel.setText("Optimal length: " + App.getAlgorithmManager().getUpperBound() + " (Time taken: " + App.getRunningTime() + " seconds)");
             }
         });
         results.setIsDoneProcessing(true);

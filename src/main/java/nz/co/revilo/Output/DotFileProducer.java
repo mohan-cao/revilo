@@ -48,7 +48,7 @@ public abstract class DotFileProducer implements ScheduleResultListener {
         _nodeWeights = nodeWeights;
         _nodeStarts = nodeStarts;
         _nodeProcessor = nodeProcessor;
-
+        System.out.println("This is notified!");
         // Attempts to print the graph to a file
         try {
             PrintWriter pw = new PrintWriter(_outputFilename, CHAR_SET);
