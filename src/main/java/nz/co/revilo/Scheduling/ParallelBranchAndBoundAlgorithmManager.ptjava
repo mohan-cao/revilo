@@ -1,0 +1,107 @@
+package nz.co.revilo.Scheduling;
+
+import java.util.concurrent.ExecutionException;
+
+/**
+ * Algorithm manager for the parallelised implementation of branch and bound, which makes use
+ * pf ParallelTask
+ * 
+ * @author Aimee T
+ */
+public class ParallelBranchAndBoundAlgorithmManager extends BranchAndBoundAlgorithmManager {
+	private TaskIDGroup<BnBSchedule> _schedulesToComplete;
+	private int _currentThreadCount;
+	
+	/**
+	 * Constructor which sets the number of processing cores we are scheduling for
+	 * @author Aimee T
+	 */
+	public ParallelBranchAndBoundAlgorithmManager(int processingCores) {
+		super(processingCores);
+		_schedulesToComplete = new TaskIDGroup(4);
+		_currentThreadCount = 0;
+	}
+
+    @Override
+	protected void startBnb() {
+    	while(!rootSchedules.isEmpty()){
+    		bnb(rootSchedules.remove(0));
+        }
+    	try {
+    		_schedulesToComplete.waitTillFinished();
+    	} catch (InterruptedException e) {
+    		e.printStackTrace();
+    	} catch (ExecutionException e) {
+    		e.printStackTrace();
+    	} finally {
+    		System.out.println("Exectuion interrupted");
+    	}
+    }
+
+	/**
+	 * Creates the ParallelTask task which needs to be scheduled for execution
+	 */
+	private void createTask(BnBSchedule schedule) {
+		TaskID<Void> partial = startNewBnbThread(schedule);
+		_schedulesToComplete.add(partial);
+	}
+	
+	TASK private void startNewBnbThread(BnBSchedule schedule) {
+		WorkerBnb worker = new WorkerBnb(this, schedule, _processingCores);
+		_currentThreadCount++;
+		worker.execute();
+		if(upperBound > worker.upperBound) {
+			upperBound = worker.upperBound;
+			optimalSchedule = worker.optimalSchedule;
+		}
+		worker = null; // null it for hopeful garbage collection
+		_currentThreadCount--;
+	}
+	
+    /**
+     * Hook method to be implemented by subclasses which need specific behaviour when a particular 
+     * recursion depth is reached. This method implements the depth check.
+     * @author Aimee T
+     */
+	@Override
+	protected boolean isAtExitDepth(BnBSchedule s) {
+    	return 3*numNodes/4 <= s.getClosedNodes().size();
+    }
+    
+    /**
+     * Hook method to be implemented by subclasses which need specific behaviour when a particular 
+     * recursion depth is reached. This method implements the behaviour required.
+     * @author Aimee T
+     */
+	@Override
+	protected void exitDepthAction(BnBSchedule s) {
+		createTask(s);
+    }
+	
+	private class WorkerBnb extends BranchAndBoundAlgorithmManager{
+		private BnBSchedule _initialPartialSchedule;
+
+		public WorkerBnb(ParallelBranchAndBoundAlgorithmManager m, BnBSchedule currentPartialSchedule, int processingCores) {
+			super(processingCores);
+			_initialPartialSchedule = currentPartialSchedule;
+			upperBound = m.upperBound;
+			sources = new ArrayList<Integer>(m.sources);
+			bottomUpSinks = new ArrayList<Integer>(m.bottomUpSinks);
+			bottomLevels = m.bottomLevels.clone();
+			numNodes = m.numNodes;
+			totalNodeWeights = m.totalNodeWeights;
+			nodeStartTimes = new ArrayList<Integer>(m.nodeStartTimes);
+			nodeProcessors = new ArrayList<Integer>(m.nodeProcessors);
+
+			_nodeWeights = m._nodeWeights.clone();
+			_arcs = m._arcs.clone();
+			_arcWeights = m._arcWeights.clone();
+		}
+
+        @Override
+		public void execute() {
+			bnb(_initialPartialSchedule);
+		}
+	}
+}
+
