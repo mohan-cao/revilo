@@ -20,11 +20,9 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
     int totalNodeWeights;
     private List<Integer> bottomUpSinks = new ArrayList<>();
     private List<BnBSchedule> rootSchedules = new ArrayList<>();
-    //	private int upperBound; //parent has this instead
     private BnBSchedule optimalSchedule;
     private List<Integer> nodeStartTimes = new ArrayList<>();
     private List<Integer> nodeProcessors = new ArrayList<>();
-    //private List<String> existingScheduleStructures = new ArrayList<>();
     private Map<String, Void> existingScheduleStructures = new HashMap<>();
 
     public BranchAndBoundAlgorithmManager(int processingCores) {
@@ -37,32 +35,20 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
         bottomLevels = new int[numNodes];
         NeighbourManagerHelper.setUpHelper(numNodes, _arcs);
 
-        //get sources
         for (int nodeId = 0; nodeId < numNodes; nodeId++) {
-            //check that sources have no parents
+            //get sources
             if (!NeighbourManagerHelper.hasInneighbours(nodeId)) {
                 //if they don't have parents, then add it to a sources queue
                 sources.add(nodeId);
-                //start a schedule with this node as source on each possible processor
             }
-            //sinks
+            
+            //get sinks
             else if (!NeighbourManagerHelper.hasOutneighbours(nodeId)) {
                 bottomUpSinks.add(nodeId);
                 bottomLevels[nodeId] = _nodeWeights[nodeId];
             }
 
             totalNodeWeights += _nodeWeights[nodeId];
-        }
-
-        /*
-         * Definitely have sources as a row at start of each processor if there aren't more sources than cores
-		 * All others will just be permutations
-		 * If stack sources on same processor, will be less optimal
-		 */
-        int processor = 0;
-        for (int nodeId : sources) {
-            BnBSchedule newSchedule = new BnBSchedule(this, null, nodeId, processor);
-            rootSchedules.add(newSchedule);
         }
 
         //Take a greedy path down the tree to find a more realistic upper bound
@@ -79,6 +65,15 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
 
         calculateBottomLevels();
 
+        /*
+         * Take turns with each root going on first
+         * Matters when more roots than processors, so some roots can't start at time=0
+         */
+        for (int nodeId : sources) {
+            BnBSchedule newSchedule = new BnBSchedule(this, null, nodeId, 0);
+            rootSchedules.add(newSchedule);
+        }
+        
         while (!rootSchedules.isEmpty()) {
             bnb(rootSchedules.remove(0));
         }
@@ -111,7 +106,6 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
                     nodeProcessors
             );
         }
-
     }
 
     /**
@@ -139,7 +133,7 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
         //found optimal for the root started with
         //reached end of a valid schedule. Never broke off, so is optimal
         if (schedule.openNodes.isEmpty()) {
-            //TODO: doing this to make sure only optimal schedules get through
+            //to make sure only optimal schedules get through
             if (schedule.getMaxFinishTime() < upperBound) {
                 optimalSchedule = schedule;
                 // if OptimalListener is null it means that we're not actually asking for updates
@@ -147,6 +141,7 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
                 if (getOptimalListener() != null) {
                     getOptimalListener().newOptimal(optimalSchedule);
                 }
+                
                 upperBound = schedule.getMaxFinishTime();
                 System.out.println(upperBound);
                 return;
@@ -182,7 +177,6 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
                 //Farthest distance needed from bottom
                 bottomLevels[inneighbour] = bottomLevels[inneighbour] > fromGivenNode ? bottomLevels[inneighbour] : fromGivenNode;
 
-                //inneighbours.remove(inneighbour); //ordered access so don't actually need to remove
                 List<Integer> inneighboursChildren = NeighbourManagerHelper.getOutneighbours(inneighbour); //nodes with 1 on the node's row
                 inneighboursChildren.remove(Integer.valueOf(nodeId)); //Integer or will treat the int as index
                 if (inneighboursChildren.isEmpty()) {
