@@ -15,6 +15,7 @@ import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.effect.ColorAdjust;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
@@ -162,11 +163,9 @@ public class MainLauncherController implements Initializable, ScheduleResultList
                     }
                 });
             }
-        }, 0, 33);
+        }, 0, 50);
 
         createGantt();
-
-//        System.out.println(App.getAlgorithmManager().getGraphName());
     }
 
     @Override
@@ -212,6 +211,9 @@ public class MainLauncherController implements Initializable, ScheduleResultList
         ArrayList<XYChart.Series> processorCat = new ArrayList<>();
         ArrayList<ArrayList<String>> pcatName = new ArrayList<>();
 
+        long lowestNodeWeight = Collections.min(_nodeWeights);
+        long highestNodeWeight = Collections.max(_nodeWeights);
+
         for (int i = 0; i < App.getExecCores(); i++) {
             processorCatStr.add("Processor " + i);
             processorCat.add(new XYChart.Series()); // each processor has its own series
@@ -240,7 +242,16 @@ public class MainLauncherController implements Initializable, ScheduleResultList
                 StackPane bar = (StackPane) d.getNode();
                 String node = pcatName.get(iterI).get(iterJ);
                 ExtraData nodeW = (ExtraData)d.getExtraValue();
-//                System.out.println(nodeW.getLength());
+                long nodeWeight = nodeW.getLength();
+                double percentage = (double)(nodeWeight - lowestNodeWeight) / (double)(highestNodeWeight - lowestNodeWeight);
+                percentage = 1.0 - (0.25 + percentage * (0.75)); //scale percentages from 25% to 100%
+                if (highestNodeWeight == lowestNodeWeight) {
+                    percentage = 0.0; // don't want NaNs
+                }
+                ColorAdjust ca = new ColorAdjust();
+                System.out.println(percentage);
+                ca.setBrightness(percentage);
+                bar.setEffect(ca);
                 Text t = new Text(node + "\n(" + nodeW.getLength() + ")");
                 t.setTextAlignment(TextAlignment.CENTER);
                 bar.getChildren().add(t);
@@ -248,9 +259,6 @@ public class MainLauncherController implements Initializable, ScheduleResultList
 
             }
         }
-
-
-
     }
 
     @Override
@@ -273,30 +281,5 @@ public class MainLauncherController implements Initializable, ScheduleResultList
         });
 
     }
-
-//    private void addTextToSchedule(XYChart.Data<Number, String> data) {
-//        final Node node = data.getNode();
-//        final Text dataText = new Text("hey");
-//        node.parentProperty().addListener(new ChangeListener<Parent>() {
-//            @Override
-//            public void changed(ObservableValue<? extends Parent> observable, Parent oldValue, Parent newValue) {
-//                Group parentGroup = (Group) newValue;
-//                parentGroup.getChildren().add(dataText);
-//            }
-//        });
-//
-//        node.boundsInParentProperty().addListener(new ChangeListener<Bounds>() {
-//            @Override
-//            public void changed(ObservableValue<? extends Bounds> observable, Bounds oldValue, Bounds bounds) {
-//                dataText.setLayoutX(
-//                  Math.round(bounds.getMinX() + bounds.getWidth() / 2 - dataText.prefWidth(-1)/2)
-//                );
-//                dataText.setLayoutY(
-//                        Math.round(bounds.getMinY() - dataText.prefHeight(-1)/2)
-//                );
-//            }
-//        });
-//    }
-
 
 }
