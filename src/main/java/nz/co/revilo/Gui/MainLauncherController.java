@@ -15,6 +15,7 @@ import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Tooltip;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
@@ -31,6 +32,8 @@ import java.net.URL;
 import java.util.*;
 
 public class MainLauncherController implements Initializable, ScheduleResultListener, NewOptimalResultListener {
+
+    public final String processorTitle = "PSR ";
 
     App app;
     protected String _graphName;
@@ -195,7 +198,7 @@ public class MainLauncherController implements Initializable, ScheduleResultList
 
 
         for (int i = 0; i < App.getExecCores(); i++) {
-            processorCatStr.add("Processor " + i);
+            processorCatStr.add(processorTitle + i);
             processorCat.add(new XYChart.Series()); // each processor has its own series
         }
 
@@ -207,6 +210,7 @@ public class MainLauncherController implements Initializable, ScheduleResultList
     }
 
     public void updateGantt() {
+        int processorStripLength = processorTitle.length();
         ArrayList<String> processorCatStr = new ArrayList<>();
         ArrayList<XYChart.Series> processorCat = new ArrayList<>();
         ArrayList<ArrayList<String>> pcatName = new ArrayList<>();
@@ -215,7 +219,7 @@ public class MainLauncherController implements Initializable, ScheduleResultList
         long highestNodeWeight = Collections.max(_nodeWeights);
 
         for (int i = 0; i < App.getExecCores(); i++) {
-            processorCatStr.add("Processor " + i);
+            processorCatStr.add(processorTitle + i);
             processorCat.add(new XYChart.Series()); // each processor has its own series
             pcatName.add(new ArrayList<>());
         }
@@ -225,7 +229,16 @@ public class MainLauncherController implements Initializable, ScheduleResultList
             int psr = _nodeProcessor.get(i);
             XYChart.Series psrCat = processorCat.get(psr);
             ArrayList<String> pcat = pcatName.get(psr);
-            XYChart.Data data = new XYChart.Data(_nodeStarts.get(i), ("Processor " + psr), new ExtraData(_nodeWeights.get(i), "status-green"));
+            String styleclass;
+            switch (psr) {
+                case 0: styleclass = "gantt0"; break;
+                case 1: styleclass = "gantt1"; break;
+                case 2: styleclass = "gantt2"; break;
+                case 3: styleclass = "gantt3"; break;
+                case 4: styleclass = "gantt4"; break;
+                default: styleclass = "ganttdefault"; break;
+            }
+            XYChart.Data data = new XYChart.Data(_nodeStarts.get(i), (processorTitle + psr), new ExtraData(_nodeWeights.get(i), styleclass));
             String iterNodeName = _nodeNames.get(i);
 
             psrCat.getData().add(data);
@@ -238,11 +251,16 @@ public class MainLauncherController implements Initializable, ScheduleResultList
             ganttChart.getData().add(ps);
             ObservableList<XYChart.Data> data = ps.getData();
             for (XYChart.Data d: data) {
+                //set up tooltips and barchart colors
                 int iterJ = data.indexOf(d);
                 StackPane bar = (StackPane) d.getNode();
-                String node = pcatName.get(iterI).get(iterJ);
+                String node = pcatName.get(iterI).get(iterJ);   //nodename
+                int startTime = (int)d.getXValue();
+                String processor = (String)d.getYValue();
+                processor = processor.substring(processorStripLength); // value of "PSR " in previous loop
                 ExtraData nodeW = (ExtraData)d.getExtraValue();
                 long nodeWeight = nodeW.getLength();
+                Tooltip.install(bar, new Tooltip("Node\t" + node + "\nWeight\t" + nodeWeight + "\nStart\t" + startTime + "\nProc.\t" + processor));
                 double percentage = (double)(nodeWeight - lowestNodeWeight) / (double)(highestNodeWeight - lowestNodeWeight);
                 percentage = 1.0 - (0.25 + percentage * (0.75)); //scale percentages from 25% to 100%
                 if (highestNodeWeight == lowestNodeWeight) {
@@ -252,10 +270,6 @@ public class MainLauncherController implements Initializable, ScheduleResultList
                 System.out.println(percentage);
                 ca.setBrightness(percentage);
                 bar.setEffect(ca);
-                Text t = new Text(node + "\n(" + nodeW.getLength() + ")");
-                t.setTextAlignment(TextAlignment.CENTER);
-                bar.getChildren().add(t);
-                StackPane.setAlignment(t, Pos.TOP_LEFT);
 
             }
         }
