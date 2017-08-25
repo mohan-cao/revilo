@@ -1,8 +1,6 @@
 package nz.co.revilo.Output;
 
-import java.io.FileNotFoundException;
 import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 /**
@@ -16,6 +14,7 @@ public abstract class DotFileProducer implements ScheduleResultListener {
 
     // Character set to write the file in
     public static final String CHAR_SET = "UTF-8";
+    public static final int FILE_CANT_BE_SAVED_EXIT_STATUS = 2;
 
     // Data structure to accept and write from scheduling manager
     protected String _outputFilename;
@@ -49,16 +48,18 @@ public abstract class DotFileProducer implements ScheduleResultListener {
         _nodeStarts = nodeStarts;
         _nodeProcessor = nodeProcessor;
         System.out.println("This is notified!");
+
         // Attempts to print the graph to a file
         try {
             PrintWriter pw = new PrintWriter(_outputFilename, CHAR_SET);
             produceOutput(pw);
             pw.flush();
             pw.close();
-        } catch (UnsupportedEncodingException e) {
-            //TODO Error handling
-        } catch (FileNotFoundException e) {
-            //TODO Error handling
+        } catch (Exception e) {
+            System.out.println("File could not be saved");
+            System.out.println(e.getMessage());
+            System.out.println(e.getStackTrace());
+            System.exit(FILE_CANT_BE_SAVED_EXIT_STATUS);
         }
     }
 
@@ -69,6 +70,9 @@ public abstract class DotFileProducer implements ScheduleResultListener {
      */
     public DotFileProducer(String outputFilename) {
         _outputFilename = outputFilename;
+        if (_outputFilename.toUpperCase().endsWith(".DOT")) {
+            _outputFilename = outputFilename + ".dot";
+        }
     }
 
     /**

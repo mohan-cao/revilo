@@ -2,11 +2,13 @@ package nz.co.revilo.Gui;
 
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
-import nz.co.revilo.Output.ScheduleResultListener;
 
 import java.util.List;
 
-public class GUIScheduleResult{
+/**
+ * @author Terran Kroft
+ */
+public class GUIScheduleResult {
     private BooleanProperty isDoneProcessing = new SimpleBooleanProperty();
     private StringProperty graphName = new SimpleStringProperty();
     private ListProperty<String> nodeNames = new SimpleListProperty<>();
