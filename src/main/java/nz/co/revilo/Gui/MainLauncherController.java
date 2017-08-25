@@ -24,7 +24,7 @@ import nz.co.revilo.App;
 import nz.co.revilo.Gui.GanttChart.ExtraData;
 import nz.co.revilo.Output.NewOptimalResultListener;
 import nz.co.revilo.Output.ScheduleResultListener;
-import nz.co.revilo.Scheduling.Schedule;
+import nz.co.revilo.Scheduling.BnBSchedule;
 
 import java.net.URL;
 import java.util.*;
@@ -109,8 +109,8 @@ public class MainLauncherController implements Initializable, ScheduleResultList
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        app.getAlgorithmManager().inform(this);
-        app.getAlgorithmManager().optimalInform(this);
+        App.getAlgorithmManager().inform(this);
+        App.getAlgorithmManager().optimalInform(this);
         results = new GUIScheduleResult();
         //set up change listeners
         results.isDoneProcessingProperty().addListener(new ChangeListener<Boolean>() {
@@ -244,7 +244,7 @@ public class MainLauncherController implements Initializable, ScheduleResultList
                 Text t = new Text(node + "\n(" + nodeW.getLength() + ")");
                 t.setTextAlignment(TextAlignment.CENTER);
                 bar.getChildren().add(t);
-                bar.setAlignment(t, Pos.TOP_LEFT);
+                StackPane.setAlignment(t, Pos.TOP_LEFT);
 
             }
         }
@@ -254,7 +254,7 @@ public class MainLauncherController implements Initializable, ScheduleResultList
     }
 
     @Override
-    public void newOptimal(Schedule optimal) {
+    public void newOptimal(BnBSchedule optimal) {
         _graphName = App.getAlgorithmManager().getGraphName();
         _nodeNames = App.getAlgorithmManager().getNodeNames();
         _nodeWeights = App.getAlgorithmManager().getNodeWeights();
