@@ -4,6 +4,7 @@ import nz.co.revilo.Scheduling.AlgorithmManager;
 import nz.co.revilo.Scheduling.BranchAndBoundAlgorithmManager;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -136,9 +137,16 @@ public class BnBTest extends ValidityTest {
      */
     @Test
     public void test8NodeRandom() {
-        TestResultListener t = scheduleBnB(AppTest.TEST_PATH + "Nodes_7_OutTree.dot");
+        _algorithmManager = new BranchAndBoundAlgorithmManager(2);
+        TestResultListener t = scheduleBnB(AppTest.TEST_PATH + "Nodes_8_Random.dot");
         assertTrue(satisfiesDependencies(t));
         assertTrue(validStartTimeForTasks(t));
+        assertEquals(_algorithmManager.getUpperBound(),581);
+        _algorithmManager = new BranchAndBoundAlgorithmManager(4);
+        TestResultListener t2 = scheduleBnB(AppTest.TEST_PATH + "Nodes_8_Random.dot");
+        assertTrue(satisfiesDependencies(t2));
+        assertTrue(validStartTimeForTasks(t2));
+        assertEquals(_algorithmManager.getUpperBound(),581);
     }
 
     /**
@@ -146,8 +154,33 @@ public class BnBTest extends ValidityTest {
      */
     @Test
     public void test9NodeSeriesParallel() {
-        TestResultListener t = scheduleBnB(AppTest.TEST_PATH + "Nodes_7_OutTree.dot");
+        _algorithmManager = new BranchAndBoundAlgorithmManager(2);
+        TestResultListener t = scheduleBnB(AppTest.TEST_PATH + "Nodes_9_SeriesParallel.dot");
         assertTrue(satisfiesDependencies(t));
         assertTrue(validStartTimeForTasks(t));
+        assertEquals(_algorithmManager.getUpperBound(),55);
+        _algorithmManager = new BranchAndBoundAlgorithmManager(4);
+        TestResultListener t2 = scheduleBnB(AppTest.TEST_PATH + "Nodes_9_SeriesParallel.dot");
+        assertTrue(satisfiesDependencies(t2));
+        assertTrue(validStartTimeForTasks(t2));
+        assertEquals(_algorithmManager.getUpperBound(),55);
+    }
+
+    /**
+     * Tests if the 9-node series parallel input satisfies the constraints outlines (dependencies, timing)
+     */
+    @Test
+    @Category(SlowTest.class)
+    public void test11NodeSeriesParallel() {
+        _algorithmManager = new BranchAndBoundAlgorithmManager(2);
+        TestResultListener t = scheduleBnB(AppTest.TEST_PATH + "Nodes_11_OutTree.dot");
+        assertTrue(satisfiesDependencies(t));
+        assertTrue(validStartTimeForTasks(t));
+        assertEquals(_algorithmManager.getUpperBound(),350);
+        _algorithmManager = new BranchAndBoundAlgorithmManager(4);
+        TestResultListener t2 = scheduleBnB(AppTest.TEST_PATH + "Nodes_11_OutTree.dot");
+        assertTrue(satisfiesDependencies(t2));
+        assertTrue(validStartTimeForTasks(t2));
+        assertEquals(_algorithmManager.getUpperBound(),227);
     }
 }
