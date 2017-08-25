@@ -27,6 +27,18 @@ public abstract class DotFileProducer implements ScheduleResultListener {
     protected List<Integer> _nodeProcessor;
 
     /**
+     * DotFileProducer constructor which sets the file name of the output schedule DOT file.
+     *
+     * @param outputFilename
+     */
+    public DotFileProducer(String outputFilename) {
+        _outputFilename = outputFilename;
+        if (_outputFilename.toUpperCase().endsWith(".DOT")) {
+            _outputFilename = outputFilename + ".dot";
+        }
+    }
+
+    /**
      * Accepts data about how tasks are going to be run on each processor and at what time then calls produceOutput()
      *
      * @param graphName     Name of graph
@@ -60,18 +72,6 @@ public abstract class DotFileProducer implements ScheduleResultListener {
             System.out.println(e.getMessage());
             System.out.println(e.getStackTrace());
             System.exit(FILE_CANT_BE_SAVED_EXIT_STATUS);
-        }
-    }
-
-    /**
-     * DotFileProducer constructor which sets the file name of the output schedule DOT file.
-     *
-     * @param outputFilename
-     */
-    public DotFileProducer(String outputFilename) {
-        _outputFilename = outputFilename;
-        if (_outputFilename.toUpperCase().endsWith(".DOT")) {
-            _outputFilename = outputFilename + ".dot";
         }
     }
 

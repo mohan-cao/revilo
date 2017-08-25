@@ -15,6 +15,13 @@ public class AstarSchedule implements Cloneable {
     public AstarSchedule() {
     }
 
+    private AstarSchedule(Set<AstarTask> scheduled, Set<AstarTask> schedulable, Set<AstarTask> unschedulable, List<Integer> processorLastUsed) {
+        _scheduled = new HashSet<>(scheduled);
+        _schedulable = new HashSet<>(schedulable);
+        _unschedulable = new HashSet<>(unschedulable);
+        _processorLastUsed = new ArrayList<>(processorLastUsed);
+    }
+
     public int cost() {
         int cost = 0;
         for (Integer processorCost : _processorLastUsed) {
@@ -23,13 +30,6 @@ public class AstarSchedule implements Cloneable {
             }
         }
         return cost;
-    }
-
-    private AstarSchedule(Set<AstarTask> scheduled, Set<AstarTask> schedulable, Set<AstarTask> unschedulable, List<Integer> processorLastUsed) {
-        _scheduled = new HashSet<>(scheduled);
-        _schedulable = new HashSet<>(schedulable);
-        _unschedulable = new HashSet<>(unschedulable);
-        _processorLastUsed = new ArrayList<>(processorLastUsed);
     }
 
     public AstarSchedule clone() {

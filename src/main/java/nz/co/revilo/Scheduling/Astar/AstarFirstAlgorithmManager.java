@@ -138,9 +138,9 @@ public class AstarFirstAlgorithmManager extends AlgorithmManager {
                             int taskNum = unshedulable._taskNum;
                             for (Integer dependency : partialDependencies.get(taskNum)) {
                                 if (!newSchedule._scheduled.contains(new AstarTask(dependency))) {
-                                   schedulable = false;
-                                   break;
-                               }
+                                    schedulable = false;
+                                    break;
+                                }
                             }
                             if (schedulable) {
                                 newSchedule._schedulable.add(unshedulable);
