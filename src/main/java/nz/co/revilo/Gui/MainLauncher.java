@@ -28,7 +28,7 @@ public class MainLauncher extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         this.primaryStage = primaryStage;
-        this.primaryStage.initStyle(StageStyle.UTILITY);
+        this.primaryStage.initStyle(StageStyle.DECORATED);
         this.primaryStage.setTitle("Revilo");
         try {
             // Load root layout from fxml file.
@@ -37,11 +37,13 @@ public class MainLauncher extends Application {
             MainLauncherController mlc = new MainLauncherController(app, this);
             loader.setController(mlc);
             rootLayout = loader.load();
-            
+
             // Show the scene containing the root layout.
             Scene scene = new Scene(rootLayout);
             scene.getStylesheets().add("/main.css");
             primaryStage.setScene(scene);
+            primaryStage.setMinWidth(680);
+            primaryStage.setMinHeight(400);
             primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
                 @Override
                 public void handle(WindowEvent event) {

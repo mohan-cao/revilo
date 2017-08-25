@@ -57,12 +57,6 @@ public class MainLauncherController implements Initializable, ScheduleResultList
     }
 
     @FXML
-    private Button closeBtn;
-
-    @FXML
-    private Button hideBtn;
-
-    @FXML
     private Label processorLabel;
 
     @FXML
@@ -99,18 +93,7 @@ public class MainLauncherController implements Initializable, ScheduleResultList
 
     private ArrayList<String> processorCatStr;
     private ArrayList<XYChart.Series> processorCat;
-
-    @FXML
-    private void closeRevilo(ActionEvent event) {
-        Platform.exit();
-        System.exit(0);
-    }
-
-    @FXML
-    private void minimizeRevilo(ActionEvent event) {
-        ml.getPrimaryStage().setIconified(true);
-    }
-
+    
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         App.getAlgorithmManager().inform(this);
