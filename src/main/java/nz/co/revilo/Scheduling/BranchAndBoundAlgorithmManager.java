@@ -54,17 +54,6 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
             totalNodeWeights += _nodeWeights[nodeId];
         }
 
-        /*
-         * Definitely have sources as a row at start of each processor if there aren't more sources than cores
-		 * All others will just be permutations
-		 * If stack sources on same processor, will be less optimal
-		 */
-        int processor = 0;
-        for (int nodeId : sources) {
-            BnBSchedule newSchedule = new BnBSchedule(this, null, nodeId, processor);
-            rootSchedules.add(newSchedule);
-        }
-
         //Take a greedy path down the tree to find a more realistic upper bound
         upperBound = greedyUpperBound();
         if ((totalNodeWeights + 1) < upperBound) {
@@ -79,6 +68,16 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
 
         calculateBottomLevels();
 
+        /*
+         * Definitely have sources as a row at start of each processor if there aren't more sources than cores
+		 * All others will just be permutations
+		 * If stack sources on same processor, will be less optimal
+		 */
+        int processor = 0;
+        for (int nodeId : sources) {
+            BnBSchedule newSchedule = new BnBSchedule(this, null, nodeId, processor);
+            rootSchedules.add(newSchedule);
+        }
         while (!rootSchedules.isEmpty()) {
             bnb(rootSchedules.remove(0));
         }
