@@ -59,7 +59,7 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
         } else if ((totalNodeWeights + 1) == upperBound) {
             System.out.println("no difference");
         } else {
-            System.out.println("greedy wins");
+            System.out.println("greedy wins. Upper bound is: " + upperBound);
             upperBound++;
         }
 
