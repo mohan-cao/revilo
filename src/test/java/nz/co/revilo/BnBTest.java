@@ -5,6 +5,13 @@ import nz.co.revilo.Scheduling.BranchAndBoundAlgorithmManager;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import static nz.co.revilo.ValidityTest.satisfiesDependencies;
 import static nz.co.revilo.ValidityTest.schedule;
 import static nz.co.revilo.ValidityTest.validStartTimeForTasks;
@@ -158,5 +165,47 @@ public class BnBTest {
         assertTrue(satisfiesDependencies(t2));
         assertTrue(validStartTimeForTasks(t2));
         assertEquals(aManager.getUpperBound(),227);
+    }
+
+    @Test(timeout=30000)
+    @Category(SlowTest.class)
+    public void ForkGraphs2Processors(){
+        try {
+            List<Path> files = Files.find(Paths.get(""),
+                    Integer.MAX_VALUE,
+                    (path, basicFileAttributes) -> path.toFile().getName().matches("Fork.*_Nodes_10_.*_WeightType_Random\\.gxl")
+            ).collect(Collectors.toList());
+            for(Path p : files){
+                System.out.println(p.toString());
+                String file = p.getFileName().toString();
+                AlgorithmManager aManager = new BranchAndBoundAlgorithmManager(2);
+                TestResultListener t = schedule(aManager,".\\"+p.toString(),true);
+                assertTrue(satisfiesDependencies(t));
+                assertTrue(validStartTimeForTasks(t));
+                if(file.contains("Join")) { //Fork join nodes
+                    if (file.contains("CCR_0.10")) {
+                        assertEquals(aManager.getUpperBound(), 499);
+                    } else if (file.contains("CCR_1.01")) {
+                        assertEquals(aManager.getUpperBound(), 59);
+                    } else if (file.contains("CCR_1.84")) {
+                        assertEquals(aManager.getUpperBound(), 38);
+                    } else if (file.contains("CCR_10.01")) {
+                        assertEquals(aManager.getUpperBound(), 69);
+                    }
+                }else{ //Just fork nodes
+                    if (file.contains("CCR_0.10")) {
+                        assertEquals(aManager.getUpperBound(), 300);
+                    } else if (file.contains("CCR_0.99")) {
+                        assertEquals(aManager.getUpperBound(), 39);
+                    } else if (file.contains("CCR_1.97")) {
+                        assertEquals(aManager.getUpperBound(), 45);
+                    } else if (file.contains("CCR_10.00")) {
+                        assertEquals(aManager.getUpperBound(), 47);
+                    }
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

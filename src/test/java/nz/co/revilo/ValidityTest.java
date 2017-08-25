@@ -1,6 +1,8 @@
 package nz.co.revilo;
 
 import nz.co.revilo.Input.DotFileReader;
+import nz.co.revilo.Input.FileParser;
+import nz.co.revilo.Input.GxlFileReader;
 import nz.co.revilo.Scheduling.AlgorithmManager;
 
 import java.io.FileNotFoundException;
@@ -19,8 +21,14 @@ public class ValidityTest {
      * @param filename name of the file containing the graph we want schedule, and then test the schedule of
      * @return a TestResultListener containing the information about the final schedule
      */
-    public static TestResultListener schedule(final AlgorithmManager aManager, final String filename, final boolean isBnB) {
-        DotFileReader reader = new DotFileReader(filename);
+    public synchronized static TestResultListener schedule(final AlgorithmManager aManager, final String filename, final boolean isBnB) {
+        FileParser reader;
+        if (filename.toUpperCase().contains("GXL")) {
+            reader = new GxlFileReader(filename);
+        } else {
+            reader = new DotFileReader(filename);
+        }
+
         TestResultListener listener;
         listener = (isBnB)?new TestResultListener(true):new TestResultListener();
         aManager.inform(listener);
@@ -39,7 +47,7 @@ public class ValidityTest {
      * @param listener the test result listener containing the information from
      * @return boolean representing if dependencies are satisfied
      */
-    public static boolean satisfiesDependencies(TestResultListener listener) {
+    public synchronized static boolean satisfiesDependencies(final TestResultListener listener) {
         List<TestResultListener.Node> nodes = listener.getNodes();
         int nNodes = nodes.size();
 
@@ -75,7 +83,7 @@ public class ValidityTest {
      * @param listener the test result listener containing the information from
      * @return boolean true if it satisfies that no processor has two tasks starting at the same time
      */
-    public static boolean validStartTimeForTasks(TestResultListener listener){
+    public synchronized static boolean validStartTimeForTasks(final TestResultListener listener){
         // Iterate through all processors
         List<TestResultListener.Node> nodes = listener.getNodes();
         for(List<TestResultListener.Node> processor : listener.getCores()) {
