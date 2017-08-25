@@ -112,7 +112,7 @@ public abstract class ValidityTest {
                     // If the node at index j has a start time between the start and end times of the task at index j,
                     // there is overlap, and the start time is not valid i.e. the start time of the task at index j is
                     // in the range [start, end)
-                    if ((nodes.get(j).getStartTime() >= start) && (nodes.get(j).getStartTime() < end)) {
+                    if ((nodes.get(j).getStartTime() >= start) && (nodes.get(j).getStartTime() < end) && i == j) {
                         System.out.print("Error: Tasks " + nodes.get(j) + " and " + nodes.get(i) + "overlap in the " +
                                 "schedule on core " + nodes.get(i).getCore());
                         return false;
