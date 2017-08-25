@@ -17,8 +17,8 @@ import java.util.*;
  * @author Mohan Cao
  */
 public class BnBSchedule {
-	int[] finishTimes;
-	int totalIdleTime=0;
+    int[] finishTimes;
+    int totalIdleTime=0;
 	int lowerBound;
 	int scheduledWeight = 0;
 	String _scheduleStructureId = "";
@@ -26,21 +26,21 @@ public class BnBSchedule {
 	Set<Integer> openNodes=new HashSet<>(); //need to assign to processor
 	Map<Integer,Tuple<Integer,Integer>> closedNodes=new HashMap<>(); //done nodes
 	Set<Integer> independentNodes=new HashSet<>(); //nodes it depends on are done
-	Map<Integer, List<Tuple<Integer, Integer>>> scheduleStructure; //map of processor to tasks assigned on each processor
+    Map<Integer, List<Tuple<Integer, Integer>>> scheduleStructure; //map of processor to tasks assigned on each processor
 
 	/**
 	 * Create new schedule object
-	 *
-	 * @author Abby S
-	 *
-	 * @param bnb the branch and bound algorithm manager that is being used
-	 * @param parentSchedule the parent schedule that is being used
+     *
+     * @author Abby S
+     *
+     * @param bnb the branch and bound algorithm manager that is being used
+     * @param parentSchedule the parent schedule that is being used
 	 * @param nodeId the node id added to the current schedule
 	 * @param processor the processor that the node is being added on
 	 */
-	public BnBSchedule(BranchAndBoundAlgorithmManager bnb, BnBSchedule parentSchedule, int nodeId, int processor) {
-		int startTime=0;
-		int addedIdleTime=0;
+    public BnBSchedule(BranchAndBoundAlgorithmManager bnb, BnBSchedule parentSchedule, int nodeId, int processor) {
+        int startTime = 0;
+        int addedIdleTime=0;
 		finishTimes = new int[bnb._processingCores];
 		this.bnb=bnb;
 
@@ -68,9 +68,9 @@ public class BnBSchedule {
 			addedIdleTime=startTime-finishTimes[processor]; //added by this node
 			totalIdleTime+=addedIdleTime;//total processor idle time
 
-			//TODO: cost function. Does this actually work as a heuristic?
-			int perfectLoadBalancing=(bnb.totalNodeWeights+totalIdleTime)/bnb._processingCores;
-			lowerBound=(startTime+bnb.bottomLevels[nodeId])>perfectLoadBalancing?(startTime+bnb.bottomLevels[nodeId]):perfectLoadBalancing;
+            //TODO: cost function. Does this actually work as a heuristic?
+            int perfectLoadBalancing = (bnb.totalNodeWeights + totalIdleTime) / bnb._processingCores;
+            lowerBound=(startTime+bnb.bottomLevels[nodeId])>perfectLoadBalancing?(startTime+bnb.bottomLevels[nodeId]):perfectLoadBalancing;
 		}
 
 		//create schedule structure map for structure id comparison
@@ -78,21 +78,21 @@ public class BnBSchedule {
 
 		//update data structures
 		closedNodes.put(nodeId, new Tuple<>(startTime, processor));
-		openNodes.remove(nodeId);
-		independentNodes.remove(nodeId);
-		updateIndependentChildren(nodeId);
+        openNodes.remove(nodeId);
+        independentNodes.remove(nodeId);
+        updateIndependentChildren(nodeId);
 		finishTimes[processor]+=addedIdleTime+bnb._nodeWeights[nodeId];
 
 		//update schedule structure
-		List<Tuple<Integer, Integer>> listToAdd = scheduleStructure.get(processor);
-		listToAdd.add(new Tuple<>(nodeId, startTime));
-		scheduleStructure.put(processor, listToAdd);
-		_scheduleStructureId = generateScheduleStructureId();
-	}
+        List<Tuple<Integer, Integer>> listToAdd = scheduleStructure.get(processor);
+        listToAdd.add(new Tuple<>(nodeId, startTime));
+        scheduleStructure.put(processor, listToAdd);
+        _scheduleStructureId = generateScheduleStructureId();
+    }
 
-	public Map<Integer, Tuple<Integer, Integer>> getClosedNodes() {
-		return closedNodes;
-	}
+    public Map<Integer, Tuple<Integer, Integer>> getClosedNodes() {
+        return closedNodes;
+    }
 
 	/**
 	 * create schedule structure map for id comparison
@@ -105,8 +105,8 @@ public class BnBSchedule {
 		scheduleStructure = new HashMap<>();
 		for(int i=0;i<bnb._processingCores;i++){
 			//list of tuples assigned on each processor
-			scheduleStructure.put(i, new ArrayList<>());
-		}
+            scheduleStructure.put(i, new ArrayList<>());
+        }
 
 		//Add all assigned nodes to schedule structure map
 		for(Integer assignedNode : closedNodes.keySet()){
@@ -122,16 +122,16 @@ public class BnBSchedule {
 	 * 
 	 * @return
 	 */
-	private String generateScheduleStructureId() {
-		String[] ids = new String[bnb._processingCores];
-		Arrays.fill(ids, " ");
-		for (int p = 0; p < bnb._processingCores; p++) {
-			List<Tuple<Integer, Integer>> list = scheduleStructure.get(p);
-			Collections.sort(list);
-			for (Tuple<Integer, Integer> t : list) {
-				ids[p] += t.hashCode();
-			}
-		}
+    private String generateScheduleStructureId() {
+        String[] ids = new String[bnb._processingCores];
+        Arrays.fill(ids, " ");
+        for (int p = 0; p < bnb._processingCores; p++) {
+            List<Tuple<Integer, Integer>> list = scheduleStructure.get(p);
+            Collections.sort(list);
+            for (Tuple<Integer, Integer> t : list) {
+                ids[p] += t.hashCode();
+            }
+        }
 		Arrays.sort(ids);
 		return Arrays.toString(ids);
 	}
@@ -154,8 +154,8 @@ public class BnBSchedule {
 
 	//TODO: remove if unused
 	public boolean isBounded(int maxFinishTime) {
-		return this.lowerBound >= maxFinishTime;
-	}
+        return this.lowerBound >= maxFinishTime;
+    }
 
 	/**
 	 * Clones the parent schedule for this next schedule
@@ -165,9 +165,9 @@ public class BnBSchedule {
 	 * 
 	 * @param parentSchedule
 	 */
-	private void cloneParentSchedule(BnBSchedule parentSchedule) {
-		//clone finishTimes
-		for(int i=0; i<bnb._processingCores;i++) finishTimes[i]=parentSchedule.finishTimes[i];
+    private void cloneParentSchedule(BnBSchedule parentSchedule) {
+        //clone finishTimes
+        for(int i=0; i<bnb._processingCores;i++) finishTimes[i]=parentSchedule.finishTimes[i];
 
 		//clone idleTime
 		totalIdleTime=parentSchedule.totalIdleTime;
@@ -219,7 +219,7 @@ public class BnBSchedule {
 		}
 	}
 
-	// TODO: design decision to not compare BnBSchedule objects
+    // TODO: design decision to not compare BnBSchedule objects
 
 	/**
 	 * Method to show current schedule in a string form
@@ -244,9 +244,9 @@ public class BnBSchedule {
 	 * @author Mohan Cao
 	 *
 	 */
-	public class Tuple<T, V> implements Comparable<Tuple<T, V>> {
-		T _a;
-		V _b;
+    public class Tuple<T, V> implements Comparable<Tuple<T, V>> {
+        T _a;
+        V _b;
 
 		public Tuple(T a, V b){
 			_a = a;
@@ -278,12 +278,12 @@ public class BnBSchedule {
 
 		@Override
 		public int compareTo(Tuple<T, V> o) {
-			Tuple<T, V> tuple = o;
-			if ((Integer) (this.getA()) < (Integer) (tuple.getA())) {
-				return -1;
-			} else if ((Integer) (this.getA()) > (Integer) (tuple.getA())) {
-				return 1;
-			}
+            Tuple<T, V> tuple = o;
+            if ((Integer) (this.getA()) < (Integer) (tuple.getA())) {
+                return -1;
+            } else if ((Integer) (this.getA()) > (Integer) (tuple.getA())) {
+                return 1;
+            }
 			return 0;
 		}
 	}
