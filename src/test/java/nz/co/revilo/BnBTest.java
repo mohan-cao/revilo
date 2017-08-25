@@ -2,13 +2,13 @@ package nz.co.revilo;
 
 import nz.co.revilo.Scheduling.AlgorithmManager;
 import nz.co.revilo.Scheduling.BranchAndBoundAlgorithmManager;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static nz.co.revilo.ValidityTest.satisfiesDependencies;
+import static nz.co.revilo.ValidityTest.schedule;
+import static nz.co.revilo.ValidityTest.validStartTimeForTasks;
+import static org.junit.Assert.*;
 
 /**
  * Test class for BnB
@@ -17,31 +17,7 @@ import static org.junit.Assert.fail;
  * Based on class written by Aimee
  *
  */
-public class BnBTest extends ValidityTest {
-
-    class MockManager extends AlgorithmManager {
-        /**
-         * Sets the number of processing cores the tasks must be scheduled on.
-         *
-         * @param processingCores number of cores specified for the final schedule
-         */
-        public MockManager(int processingCores) {
-            super(processingCores);
-        }
-
-        @Override
-        protected void execute() {
-            fail("Forgot to implement a real manager.");
-        }
-    }
-    /**
-     * Sets up a new AlgorithmManager before each test case. AlgorithmManagerImplementations can be switched out
-     */
-    @Before
-    public void setUp() {
-        _algorithmManager = new MockManager(1);
-    }
-
+public class BnBTest {
 
     /**
      * Tests against the simple diamond DAG
@@ -49,16 +25,16 @@ public class BnBTest extends ValidityTest {
      */
     @Test
     public void testSimpleDiamondDAG(){
-        _algorithmManager = new BranchAndBoundAlgorithmManager(1);
-        TestResultListener t = scheduleBnB(AppTest.TEST_PATH + "input.dot");
+        AlgorithmManager aManager = new BranchAndBoundAlgorithmManager(1);
+        TestResultListener t = schedule(aManager,AppTest.TEST_PATH + "input.dot",true);
         assertTrue(satisfiesDependencies(t));
         assertTrue(validStartTimeForTasks(t));
-        assertEquals(_algorithmManager.getUpperBound(),10);
-        _algorithmManager = new BranchAndBoundAlgorithmManager(2);
-        TestResultListener t2 = scheduleBnB(AppTest.TEST_PATH + "input.dot");
+        assertEquals(aManager.getUpperBound(),10);
+        aManager = new BranchAndBoundAlgorithmManager(2);
+        TestResultListener t2 = schedule(aManager,AppTest.TEST_PATH + "input.dot",true);
         assertTrue(satisfiesDependencies(t2));
         assertTrue(validStartTimeForTasks(t2));
-        assertEquals(_algorithmManager.getUpperBound(),10);
+        assertEquals(aManager.getUpperBound(),10);
     }
 
 
@@ -67,11 +43,11 @@ public class BnBTest extends ValidityTest {
      */
     @Test
     public void testLinearDAG(){
-        _algorithmManager = new BranchAndBoundAlgorithmManager(1);
-        TestResultListener t = scheduleBnB(AppTest.TEST_PATH + "input1.dot");
+        AlgorithmManager aManager = new BranchAndBoundAlgorithmManager(1);
+        TestResultListener t = schedule(aManager,AppTest.TEST_PATH + "input1.dot",true);
         assertTrue(satisfiesDependencies(t));
         assertTrue(validStartTimeForTasks(t));
-        assertEquals(_algorithmManager.getUpperBound(),25);
+        assertEquals(aManager.getUpperBound(),25);
     }
 
     /**
@@ -79,11 +55,11 @@ public class BnBTest extends ValidityTest {
      */
     @Test
     public void testLinearDAG2(){
-        _algorithmManager = new BranchAndBoundAlgorithmManager(1);
-        TestResultListener t = scheduleBnB(AppTest.TEST_PATH + "input2.dot");
+        AlgorithmManager aManager = new BranchAndBoundAlgorithmManager(1);
+        TestResultListener t = schedule(aManager,AppTest.TEST_PATH + "input2.dot",true);
         assertTrue(satisfiesDependencies(t));
         assertTrue(validStartTimeForTasks(t));
-        assertEquals(_algorithmManager.getUpperBound(),25);
+        assertEquals(aManager.getUpperBound(),25);
     }
 
     /**
@@ -91,11 +67,11 @@ public class BnBTest extends ValidityTest {
      */
     @Test
     public void testSimpleFanningDAG(){
-        _algorithmManager = new BranchAndBoundAlgorithmManager(1);
-        TestResultListener t = scheduleBnB(AppTest.TEST_PATH + "input4.dot");
+        AlgorithmManager aManager = new BranchAndBoundAlgorithmManager(1);
+        TestResultListener t = schedule(aManager,AppTest.TEST_PATH + "input4.dot",true);
         assertTrue(satisfiesDependencies(t));
         assertTrue(validStartTimeForTasks(t));
-        assertEquals(_algorithmManager.getUpperBound(),25);
+        assertEquals(aManager.getUpperBound(),25);
     }
 
     /**
@@ -103,16 +79,16 @@ public class BnBTest extends ValidityTest {
      */
     @Test
     public void test10NodesRandom() {
-        _algorithmManager = new BranchAndBoundAlgorithmManager(2);
-        TestResultListener t = scheduleBnB(AppTest.TEST_PATH + "Nodes_10_Random.dot");
+        AlgorithmManager aManager = new BranchAndBoundAlgorithmManager(2);
+        TestResultListener t = schedule(aManager,AppTest.TEST_PATH + "Nodes_10_Random.dot",true);
         assertTrue(satisfiesDependencies(t));
         assertTrue(validStartTimeForTasks(t));
-        assertEquals(_algorithmManager.getUpperBound(),50);
-        _algorithmManager = new BranchAndBoundAlgorithmManager(4);
-        TestResultListener t2 = scheduleBnB(AppTest.TEST_PATH + "Nodes_10_Random.dot");
+        assertEquals(aManager.getUpperBound(),50);
+        aManager = new BranchAndBoundAlgorithmManager(4);
+        TestResultListener t2 = schedule(aManager,AppTest.TEST_PATH + "Nodes_10_Random.dot",true);
         assertTrue(satisfiesDependencies(t2));
         assertTrue(validStartTimeForTasks(t2));
-        assertEquals(_algorithmManager.getUpperBound(),50);
+        assertEquals(aManager.getUpperBound(),50);
     }
 
     /**
@@ -120,16 +96,16 @@ public class BnBTest extends ValidityTest {
      */
     @Test
     public void test7NodeOutTree() {
-        _algorithmManager = new BranchAndBoundAlgorithmManager(2);
-        TestResultListener t = scheduleBnB(AppTest.TEST_PATH + "Nodes_7_OutTree.dot");
+        AlgorithmManager aManager = new BranchAndBoundAlgorithmManager(2);
+        TestResultListener t = schedule(aManager,AppTest.TEST_PATH + "Nodes_7_OutTree.dot",true);
         assertTrue(satisfiesDependencies(t));
         assertTrue(validStartTimeForTasks(t));
-        assertEquals(_algorithmManager.getUpperBound(),28);
-        _algorithmManager = new BranchAndBoundAlgorithmManager(4);
-        TestResultListener t2 = scheduleBnB(AppTest.TEST_PATH + "Nodes_7_OutTree.dot");
+        assertEquals(aManager.getUpperBound(),28);
+        aManager = new BranchAndBoundAlgorithmManager(4);
+        TestResultListener t2 = schedule(aManager,AppTest.TEST_PATH + "Nodes_7_OutTree.dot",true);
         assertTrue(satisfiesDependencies(t2));
         assertTrue(validStartTimeForTasks(t2));
-        assertEquals(_algorithmManager.getUpperBound(),22);
+        assertEquals(aManager.getUpperBound(),22);
     }
 
     /**
@@ -137,16 +113,16 @@ public class BnBTest extends ValidityTest {
      */
     @Test
     public void test8NodeRandom() {
-        _algorithmManager = new BranchAndBoundAlgorithmManager(2);
-        TestResultListener t = scheduleBnB(AppTest.TEST_PATH + "Nodes_8_Random.dot");
+        AlgorithmManager aManager = new BranchAndBoundAlgorithmManager(2);
+        TestResultListener t = schedule(aManager,AppTest.TEST_PATH + "Nodes_8_Random.dot",true);
         assertTrue(satisfiesDependencies(t));
         assertTrue(validStartTimeForTasks(t));
-        assertEquals(_algorithmManager.getUpperBound(),581);
-        _algorithmManager = new BranchAndBoundAlgorithmManager(4);
-        TestResultListener t2 = scheduleBnB(AppTest.TEST_PATH + "Nodes_8_Random.dot");
+        assertEquals(aManager.getUpperBound(),581);
+        aManager = new BranchAndBoundAlgorithmManager(4);
+        TestResultListener t2 = schedule(aManager,AppTest.TEST_PATH + "Nodes_8_Random.dot",true);
         assertTrue(satisfiesDependencies(t2));
         assertTrue(validStartTimeForTasks(t2));
-        assertEquals(_algorithmManager.getUpperBound(),581);
+        assertEquals(aManager.getUpperBound(),581);
     }
 
     /**
@@ -154,16 +130,16 @@ public class BnBTest extends ValidityTest {
      */
     @Test
     public void test9NodeSeriesParallel() {
-        _algorithmManager = new BranchAndBoundAlgorithmManager(2);
-        TestResultListener t = scheduleBnB(AppTest.TEST_PATH + "Nodes_9_SeriesParallel.dot");
+        AlgorithmManager aManager = new BranchAndBoundAlgorithmManager(2);
+        TestResultListener t = schedule(aManager,AppTest.TEST_PATH + "Nodes_9_SeriesParallel.dot",true);
         assertTrue(satisfiesDependencies(t));
         assertTrue(validStartTimeForTasks(t));
-        assertEquals(_algorithmManager.getUpperBound(),55);
-        _algorithmManager = new BranchAndBoundAlgorithmManager(4);
-        TestResultListener t2 = scheduleBnB(AppTest.TEST_PATH + "Nodes_9_SeriesParallel.dot");
+        assertEquals(aManager.getUpperBound(),55);
+        aManager = new BranchAndBoundAlgorithmManager(4);
+        TestResultListener t2 = schedule(aManager,AppTest.TEST_PATH + "Nodes_9_SeriesParallel.dot",true);
         assertTrue(satisfiesDependencies(t2));
         assertTrue(validStartTimeForTasks(t2));
-        assertEquals(_algorithmManager.getUpperBound(),55);
+        assertEquals(aManager.getUpperBound(),55);
     }
 
     /**
@@ -172,15 +148,15 @@ public class BnBTest extends ValidityTest {
     @Test
     @Category(SlowTest.class)
     public void test11NodeSeriesParallel() {
-        _algorithmManager = new BranchAndBoundAlgorithmManager(2);
-        TestResultListener t = scheduleBnB(AppTest.TEST_PATH + "Nodes_11_OutTree.dot");
+        AlgorithmManager aManager = new BranchAndBoundAlgorithmManager(2);
+        TestResultListener t = schedule(aManager,AppTest.TEST_PATH + "Nodes_11_OutTree.dot",true);
         assertTrue(satisfiesDependencies(t));
         assertTrue(validStartTimeForTasks(t));
-        assertEquals(_algorithmManager.getUpperBound(),350);
-        _algorithmManager = new BranchAndBoundAlgorithmManager(4);
-        TestResultListener t2 = scheduleBnB(AppTest.TEST_PATH + "Nodes_11_OutTree.dot");
+        assertEquals(aManager.getUpperBound(),350);
+        aManager = new BranchAndBoundAlgorithmManager(4);
+        TestResultListener t2 = schedule(aManager,AppTest.TEST_PATH + "Nodes_11_OutTree.dot",true);
         assertTrue(satisfiesDependencies(t2));
         assertTrue(validStartTimeForTasks(t2));
-        assertEquals(_algorithmManager.getUpperBound(),227);
+        assertEquals(aManager.getUpperBound(),227);
     }
 }

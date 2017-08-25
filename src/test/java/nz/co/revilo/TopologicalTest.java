@@ -1,7 +1,7 @@
 package nz.co.revilo;
 
+import nz.co.revilo.Scheduling.AlgorithmManager;
 import nz.co.revilo.Scheduling.Topological.ImprovedTopologicalAlgorithmManager;
-import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -12,19 +12,9 @@ import static org.junit.Assert.assertTrue;
  * Test cases designed for use with the topological sort implementation(s) of AlgorithmManager. These tests only ensure
  * that schedules are valid, NOT optimal. This is done by ensuring all dependencies are satisfied (i.e. arcs correctly
  * acknowledged) in scheduling, and that is no more than one process running on a processor at once.
- * @author Aimee
- * @version alpha
+ * @author Aimee, Mohan Cao
  */
 public class TopologicalTest extends ValidityTest {
-
-    /**
-     * Sets up a new AlgorithmManager before each test case. AlgorithmManagerImplementations can be switched out
-     */
-    @Before
-    public void setUp() {
-        _algorithmManager = new ImprovedTopologicalAlgorithmManager(1);
-    }
-
 
     /**
      * Tests against the simple diamond DAG
@@ -32,7 +22,8 @@ public class TopologicalTest extends ValidityTest {
      */
     @Test
     public void testSimpleDiamondDAG(){
-        TestResultListener t = schedule(AppTest.TEST_PATH + "input.dot");
+        AlgorithmManager aManager = new ImprovedTopologicalAlgorithmManager(1);
+        TestResultListener t = schedule(aManager,AppTest.TEST_PATH + "input.dot",false);
         assertTrue(satisfiesDependencies(t));
         assertTrue(validStartTimeForTasks(t));
         for(TestResultListener.Node n : t.getNodes()){
@@ -61,7 +52,8 @@ public class TopologicalTest extends ValidityTest {
      */
     @Test
     public void testLinearDAG(){
-        TestResultListener t = schedule(AppTest.TEST_PATH + "input1.dot");
+        AlgorithmManager aManager = new ImprovedTopologicalAlgorithmManager(1);
+        TestResultListener t = schedule(aManager,AppTest.TEST_PATH + "input1.dot",false);
         assertTrue(satisfiesDependencies(t));
         assertTrue(validStartTimeForTasks(t));
         for(TestResultListener.Node n : t.getNodes()){
@@ -92,7 +84,8 @@ public class TopologicalTest extends ValidityTest {
      */
     @Test
     public void testLinearDAG2(){
-        TestResultListener t = schedule(AppTest.TEST_PATH + "input2.dot");
+        AlgorithmManager aManager = new ImprovedTopologicalAlgorithmManager(1);
+        TestResultListener t = schedule(aManager,AppTest.TEST_PATH + "input2.dot",false);
         assertTrue(satisfiesDependencies(t));
         assertTrue(validStartTimeForTasks(t));
         for(TestResultListener.Node n : t.getNodes()){
@@ -129,7 +122,8 @@ public class TopologicalTest extends ValidityTest {
     @Ignore
     @Deprecated
     public void testSmallBranchingDAG(){
-        TestResultListener t = schedule(AppTest.TEST_PATH + "input3.dot");
+        AlgorithmManager aManager = new ImprovedTopologicalAlgorithmManager(1);
+        TestResultListener t = schedule(aManager,AppTest.TEST_PATH + "input3.dot",false);
         assertTrue(satisfiesDependencies(t));
         assertTrue(validStartTimeForTasks(t));
         for(TestResultListener.Node n : t.getNodes()){
@@ -157,7 +151,8 @@ public class TopologicalTest extends ValidityTest {
      */
     @Test
     public void testSimpleFanningDAG(){
-        TestResultListener t = schedule(AppTest.TEST_PATH + "input4.dot");
+        AlgorithmManager aManager = new ImprovedTopologicalAlgorithmManager(1);
+        TestResultListener t = schedule(aManager,AppTest.TEST_PATH + "input4.dot",false);
         assertTrue(satisfiesDependencies(t));
         assertTrue(validStartTimeForTasks(t));
         for(TestResultListener.Node n : t.getNodes()){
@@ -179,7 +174,8 @@ public class TopologicalTest extends ValidityTest {
      */
     @Test
     public void test10NodesRandom() {
-        TestResultListener t = schedule(AppTest.TEST_PATH + "input.dot");
+        AlgorithmManager aManager = new ImprovedTopologicalAlgorithmManager(1);
+        TestResultListener t = schedule(aManager,AppTest.TEST_PATH + "Nodes_10_Random.dot",false);
         assertTrue(satisfiesDependencies(t));
         assertTrue(validStartTimeForTasks(t));
     }
@@ -189,7 +185,8 @@ public class TopologicalTest extends ValidityTest {
      */
     @Test
     public void test7NodeOutTree() {
-        TestResultListener t = schedule(AppTest.TEST_PATH + "Nodes_7_OutTree.dot");
+        AlgorithmManager aManager = new ImprovedTopologicalAlgorithmManager(1);
+        TestResultListener t = schedule(aManager,AppTest.TEST_PATH + "Nodes_7_OutTree.dot",false);
         assertTrue(satisfiesDependencies(t));
         assertTrue(validStartTimeForTasks(t));
     }
@@ -199,7 +196,8 @@ public class TopologicalTest extends ValidityTest {
      */
     @Test
     public void test8NodeRandom() {
-        TestResultListener t = schedule(AppTest.TEST_PATH + "Nodes_7_OutTree.dot");
+        AlgorithmManager aManager = new ImprovedTopologicalAlgorithmManager(1);
+        TestResultListener t = schedule(aManager,AppTest.TEST_PATH + "Nodes_8_Random.dot",false);
         assertTrue(satisfiesDependencies(t));
         assertTrue(validStartTimeForTasks(t));
     }
@@ -209,7 +207,8 @@ public class TopologicalTest extends ValidityTest {
      */
     @Test
     public void test9NodeSeriesParallel() {
-        TestResultListener t = schedule(AppTest.TEST_PATH + "Nodes_7_OutTree.dot");
+        AlgorithmManager aManager = new ImprovedTopologicalAlgorithmManager(1);
+        TestResultListener t = schedule(aManager,AppTest.TEST_PATH + "Nodes_9_SeriesParallel.dot",false);
         assertTrue(satisfiesDependencies(t));
         assertTrue(validStartTimeForTasks(t));
     }
