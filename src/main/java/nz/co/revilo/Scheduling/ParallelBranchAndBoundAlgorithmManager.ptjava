@@ -34,12 +34,20 @@ public class ParallelBranchAndBoundAlgorithmManager extends BranchAndBoundAlgori
 
 	/**
 	 * Creates the ParallelTask task which needs to be scheduled for execution
+	 * 
+	 * @author Aimee T
 	 */
 	private void createTask(BnBSchedule schedule) {
-		TaskID<Void> partial = startNewBnbThread(schedule);
-		_schedulesToComplete.add(partial);
+		TaskID<Void> partial = startNewBnbThread(schedule); // Make the creation of a new worker for the input schedule a task
+		_schedulesToComplete.add(partial); // Add it to the TaskIDGroup
 	}
 	
+	/**
+	 * Creates and executes a new WorkerBnB object to continue expanding the input partial
+	 * schedule
+	 * 
+	 * @author Aimee T
+	 */
 	TASK private void startNewBnbThread(BnBSchedule schedule) {
 		WorkerBnb worker = new WorkerBnb(this, schedule, _processingCores);
 		worker.execute();
@@ -56,7 +64,7 @@ public class ParallelBranchAndBoundAlgorithmManager extends BranchAndBoundAlgori
      */
 	@Override
 	protected boolean isParallel(int closedSet) {
-    	return closedSet > 2;
+    	return closedSet > 3;
     }
     
     /**
@@ -69,21 +77,28 @@ public class ParallelBranchAndBoundAlgorithmManager extends BranchAndBoundAlgori
 		createTask(s);
     }
 	
+	/**
+	 * Class responsible for expanding partial schedules, which are the subtasks the branch and bound
+	 * algorithm is split into.
+	 */
 	private class WorkerBnb extends BranchAndBoundAlgorithmManager{
 		private BnBSchedule _initialPartialSchedule;
 		private int _localOptimalLength;
 
+		/**
+		 * Constructor sets all the necessary fields, cloning values from the input 
+		 * ParallelBranchAndBoundAlgorithmManager when necessasry.
+		 * 
+		 * @author Aimee
+		 */
 		public WorkerBnb(ParallelBranchAndBoundAlgorithmManager m, BnBSchedule currentPartialSchedule, int processingCores) {
 			super(processingCores);
 			_initialPartialSchedule = currentPartialSchedule;
 			upperBound = m.upperBound;
 			sources = new ArrayList<Integer>(m.sources);
-			bottomUpSinks = new ArrayList<Integer>(m.bottomUpSinks);
 			bottomLevels = m.bottomLevels.clone();
 			numNodes = m.numNodes;
 			totalNodeWeights = m.totalNodeWeights;
-			nodeStartTimes = new ArrayList<Integer>(m.nodeStartTimes);
-			nodeProcessors = new ArrayList<Integer>(m.nodeProcessors);
 			brokenTrees = m.brokenTrees;
 
 			_nodeWeights = m._nodeWeights.clone();
@@ -91,17 +106,33 @@ public class ParallelBranchAndBoundAlgorithmManager extends BranchAndBoundAlgori
 			_arcWeights = m._arcWeights.clone();
 		}
 
+		/**
+		 * Starts running the branch and bound algorithm (without taking input or generating
+		 * and output file)
+		 * 
+		 * @author Aimee T
+		 */
         @Override
 		public void execute() {
 			bnb(_initialPartialSchedule);
 		}
         
+        /**
+         * Sets the value of the length of this worker's optimal schedule
+         * 
+         * @author Aimee T
+         */
         @Override
         protected void setOptimalSchedule(BnBSchedule schedule) {
         	super.setOptimalSchedule(schedule);
         	_localOptimalLength = schedule.getMaxFinishTime();
         }
         
+        /**
+         * Sets the value of the length of this worker's optimal schedule
+         * 
+         * @author Aimee T
+         */
         protected int getLocalOptimalLength() {
         	return _localOptimalLength;
         }
