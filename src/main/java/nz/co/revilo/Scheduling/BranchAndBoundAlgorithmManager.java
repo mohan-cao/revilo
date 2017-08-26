@@ -132,14 +132,14 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
     	
         if (schedule.lowerBound >= upperBound) { //>= @ Michael K, huge optimisation
             schedule = null; //garbage collect that schedule
-            brokenTrees++; //this tree has broken
+            brokenTrees.incrementAndGet(); //this tree has broken
             return; //break tree at this point
         }
 
         //compare to existing schedule structures and remove if duplicate
         if (existingScheduleStructures.containsKey(schedule._scheduleStructureId)) {
             schedule = null; //garbage collect that schedule
-            brokenTrees++; // this tree has broken
+            brokenTrees.incrementAndGet(); // this tree has broken
             return; //break tree at this point
         } else {
             existingScheduleStructures.put(schedule._scheduleStructureId, null);

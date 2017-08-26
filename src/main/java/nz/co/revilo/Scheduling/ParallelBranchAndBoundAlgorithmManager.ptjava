@@ -46,9 +46,9 @@ public class ParallelBranchAndBoundAlgorithmManager extends BranchAndBoundAlgori
 		WorkerBnb worker = new WorkerBnb(this, schedule, _processingCores);
 		worker.execute();
 		if(worker.upperBound < upperBound) {
-			upperBound = worker.upperBound;
 			optimalSchedule = worker.optimalSchedule;
 		}
+		System.out.println("Worker Done");
 		worker = null; // null it for hopeful garbage collection
 	}
 	
@@ -86,6 +86,7 @@ public class ParallelBranchAndBoundAlgorithmManager extends BranchAndBoundAlgori
 			totalNodeWeights = m.totalNodeWeights;
 			nodeStartTimes = new ArrayList<Integer>(m.nodeStartTimes);
 			nodeProcessors = new ArrayList<Integer>(m.nodeProcessors);
+			brokenTrees = m.brokenTrees;
 
 			_nodeWeights = m._nodeWeights.clone();
 			_arcs = m._arcs.clone();

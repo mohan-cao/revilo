@@ -127,9 +127,9 @@ public class ParallelBranchAndBoundAlgorithmManager extends BranchAndBoundAlgori
         worker.execute();//####[47]####
         if (worker.upperBound < upperBound) //####[48]####
         {//####[48]####
-            upperBound = worker.upperBound;//####[49]####
-            optimalSchedule = worker.optimalSchedule;//####[50]####
-        }//####[51]####
+            optimalSchedule = worker.optimalSchedule;//####[49]####
+        }//####[50]####
+        System.out.println("Worker Done");//####[51]####
         worker = null;//####[52]####
     }//####[53]####
 //####[53]####
@@ -179,14 +179,15 @@ public class ParallelBranchAndBoundAlgorithmManager extends BranchAndBoundAlgori
             totalNodeWeights = m.totalNodeWeights;//####[86]####
             nodeStartTimes = new ArrayList<Integer>(m.nodeStartTimes);//####[87]####
             nodeProcessors = new ArrayList<Integer>(m.nodeProcessors);//####[88]####
-            _nodeWeights = m._nodeWeights.clone();//####[90]####
-            _arcs = m._arcs.clone();//####[91]####
-            _arcWeights = m._arcWeights.clone();//####[92]####
-        }//####[93]####
-//####[96]####
-        @Override//####[96]####
-        public void execute() {//####[96]####
-            bnb(_initialPartialSchedule);//####[97]####
-        }//####[98]####
-    }//####[98]####
-}//####[98]####
+            brokenTrees = m.brokenTrees;//####[89]####
+            _nodeWeights = m._nodeWeights.clone();//####[91]####
+            _arcs = m._arcs.clone();//####[92]####
+            _arcWeights = m._arcWeights.clone();//####[93]####
+        }//####[94]####
+//####[97]####
+        @Override//####[97]####
+        public void execute() {//####[97]####
+            bnb(_initialPartialSchedule);//####[98]####
+        }//####[99]####
+    }//####[99]####
+}//####[99]####
