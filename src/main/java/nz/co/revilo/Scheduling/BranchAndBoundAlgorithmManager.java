@@ -168,8 +168,9 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
             if (schedule.getMaxFinishTime() < upperBound.get()) {
                 setOptimalSchedule(schedule);
                 System.out.println(upperBound.get());
-            }
-            return;
+                return;
+            } 
+           
         }
 
         //continue DFS

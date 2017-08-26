@@ -38,7 +38,8 @@ public class ParallelBranchAndBoundAlgorithmManager extends BranchAndBoundAlgori
 	 * @author Aimee T
 	 */
 	private void createTask(BnBSchedule schedule) {
-		TaskID<Void> partial = startNewBnbThread(schedule); // Make the creation of a new worker for the input schedule a task
+		// Make the creation of a new worker for the input schedule a task
+		TaskID<Void> partial = startNewBnbThread(schedule); 
 		_schedulesToComplete.add(partial); // Add it to the TaskIDGroup
 	}
 	
@@ -49,7 +50,9 @@ public class ParallelBranchAndBoundAlgorithmManager extends BranchAndBoundAlgori
 	 * @author Aimee T
 	 */
 	TASK private void startNewBnbThread(BnBSchedule schedule) {
-		WorkerBnb worker = new WorkerBnb(this, schedule, _processingCores);
+		// Create a new worker to continue branching from the partial schedule
+		WorkerBnb worker = new WorkerBnb(this, schedule, _processingCores); 
+		// Execute the branch and bound algorithm in the worker
 		worker.execute();
 		if(worker.getLocalOptimalLength() == upperBound.get()) {
 			optimalSchedule = worker.optimalSchedule;
@@ -64,6 +67,7 @@ public class ParallelBranchAndBoundAlgorithmManager extends BranchAndBoundAlgori
      */
 	@Override
 	protected boolean isParallel(int closedSet) {
+		// Start parallelising when deeper than 3 nodes into the branching
     	return closedSet > 3;
     }
     
