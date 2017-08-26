@@ -229,10 +229,10 @@ public class App {
                 // Append input file name with default suffix
                 int fileNameLocation = workingInputFilename.toLowerCase().lastIndexOf(DEFAULT_FILE_EXTENSION);
                 // Find the end of the path part of the file name
-                int pathEndIndex = (workingInputFilename.lastIndexOf('/')
+                int pathEndIndex = ((workingInputFilename.lastIndexOf('/')
                         > workingInputFilename.lastIndexOf('\\'))
                         ? workingInputFilename.lastIndexOf('/')
-                        : workingInputFilename.lastIndexOf('\\') + 1;
+                        : workingInputFilename.lastIndexOf('\\')) + 1;
 
                 // If the file is in the current directory, then the file name starts at index 0
                 if(pathEndIndex == -1) {
