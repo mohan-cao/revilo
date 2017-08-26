@@ -143,12 +143,14 @@ public class App {
         
         // Start an AlgorithmManager
         if(_inst._numParallelProcessors > 1) {
-            ParaTask.setThreadPoolSize(ParaTask.ThreadPoolType.ALL, _inst._numParallelProcessors);
+            // Subtract one from the input number of processors to account for the master in the
+            // parallelisation methods used in ParallelBranchAndBoundAlgorithmManager, where
+            // there will always be one thread allocating to other threads
+            ParaTask.setThreadPoolSize(ParaTask.ThreadPoolType.ALL, _inst._numParallelProcessors - 1);
             ParaTask.init();
         	_manager = new ParallelBranchAndBoundAlgorithmManager(_inst._numExecutionCores);
         } else {
         	_manager = new BranchAndBoundAlgorithmManager(_inst._numExecutionCores);
-        	System.out.println("One Processor!");
         }
 
         // Parse file and give it algorithm manager to give results to depending on the file extension
