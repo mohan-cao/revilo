@@ -228,8 +228,8 @@ public class MainLauncherController implements Initializable, ScheduleResultList
         ArrayList<XYChart.Series> processorCat = new ArrayList<>();
         ArrayList<ArrayList<String>> pcatName = new ArrayList<>();
 
-        long lowestNodeWeight = Collections.min(_nodeWeights);
-        long highestNodeWeight = Collections.max(_nodeWeights);
+        long lowestNodeWeight = (long) Collections.min(_nodeWeights);
+        long highestNodeWeight = (long) Collections.max(_nodeWeights);
 
         for (int i = 0; i < App.getExecCores(); i++) {
             processorCatStr.add(processorTitle + i);
