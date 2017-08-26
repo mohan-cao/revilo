@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Observable;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
@@ -20,7 +21,7 @@ public abstract class AlgorithmManager extends Observable implements ParseResult
 
     protected int _processingCores;
     protected AtomicLong brokenTrees;
-    protected int upperBound; // used in subclasses
+    protected AtomicInteger upperBound; // used in subclasses
     protected int[] _nodeWeights;
     protected boolean[][] _arcs;
     protected int[][] _arcWeights;
@@ -36,6 +37,7 @@ public abstract class AlgorithmManager extends Observable implements ParseResult
     public AlgorithmManager(int processingCores) {
         _processingCores = processingCores;
         brokenTrees = new AtomicLong(0);
+        upperBound = new AtomicInteger(0);
     }
 
     /**
@@ -52,7 +54,7 @@ public abstract class AlgorithmManager extends Observable implements ParseResult
      *
      * @return current best
      */
-    public int getUpperBound() {
+    public AtomicInteger getUpperBound() {
         return upperBound;
     }
 

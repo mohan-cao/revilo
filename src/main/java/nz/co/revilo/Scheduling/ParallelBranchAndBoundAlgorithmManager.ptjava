@@ -1,7 +1,5 @@
 package nz.co.revilo.Scheduling;
 
-import java.util.concurrent.ExecutionException;
-
 /**
  * Algorithm manager for the parallelised implementation of branch and bound, which makes use
  * pf ParallelTask
@@ -45,7 +43,7 @@ public class ParallelBranchAndBoundAlgorithmManager extends BranchAndBoundAlgori
 	TASK private void startNewBnbThread(BnBSchedule schedule) {
 		WorkerBnb worker = new WorkerBnb(this, schedule, _processingCores);
 		worker.execute();
-		if(worker.upperBound < upperBound) {
+		if(worker.getLocalOptimalLength() == upperBound.get()) {
 			optimalSchedule = worker.optimalSchedule;
 		}
 		worker = null; // null it for hopeful garbage collection
@@ -57,8 +55,8 @@ public class ParallelBranchAndBoundAlgorithmManager extends BranchAndBoundAlgori
      * @author Aimee T
      */
 	@Override
-	protected boolean isParallel() {
-    	return true;
+	protected boolean isParallel(int closedSet) {
+    	return closedSet > 2;
     }
     
     /**
@@ -73,6 +71,7 @@ public class ParallelBranchAndBoundAlgorithmManager extends BranchAndBoundAlgori
 	
 	private class WorkerBnb extends BranchAndBoundAlgorithmManager{
 		private BnBSchedule _initialPartialSchedule;
+		private int _localOptimalLength;
 
 		public WorkerBnb(ParallelBranchAndBoundAlgorithmManager m, BnBSchedule currentPartialSchedule, int processingCores) {
 			super(processingCores);
@@ -96,6 +95,16 @@ public class ParallelBranchAndBoundAlgorithmManager extends BranchAndBoundAlgori
 		public void execute() {
 			bnb(_initialPartialSchedule);
 		}
+        
+        @Override
+        protected void setOptimalSchedule(BnBSchedule schedule) {
+        	super.setOptimalSchedule(schedule);
+        	_localOptimalLength = schedule.getMaxFinishTime();
+        }
+        
+        protected int getLocalOptimalLength() {
+        	return _localOptimalLength;
+        }
 	}
 }
 

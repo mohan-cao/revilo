@@ -52,15 +52,15 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
         }
 
         //Take a greedy path down the tree to find a more realistic upper bound
-        upperBound = greedyUpperBound();
-        if ((totalNodeWeights + 1) < upperBound) {
-            upperBound = totalNodeWeights + 1;
+        upperBound.set(greedyUpperBound());
+        if ((totalNodeWeights + 1) < upperBound.get()) {
+            upperBound.addAndGet(totalNodeWeights + 1);
             System.out.println("topological cost was better");
-        } else if ((totalNodeWeights + 1) == upperBound) {
+        } else if ((totalNodeWeights + 1) == upperBound.get()) {
             System.out.println("no difference");
         } else {
             System.out.println("greedy wins. Upper bound is: " + upperBound);
-            upperBound++;
+            upperBound.incrementAndGet();
         }
 
         calculateBottomLevels();
@@ -117,6 +117,22 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
             );
         }
     }
+    
+    /**
+     * If the schedule found is optimal, set it to be the optimal schedule and notify listeners
+     * 
+     * @author Aimee T
+     */
+    protected void setOptimalSchedule(BnBSchedule schedule) {
+    	optimalSchedule = schedule;
+        // if OptimalListener is null it means that we're not actually asking for updates
+        // because we are likely not using a visualization
+        if (getOptimalListener() != null) {
+            getOptimalListener().newOptimal(optimalSchedule);
+        }
+        
+        upperBound.set(schedule.getMaxFinishTime());
+    }
 
     /**
      * bnb based on the current schedule s
@@ -125,12 +141,12 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
      * @author Abby S, Terran K
      */
     protected void bnb(BnBSchedule schedule) {
-    	if(isParallel()) {
+    	if(isParallel(schedule.getClosedNodes().size())) {
     		doParallel(schedule);
     		return;
     	}
     	
-        if (schedule.lowerBound >= upperBound) { //>= @ Michael K, huge optimisation
+        if (schedule.lowerBound >= upperBound.get()) { //>= @ Michael K, huge optimisation
             schedule = null; //garbage collect that schedule
             brokenTrees.incrementAndGet(); //this tree has broken
             return; //break tree at this point
@@ -149,18 +165,11 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
         //reached end of a valid schedule. Never broke off, so is optimal
         if (schedule.openNodes.isEmpty()) {
             //to make sure only optimal schedules get through
-            if (schedule.getMaxFinishTime() < upperBound) {
-                optimalSchedule = schedule;
-                // if OptimalListener is null it means that we're not actually asking for updates
-                // because we are likely not using a visualization
-                if (getOptimalListener() != null) {
-                    getOptimalListener().newOptimal(optimalSchedule);
-                }
-                
-                upperBound = schedule.getMaxFinishTime();
-                System.out.println(upperBound);
-                return;
+            if (schedule.getMaxFinishTime() < upperBound.get()) {
+                setOptimalSchedule(schedule);
+                System.out.println(upperBound.get());
             }
+            return;
         }
 
         //continue DFS
@@ -180,7 +189,7 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
      * recursion depth is reached. This method implements the depth check.
      * @author Aimee T
      */
-    protected boolean isParallel() {
+    protected boolean isParallel(int closedNodes) {
     	return false;
     }
     
