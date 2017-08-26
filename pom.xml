@@ -118,8 +118,6 @@
                 </dependencies>
                 <configuration>
                     <trimStackTrace>false</trimStackTrace>
-                    <parallel>methods</parallel>
-                    <useUnlimitedThreads>true</useUnlimitedThreads>
                     <includes>
                         <include>**/*.class</include>
                     </includes>
@@ -139,8 +137,8 @@
                 </dependencies>
                 <configuration>
                     <groups>${project.groupId}.SlowTest</groups>
-                    <parallel>methods</parallel>
-                    <useUnlimitedThreads>true</useUnlimitedThreads>
+                    <forkCount>8</forkCount>
+                    <forkedProcessTimeoutInSeconds>30</forkedProcessTimeoutInSeconds>
                 </configuration>
                 <executions>
                     <execution>

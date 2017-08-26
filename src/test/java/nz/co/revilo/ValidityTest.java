@@ -12,6 +12,20 @@ import java.util.List;
  * Redone as a utility class.
  */
 public class ValidityTest {
+    static class Tuple<T,V>{
+        T a; V b;
+        Tuple(T x, V y){
+            a = x; b = y;
+        }
+
+        public T getA() {
+            return a;
+        }
+
+        public V getB() {
+            return b;
+        }
+    }
     /**
      * Reads in the graph's DOT file, and finds the schedule based on the supplied AlgorithmManager. The final schedule
      * is provided to the output TestResultListener
@@ -21,7 +35,7 @@ public class ValidityTest {
      * @param filename name of the file containing the graph we want schedule, and then test the schedule of
      * @return a TestResultListener containing the information about the final schedule
      */
-    public synchronized static TestResultListener schedule(final AlgorithmManager aManager, final String filename, final boolean isBnB) {
+    public synchronized static Tuple<TestResultListener,FileParser> schedule(final AlgorithmManager aManager, final String filename, final boolean isBnB) {
         FileParser reader;
         if (filename.toUpperCase().contains("GXL")) {
             reader = new GxlFileReader(filename);
@@ -32,13 +46,7 @@ public class ValidityTest {
         TestResultListener listener;
         listener = (isBnB)?new TestResultListener(true):new TestResultListener();
         aManager.inform(listener);
-        try {
-            reader.startParsing(aManager);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-            System.out.println("File " + filename+ " does not exist");
-        }
-        return listener;
+        return new Tuple<>(listener,reader);
     }
 
     /**
