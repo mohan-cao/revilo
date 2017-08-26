@@ -3,12 +3,12 @@ digraph "outputFork_Nodes_10_CCR_0.10_WeightType_Random" {
 		1		[Weight=19,Start=96,Processor=0];
 		2		[Weight=19,Start=115,Processor=0];
 		3		[Weight=67,Start=134,Processor=0];
-		4		[Weight=67,Start=104,Processor=1];
-		5		[Weight=29,Start=171,Processor=1];
-		6		[Weight=58,Start=98,Processor=2];
-		7		[Weight=48,Start=156,Processor=2];
-		8		[Weight=48,Start=99,Processor=3];
-		9		[Weight=48,Start=147,Processor=3];
+		4		[Weight=67,Start=201,Processor=0];
+		5		[Weight=29,Start=268,Processor=0];
+		6		[Weight=58,Start=98,Processor=1];
+		7		[Weight=48,Start=156,Processor=1];
+		8		[Weight=48,Start=204,Processor=1];
+		9		[Weight=48,Start=252,Processor=1];
 		0 -> 1	[Weight=8];
 		0 -> 2	[Weight=9];
 		0 -> 3	[Weight=4];
