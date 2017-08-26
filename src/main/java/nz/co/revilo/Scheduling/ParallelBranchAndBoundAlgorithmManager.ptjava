@@ -8,7 +8,8 @@ package nz.co.revilo.Scheduling;
  */
 public class ParallelBranchAndBoundAlgorithmManager extends BranchAndBoundAlgorithmManager {
 	private TaskIDGroup<BnBSchedule> _schedulesToComplete;
-	
+	private int _threads;
+
 	/**
 	 * Constructor which sets the number of processing cores we are scheduling for
 	 * @author Aimee T
@@ -16,21 +17,22 @@ public class ParallelBranchAndBoundAlgorithmManager extends BranchAndBoundAlgori
 	public ParallelBranchAndBoundAlgorithmManager(int processingCores, int threads) {
 		super(processingCores);
 		_schedulesToComplete = new TaskIDGroup<BnBSchedule>(threads);
+		_threads = threads;
 	}
 
-    @Override
+	@Override
 	protected void startBnb() {
-    	while(!rootSchedules.isEmpty()){
-    		bnb(rootSchedules.remove(0));
-        }
-    	try {
-    		_schedulesToComplete.waitTillFinished();
-    	} catch (InterruptedException e) {
-    		e.printStackTrace();
-    	} catch (ExecutionException e) {
-    		e.printStackTrace();
-    	}
-    }
+		while(!rootSchedules.isEmpty()){
+			bnb(rootSchedules.remove(0));
+		}
+		try {
+			_schedulesToComplete.waitTillFinished();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		} catch (ExecutionException e) {
+			e.printStackTrace();
+		}
+	}
 
 	/**
 	 * Creates the ParallelTask task which needs to be scheduled for execution
@@ -42,7 +44,7 @@ public class ParallelBranchAndBoundAlgorithmManager extends BranchAndBoundAlgori
 		TaskID<Void> partial = startNewBnbThread(schedule); 
 		_schedulesToComplete.add(partial); // Add it to the TaskIDGroup
 	}
-	
+
 	/**
 	 * Creates and executes a new WorkerBnB object to continue expanding the input partial
 	 * schedule
@@ -59,28 +61,32 @@ public class ParallelBranchAndBoundAlgorithmManager extends BranchAndBoundAlgori
 		}
 		worker = null; // null it for hopeful garbage collection
 	}
-	
-    /**
-     * Hook method to be implemented by subclasses which need specific behaviour when a particular 
-     * recursion depth is reached. This method implements the depth check.
-     * @author Aimee T
-     */
+
+	/**
+	 * Hook method to be implemented by subclasses which need specific behaviour when a particular 
+	 * recursion depth is reached. This method implements the depth check.
+	 * @author Aimee T
+	 */
 	@Override
 	protected boolean isParallel(int closedSet) {
 		// Start parallelising when deeper than 3 nodes into the branching
-    	return closedSet > 2;
-    }
-    
-    /**
-     * Hook method to be implemented by subclasses which need specific behaviour when a particular 
-     * recursion depth is reached. This method implements the behaviour required.
-     * @author Aimee T
-     */
+		if(_threads == 1) {
+			return false;
+		} else {
+			return closedSet > 2;
+		}
+	}
+
+	/**
+	 * Hook method to be implemented by subclasses which need specific behaviour when a particular 
+	 * recursion depth is reached. This method implements the behaviour required.
+	 * @author Aimee T
+	 */
 	@Override
 	protected void doParallel(BnBSchedule s) {
 		createTask(s);
-    }
-	
+	}
+
 	/**
 	 * Class responsible for expanding partial schedules, which are the subtasks the branch and bound
 	 * algorithm is split into.
@@ -115,30 +121,30 @@ public class ParallelBranchAndBoundAlgorithmManager extends BranchAndBoundAlgori
 		 * 
 		 * @author Aimee T
 		 */
-        @Override
+		@Override
 		public void execute() {
 			bnb(_initialPartialSchedule);
 		}
-        
-        /**
-         * Sets the value of the length of this worker's optimal schedule
-         * 
-         * @author Aimee T
-         */
-        @Override
-        protected void setOptimalSchedule(BnBSchedule schedule) {
-        	super.setOptimalSchedule(schedule);
-        	_localOptimalLength = schedule.getMaxFinishTime();
-        }
-        
-        /**
-         * Sets the value of the length of this worker's optimal schedule
-         * 
-         * @author Aimee T
-         */
-        protected int getLocalOptimalLength() {
-        	return _localOptimalLength;
-        }
+
+		/**
+		 * Sets the value of the length of this worker's optimal schedule
+		 * 
+		 * @author Aimee T
+		 */
+		@Override
+		protected void setOptimalSchedule(BnBSchedule schedule) {
+			super.setOptimalSchedule(schedule);
+			_localOptimalLength = schedule.getMaxFinishTime();
+		}
+
+		/**
+		 * Sets the value of the length of this worker's optimal schedule
+		 * 
+		 * @author Aimee T
+		 */
+		protected int getLocalOptimalLength() {
+			return _localOptimalLength;
+		}
 	}
 }
 
