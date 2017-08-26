@@ -179,14 +179,16 @@ public class ParallelBranchAndBoundAlgorithmManager extends BranchAndBoundAlgori
             nodeStartTimes = new ArrayList<Integer>(m.nodeStartTimes);//####[86]####
             nodeProcessors = new ArrayList<Integer>(m.nodeProcessors);//####[87]####
             brokenTrees = m.brokenTrees;//####[88]####
-            _nodeWeights = m._nodeWeights.clone();//####[90]####
-            _arcs = m._arcs.clone();//####[91]####
-            _arcWeights = m._arcWeights.clone();//####[92]####
-        }//####[93]####
-//####[96]####
-        @Override//####[96]####
-        public void execute() {//####[96]####
-            bnb(_initialPartialSchedule);//####[97]####
-        }//####[98]####
-    }//####[98]####
-}//####[98]####
+            atomicBound = m.atomicBound;//####[89]####
+            atomicListener = m.atomicListener;//####[90]####
+            _nodeWeights = m._nodeWeights.clone();//####[92]####
+            _arcs = m._arcs.clone();//####[93]####
+            _arcWeights = m._arcWeights.clone();//####[94]####
+        }//####[95]####
+//####[98]####
+        @Override//####[98]####
+        public void execute() {//####[98]####
+            bnb(_initialPartialSchedule);//####[99]####
+        }//####[100]####
+    }//####[100]####
+}//####[100]####

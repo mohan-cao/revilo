@@ -8,7 +8,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Observable;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * Abstract class defining the data structures, and information to be used when implementing any algorithms as part of a
@@ -20,6 +22,7 @@ public abstract class AlgorithmManager extends Observable implements ParseResult
 
     protected int _processingCores;
     protected AtomicLong brokenTrees;
+    protected AtomicInteger atomicBound;
     protected int upperBound; // used in subclasses
     protected int[] _nodeWeights;
     protected boolean[][] _arcs;
@@ -27,6 +30,7 @@ public abstract class AlgorithmManager extends Observable implements ParseResult
     protected String[] _nodeNames;
     protected String _graphName;
     protected NewOptimalResultListener optimalListener;
+    protected AtomicReference<NewOptimalResultListener> atomicListener;
     protected List<ScheduleResultListener> listeners = new ArrayList<>();
 
     /**
@@ -36,7 +40,14 @@ public abstract class AlgorithmManager extends Observable implements ParseResult
     public AlgorithmManager(int processingCores) {
         _processingCores = processingCores;
         brokenTrees = new AtomicLong(0);
+        atomicBound = new AtomicInteger(0);
+        atomicListener = new AtomicReference<>(null);
     }
+
+    public AtomicReference<NewOptimalResultListener> getAtomicListener() {
+        return atomicListener;
+    }
+
 
     /**
      * Get the number of branches broken (i.e. branches that have been deemed not as good)
@@ -46,6 +57,14 @@ public abstract class AlgorithmManager extends Observable implements ParseResult
     public AtomicLong getBrokenTrees() {
         return brokenTrees;
     }
+    public AtomicInteger getAtomicBound() { return atomicBound; }
+
+
+    /**
+     * Get the number of branches broken (i.e. branches that have been deemed not as good)
+     *
+     * @return
+     */
 
     /**
      * Gets the upper bound value (current best)
@@ -98,7 +117,8 @@ public abstract class AlgorithmManager extends Observable implements ParseResult
         listeners.add(listener);
     }
 
-    public void optimalInform(NewOptimalResultListener listener) {
+    public synchronized void optimalInform(NewOptimalResultListener listener) {
+        atomicListener = new AtomicReference<>(listener);
         optimalListener = listener;
     }
 
@@ -108,7 +128,7 @@ public abstract class AlgorithmManager extends Observable implements ParseResult
      *
      * @return
      */
-    public NewOptimalResultListener getOptimalListener() { return optimalListener; }
+    public AtomicReference<NewOptimalResultListener> getOptimalListener() { return atomicListener; }
 
     /**
      * Template method for reading in graph information required to process a schedule, and executes the schedule (using
