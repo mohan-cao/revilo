@@ -228,8 +228,19 @@ public class App {
 
                 // Append input file name with default suffix
                 int fileNameLocation = workingInputFilename.toLowerCase().lastIndexOf(DEFAULT_FILE_EXTENSION);
-                String fileNameWithoutExtension = workingInputFilename.substring(0, fileNameLocation);
-                _inst._outputFilename = fileNameWithoutExtension + DEFAULT_OUTPUT_FILENAME;
+                // Find the end of the path part of the file name
+                int pathEndIndex = (workingInputFilename.lastIndexOf('/')
+                        > workingInputFilename.lastIndexOf('\\'))
+                        ? workingInputFilename.lastIndexOf('/')
+                        : workingInputFilename.lastIndexOf('\\') + 1;
+
+                // If the file is in the current directory, then the file name starts at index 0
+                if(pathEndIndex == -1) {
+                    pathEndIndex = 0;
+                }
+
+                String cleanedFileName = workingInputFilename.substring(pathEndIndex, fileNameLocation);
+                _inst._outputFilename = cleanedFileName + DEFAULT_OUTPUT_FILENAME;
 
                 // Use given filename if available
             } else {
