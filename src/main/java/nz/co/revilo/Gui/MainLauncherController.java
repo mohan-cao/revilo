@@ -276,7 +276,6 @@ public class MainLauncherController implements Initializable, ScheduleResultList
                     percentage = 0.0; // don't want NaNs
                 }
                 ColorAdjust ca = new ColorAdjust();
-                System.out.println(percentage);
                 ca.setBrightness(percentage);
                 bar.setEffect(ca);
 
