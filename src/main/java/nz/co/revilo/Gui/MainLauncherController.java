@@ -66,6 +66,9 @@ public class MainLauncherController implements Initializable, ScheduleResultList
     private Label timeLabel;
 
     @FXML
+    private Label parallelLabel;
+
+    @FXML
     private Label timeUnits;
 
     @FXML
@@ -157,6 +160,7 @@ public class MainLauncherController implements Initializable, ScheduleResultList
                 graphNameLabel.setText(App.getInputFileName()); //padding
                 systemLabel.setText("PROCESSING");
                 statusLabel.setText("Starting up...");
+                parallelLabel.setText(App.getNumParallelCores() + "");
                 createGantt();
             }
         });

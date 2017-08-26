@@ -42,7 +42,7 @@
                                     <Font name="SF UI Display Bold" size="13.0" />
                                  </font>
                               </Label>
-                              <Label alignment="BOTTOM_RIGHT" contentDisplay="RIGHT" text="OFF" textAlignment="RIGHT" textFill="WHITE" AnchorPane.bottomAnchor="8.0" AnchorPane.rightAnchor="5.0">
+                              <Label fx:id="parallelLabel" alignment="BOTTOM_RIGHT" contentDisplay="RIGHT" text="OFF" textAlignment="RIGHT" textFill="WHITE" AnchorPane.bottomAnchor="8.0" AnchorPane.rightAnchor="5.0">
                                  <font>
                                     <Font name="SF UI Display Light" size="48.0" />
                                  </font>
