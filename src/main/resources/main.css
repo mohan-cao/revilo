@@ -13,11 +13,41 @@
     -fx-background-color: rgba(0, 0, 0, 0); /* hide idle series */
 }
 
-.status-green {
-    -fx-background-color: rgba(22, 80, 225, 0.7);
+.gantt0 {
+    -fx-background-color: linear-gradient(from 0% 0% to 0% 100%, #19d7fb, #1e63ee);
     -fx-border-color: white;
-    -fx-padding: 15px;
+    /*-fx-padding: 15px;*/
 }
+.gantt1 {
+    -fx-background-color: linear-gradient(from 0% 0% to 0% 100%, #4cd964, #02b21f);
+    -fx-border-color: white;
+    /*-fx-padding: 15px;*/
+}
+
+.gantt2 {
+    -fx-background-color: linear-gradient(from 0% 0% to 0% 100%, #fc2a19, #fc5fa6);
+    -fx-border-color: white;
+    /*-fx-padding: 15px;*/
+}
+
+.gantt3 {
+    -fx-background-color: linear-gradient(from 0% 0% to 0% 100%, #fea700, #fa661e);
+    -fx-border-color: white;
+    /*-fx-padding: 15px;*/
+}
+
+.gantt4 {
+    -fx-background-color: linear-gradient(from 0% 0% to 0% 100%, #00d8eb, #008dcd);
+    -fx-border-color: white;
+    /*-fx-padding: 15px;*/
+}
+
+.gantt {
+    -fx-background-color: linear-gradient(from 0% 0% to 0% 100%, #8a8a92, #dedede);
+    -fx-border-color: white;
+    /*-fx-padding: 15px;*/
+}
+
 
 .scroll-pane {
     -fx-background-color: white;
