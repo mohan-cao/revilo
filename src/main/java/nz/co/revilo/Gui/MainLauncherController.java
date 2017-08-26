@@ -78,6 +78,9 @@ public class MainLauncherController implements Initializable, ScheduleResultList
     private Label bestLabel;
 
     @FXML
+    private Label threadsLabel;
+
+    @FXML
     private Label graphNameLabel;
 
     @FXML
@@ -161,6 +164,8 @@ public class MainLauncherController implements Initializable, ScheduleResultList
                 systemLabel.setText("PROCESSING");
                 statusLabel.setText("Starting up...");
                 parallelLabel.setText(App.getNumParallelCores() + "");
+                String thr = App.getNumParallelCores() == 1 ? "THREAD" : "THREADS";
+                threadsLabel.setText(thr);
                 createGantt();
             }
         });

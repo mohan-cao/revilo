@@ -42,12 +42,12 @@
                                     <Font name="SF UI Display Bold" size="13.0" />
                                  </font>
                               </Label>
-                              <Label fx:id="parallelLabel" alignment="BOTTOM_RIGHT" contentDisplay="RIGHT" text="OFF" textAlignment="RIGHT" textFill="WHITE" AnchorPane.bottomAnchor="8.0" AnchorPane.rightAnchor="5.0">
+                              <Label fx:id="parallelLabel" alignment="BOTTOM_RIGHT" contentDisplay="RIGHT" text="0" textAlignment="RIGHT" textFill="WHITE" AnchorPane.bottomAnchor="8.0" AnchorPane.rightAnchor="5.0">
                                  <font>
                                     <Font name="SF UI Display Light" size="48.0" />
                                  </font>
                               </Label>
-                              <Label layoutX="10.0" layoutY="10.0" text="CORES" textAlignment="RIGHT" textFill="#ffffffcc" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="5.0">
+                              <Label fx:id="threadsLabel" layoutX="10.0" layoutY="10.0" text="THREADS" textAlignment="RIGHT" textFill="#ffffffcc" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="5.0">
                                  <font>
                                     <Font name="SF UI Display Medium" size="12.0" />
                                  </font>
