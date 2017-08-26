@@ -11,6 +11,6 @@ public interface NewOptimalResultListener {
      * @param optimal
      * @author Terran Kroft
      */
-    void newOptimal(BnBSchedule optimal);
+    public void newOptimal(BnBSchedule optimal);
 
 }

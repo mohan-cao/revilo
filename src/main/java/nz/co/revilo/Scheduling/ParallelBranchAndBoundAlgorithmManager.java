@@ -1,44 +1,45 @@
 package nz.co.revilo.Scheduling;//####[1]####
 //####[1]####
-import java.util.concurrent.ExecutionException;//####[3]####
-//####[3]####
-//-- ParaTask related imports//####[3]####
-import pt.runtime.*;//####[3]####
-import java.util.concurrent.ExecutionException;//####[3]####
-import java.util.concurrent.locks.*;//####[3]####
-import java.lang.reflect.*;//####[3]####
-import pt.runtime.GuiThread;//####[3]####
-import java.util.concurrent.BlockingQueue;//####[3]####
-import java.util.ArrayList;//####[3]####
-import java.util.List;//####[3]####
-//####[3]####
+//-- ParaTask related imports//####[1]####
+import pt.runtime.*;//####[1]####
+import java.util.concurrent.ExecutionException;//####[1]####
+import java.util.concurrent.locks.*;//####[1]####
+import java.lang.reflect.*;//####[1]####
+import pt.runtime.GuiThread;//####[1]####
+import java.util.concurrent.BlockingQueue;//####[1]####
+import java.util.ArrayList;//####[1]####
+import java.util.List;//####[1]####
+//####[1]####
 /**
  * Algorithm manager for the parallelised implementation of branch and bound, which makes use
  * pf ParallelTask
  * 
  * @author Aimee T
- *///####[10]####
-public class ParallelBranchAndBoundAlgorithmManager extends BranchAndBoundAlgorithmManager {//####[11]####
-    static{ParaTask.init();}//####[11]####
-    /*  ParaTask helper method to access private/protected slots *///####[11]####
-    public void __pt__accessPrivateSlot(Method m, Object instance, TaskID arg, Object interResult ) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException {//####[11]####
-        if (m.getParameterTypes().length == 0)//####[11]####
-            m.invoke(instance);//####[11]####
-        else if ((m.getParameterTypes().length == 1))//####[11]####
-            m.invoke(instance, arg);//####[11]####
-        else //####[11]####
-            m.invoke(instance, arg, interResult);//####[11]####
-    }//####[11]####
-//####[12]####
-    private TaskIDGroup<BnBSchedule> _schedulesToComplete;//####[12]####
-//####[18]####
+ *///####[8]####
+public class ParallelBranchAndBoundAlgorithmManager extends BranchAndBoundAlgorithmManager {//####[9]####
+    static{ParaTask.init();}//####[9]####
+    /*  ParaTask helper method to access private/protected slots *///####[9]####
+    public void __pt__accessPrivateSlot(Method m, Object instance, TaskID arg, Object interResult ) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException {//####[9]####
+        if (m.getParameterTypes().length == 0)//####[9]####
+            m.invoke(instance);//####[9]####
+        else if ((m.getParameterTypes().length == 1))//####[9]####
+            m.invoke(instance, arg);//####[9]####
+        else //####[9]####
+            m.invoke(instance, arg, interResult);//####[9]####
+    }//####[9]####
+//####[10]####
+    private TaskIDGroup<BnBSchedule> _schedulesToComplete;//####[10]####
+//####[11]####
+    private int _threads;//####[11]####
+//####[17]####
     /**
 	 * Constructor which sets the number of processing cores we are scheduling for
 	 * @author Aimee T
-	 *///####[18]####
-    public ParallelBranchAndBoundAlgorithmManager(int processingCores, int threads) {//####[18]####
-        super(processingCores);//####[19]####
-        _schedulesToComplete = new TaskIDGroup<BnBSchedule>(threads);//####[20]####
+	 *///####[17]####
+    public ParallelBranchAndBoundAlgorithmManager(int processingCores, int threads) {//####[17]####
+        super(processingCores);//####[18]####
+        _schedulesToComplete = new TaskIDGroup<BnBSchedule>(threads);//####[19]####
+        _threads = threads;//####[20]####
     }//####[21]####
 //####[24]####
     @Override//####[24]####
@@ -55,140 +56,223 @@ public class ParallelBranchAndBoundAlgorithmManager extends BranchAndBoundAlgori
             e.printStackTrace();//####[33]####
         }//####[34]####
     }//####[35]####
-//####[40]####
+//####[42]####
     /**
 	 * Creates the ParallelTask task which needs to be scheduled for execution
-	 *///####[40]####
-    private void createTask(BnBSchedule schedule) {//####[40]####
-        TaskID<Void> partial = startNewBnbThread(schedule);//####[41]####
-        _schedulesToComplete.add(partial);//####[42]####
-    }//####[43]####
-//####[45]####
-    private static volatile Method __pt__startNewBnbThread_BnBSchedule_method = null;//####[45]####
-    private synchronized static void __pt__startNewBnbThread_BnBSchedule_ensureMethodVarSet() {//####[45]####
-        if (__pt__startNewBnbThread_BnBSchedule_method == null) {//####[45]####
-            try {//####[45]####
-                __pt__startNewBnbThread_BnBSchedule_method = ParaTaskHelper.getDeclaredMethod(new ParaTaskHelper.ClassGetter().getCurrentClass(), "__pt__startNewBnbThread", new Class[] {//####[45]####
-                    BnBSchedule.class//####[45]####
-                });//####[45]####
-            } catch (Exception e) {//####[45]####
-                e.printStackTrace();//####[45]####
-            }//####[45]####
-        }//####[45]####
-    }//####[45]####
-    private TaskID<Void> startNewBnbThread(BnBSchedule schedule) {//####[45]####
-        //-- execute asynchronously by enqueuing onto the taskpool//####[45]####
-        return startNewBnbThread(schedule, new TaskInfo());//####[45]####
-    }//####[45]####
-    private TaskID<Void> startNewBnbThread(BnBSchedule schedule, TaskInfo taskinfo) {//####[45]####
-        // ensure Method variable is set//####[45]####
-        if (__pt__startNewBnbThread_BnBSchedule_method == null) {//####[45]####
-            __pt__startNewBnbThread_BnBSchedule_ensureMethodVarSet();//####[45]####
-        }//####[45]####
-        taskinfo.setParameters(schedule);//####[45]####
-        taskinfo.setMethod(__pt__startNewBnbThread_BnBSchedule_method);//####[45]####
-        taskinfo.setInstance(this);//####[45]####
-        return TaskpoolFactory.getTaskpool().enqueue(taskinfo);//####[45]####
-    }//####[45]####
-    private TaskID<Void> startNewBnbThread(TaskID<BnBSchedule> schedule) {//####[45]####
-        //-- execute asynchronously by enqueuing onto the taskpool//####[45]####
-        return startNewBnbThread(schedule, new TaskInfo());//####[45]####
-    }//####[45]####
-    private TaskID<Void> startNewBnbThread(TaskID<BnBSchedule> schedule, TaskInfo taskinfo) {//####[45]####
-        // ensure Method variable is set//####[45]####
-        if (__pt__startNewBnbThread_BnBSchedule_method == null) {//####[45]####
-            __pt__startNewBnbThread_BnBSchedule_ensureMethodVarSet();//####[45]####
-        }//####[45]####
-        taskinfo.setTaskIdArgIndexes(0);//####[45]####
-        taskinfo.addDependsOn(schedule);//####[45]####
-        taskinfo.setParameters(schedule);//####[45]####
-        taskinfo.setMethod(__pt__startNewBnbThread_BnBSchedule_method);//####[45]####
-        taskinfo.setInstance(this);//####[45]####
-        return TaskpoolFactory.getTaskpool().enqueue(taskinfo);//####[45]####
-    }//####[45]####
-    private TaskID<Void> startNewBnbThread(BlockingQueue<BnBSchedule> schedule) {//####[45]####
-        //-- execute asynchronously by enqueuing onto the taskpool//####[45]####
-        return startNewBnbThread(schedule, new TaskInfo());//####[45]####
-    }//####[45]####
-    private TaskID<Void> startNewBnbThread(BlockingQueue<BnBSchedule> schedule, TaskInfo taskinfo) {//####[45]####
-        // ensure Method variable is set//####[45]####
-        if (__pt__startNewBnbThread_BnBSchedule_method == null) {//####[45]####
-            __pt__startNewBnbThread_BnBSchedule_ensureMethodVarSet();//####[45]####
-        }//####[45]####
-        taskinfo.setQueueArgIndexes(0);//####[45]####
-        taskinfo.setIsPipeline(true);//####[45]####
-        taskinfo.setParameters(schedule);//####[45]####
-        taskinfo.setMethod(__pt__startNewBnbThread_BnBSchedule_method);//####[45]####
-        taskinfo.setInstance(this);//####[45]####
-        return TaskpoolFactory.getTaskpool().enqueue(taskinfo);//####[45]####
-    }//####[45]####
-    public void __pt__startNewBnbThread(BnBSchedule schedule) {//####[45]####
-        WorkerBnb worker = new WorkerBnb(this, schedule, _processingCores);//####[46]####
-        worker.execute();//####[47]####
-        if (worker.upperBound < upperBound) //####[48]####
-        {//####[48]####
-            optimalSchedule = worker.optimalSchedule;//####[49]####
-        }//####[50]####
-        worker = null;//####[51]####
-    }//####[52]####
-//####[52]####
-//####[60]####
+	 * 
+	 * @author Aimee T
+	 *///####[42]####
+    private void createTask(BnBSchedule schedule) {//####[42]####
+        TaskID<Void> partial = startNewBnbThread(schedule);//####[44]####
+        _schedulesToComplete.add(partial);//####[45]####
+    }//####[46]####
+//####[54]####
+    private static volatile Method __pt__startNewBnbThread_BnBSchedule_method = null;//####[54]####
+    private synchronized static void __pt__startNewBnbThread_BnBSchedule_ensureMethodVarSet() {//####[54]####
+        if (__pt__startNewBnbThread_BnBSchedule_method == null) {//####[54]####
+            try {//####[54]####
+                __pt__startNewBnbThread_BnBSchedule_method = ParaTaskHelper.getDeclaredMethod(new ParaTaskHelper.ClassGetter().getCurrentClass(), "__pt__startNewBnbThread", new Class[] {//####[54]####
+                    BnBSchedule.class//####[54]####
+                });//####[54]####
+            } catch (Exception e) {//####[54]####
+                e.printStackTrace();//####[54]####
+            }//####[54]####
+        }//####[54]####
+    }//####[54]####
     /**
-     * Hook method to be implemented by subclasses which need specific behaviour when a particular 
-     * recursion depth is reached. This method implements the depth check.
-     * @author Aimee T
-     *///####[60]####
-    @Override//####[60]####
-    protected boolean isParallel() {//####[60]####
-        return true;//####[61]####
-    }//####[62]####
-//####[70]####
+	 * Creates and executes a new WorkerBnB object to continue expanding the input partial
+	 * schedule
+	 * 
+	 * @author Aimee T
+	 *///####[54]####
+    private TaskID<Void> startNewBnbThread(BnBSchedule schedule) {//####[54]####
+        //-- execute asynchronously by enqueuing onto the taskpool//####[54]####
+        return startNewBnbThread(schedule, new TaskInfo());//####[54]####
+    }//####[54]####
     /**
-     * Hook method to be implemented by subclasses which need specific behaviour when a particular 
-     * recursion depth is reached. This method implements the behaviour required.
-     * @author Aimee T
-     *///####[70]####
-    @Override//####[70]####
-    protected void doParallel(BnBSchedule s) {//####[70]####
-        createTask(s);//####[71]####
-    }//####[72]####
-//####[74]####
-    private class WorkerBnb extends BranchAndBoundAlgorithmManager {//####[74]####
-//####[74]####
-        /*  ParaTask helper method to access private/protected slots *///####[74]####
-        public void __pt__accessPrivateSlot(Method m, Object instance, TaskID arg, Object interResult ) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException {//####[74]####
-            if (m.getParameterTypes().length == 0)//####[74]####
-                m.invoke(instance);//####[74]####
-            else if ((m.getParameterTypes().length == 1))//####[74]####
-                m.invoke(instance, arg);//####[74]####
-            else //####[74]####
-                m.invoke(instance, arg, interResult);//####[74]####
-        }//####[74]####
-//####[75]####
-        private BnBSchedule _initialPartialSchedule;//####[75]####
-//####[77]####
-        public WorkerBnb(ParallelBranchAndBoundAlgorithmManager m, BnBSchedule currentPartialSchedule, int processingCores) {//####[77]####
-            super(processingCores);//####[78]####
-            _initialPartialSchedule = currentPartialSchedule;//####[79]####
-            upperBound = m.upperBound;//####[80]####
-            sources = new ArrayList<Integer>(m.sources);//####[81]####
-            bottomUpSinks = new ArrayList<Integer>(m.bottomUpSinks);//####[82]####
-            bottomLevels = m.bottomLevels.clone();//####[83]####
-            numNodes = m.numNodes;//####[84]####
-            totalNodeWeights = m.totalNodeWeights;//####[85]####
-            nodeStartTimes = new ArrayList<Integer>(m.nodeStartTimes);//####[86]####
-            nodeProcessors = new ArrayList<Integer>(m.nodeProcessors);//####[87]####
-            brokenTrees = m.brokenTrees;//####[88]####
-            atomicBound = m.atomicBound;//####[89]####
-            atomicListener = m.atomicListener;//####[90]####
-            _nodeWeights = m._nodeWeights.clone();//####[92]####
-            _arcs = m._arcs.clone();//####[93]####
-            _arcWeights = m._arcWeights.clone();//####[94]####
-        }//####[95]####
-//####[98]####
-        @Override//####[98]####
-        public void execute() {//####[98]####
-            bnb(_initialPartialSchedule);//####[99]####
-        }//####[100]####
-    }//####[100]####
-}//####[100]####
+	 * Creates and executes a new WorkerBnB object to continue expanding the input partial
+	 * schedule
+	 * 
+	 * @author Aimee T
+	 *///####[54]####
+    private TaskID<Void> startNewBnbThread(BnBSchedule schedule, TaskInfo taskinfo) {//####[54]####
+        // ensure Method variable is set//####[54]####
+        if (__pt__startNewBnbThread_BnBSchedule_method == null) {//####[54]####
+            __pt__startNewBnbThread_BnBSchedule_ensureMethodVarSet();//####[54]####
+        }//####[54]####
+        taskinfo.setParameters(schedule);//####[54]####
+        taskinfo.setMethod(__pt__startNewBnbThread_BnBSchedule_method);//####[54]####
+        taskinfo.setInstance(this);//####[54]####
+        return TaskpoolFactory.getTaskpool().enqueue(taskinfo);//####[54]####
+    }//####[54]####
+    /**
+	 * Creates and executes a new WorkerBnB object to continue expanding the input partial
+	 * schedule
+	 * 
+	 * @author Aimee T
+	 *///####[54]####
+    private TaskID<Void> startNewBnbThread(TaskID<BnBSchedule> schedule) {//####[54]####
+        //-- execute asynchronously by enqueuing onto the taskpool//####[54]####
+        return startNewBnbThread(schedule, new TaskInfo());//####[54]####
+    }//####[54]####
+    /**
+	 * Creates and executes a new WorkerBnB object to continue expanding the input partial
+	 * schedule
+	 * 
+	 * @author Aimee T
+	 *///####[54]####
+    private TaskID<Void> startNewBnbThread(TaskID<BnBSchedule> schedule, TaskInfo taskinfo) {//####[54]####
+        // ensure Method variable is set//####[54]####
+        if (__pt__startNewBnbThread_BnBSchedule_method == null) {//####[54]####
+            __pt__startNewBnbThread_BnBSchedule_ensureMethodVarSet();//####[54]####
+        }//####[54]####
+        taskinfo.setTaskIdArgIndexes(0);//####[54]####
+        taskinfo.addDependsOn(schedule);//####[54]####
+        taskinfo.setParameters(schedule);//####[54]####
+        taskinfo.setMethod(__pt__startNewBnbThread_BnBSchedule_method);//####[54]####
+        taskinfo.setInstance(this);//####[54]####
+        return TaskpoolFactory.getTaskpool().enqueue(taskinfo);//####[54]####
+    }//####[54]####
+    /**
+	 * Creates and executes a new WorkerBnB object to continue expanding the input partial
+	 * schedule
+	 * 
+	 * @author Aimee T
+	 *///####[54]####
+    private TaskID<Void> startNewBnbThread(BlockingQueue<BnBSchedule> schedule) {//####[54]####
+        //-- execute asynchronously by enqueuing onto the taskpool//####[54]####
+        return startNewBnbThread(schedule, new TaskInfo());//####[54]####
+    }//####[54]####
+    /**
+	 * Creates and executes a new WorkerBnB object to continue expanding the input partial
+	 * schedule
+	 * 
+	 * @author Aimee T
+	 *///####[54]####
+    private TaskID<Void> startNewBnbThread(BlockingQueue<BnBSchedule> schedule, TaskInfo taskinfo) {//####[54]####
+        // ensure Method variable is set//####[54]####
+        if (__pt__startNewBnbThread_BnBSchedule_method == null) {//####[54]####
+            __pt__startNewBnbThread_BnBSchedule_ensureMethodVarSet();//####[54]####
+        }//####[54]####
+        taskinfo.setQueueArgIndexes(0);//####[54]####
+        taskinfo.setIsPipeline(true);//####[54]####
+        taskinfo.setParameters(schedule);//####[54]####
+        taskinfo.setMethod(__pt__startNewBnbThread_BnBSchedule_method);//####[54]####
+        taskinfo.setInstance(this);//####[54]####
+        return TaskpoolFactory.getTaskpool().enqueue(taskinfo);//####[54]####
+    }//####[54]####
+    /**
+	 * Creates and executes a new WorkerBnB object to continue expanding the input partial
+	 * schedule
+	 * 
+	 * @author Aimee T
+	 *///####[54]####
+    public void __pt__startNewBnbThread(BnBSchedule schedule) {//####[54]####
+        WorkerBnb worker = new WorkerBnb(this, schedule, _processingCores);//####[56]####
+        worker.execute();//####[58]####
+        if (worker.getLocalOptimalLength() == upperBound.get()) //####[59]####
+        {//####[59]####
+            optimalSchedule = worker.optimalSchedule;//####[60]####
+        }//####[61]####
+        worker = null;//####[62]####
+    }//####[63]####
+//####[63]####
+//####[71]####
+    /**
+	 * Hook method to be implemented by subclasses which need specific behaviour when a particular 
+	 * recursion depth is reached. This method implements the depth check.
+	 * @author Aimee T
+	 *///####[71]####
+    @Override//####[71]####
+    protected boolean isParallel(int closedSet) {//####[71]####
+        if (_threads == 1) //####[73]####
+        {//####[73]####
+            return false;//####[74]####
+        } else {//####[75]####
+            return closedSet > 2;//####[76]####
+        }//####[77]####
+    }//####[78]####
+//####[86]####
+    /**
+	 * Hook method to be implemented by subclasses which need specific behaviour when a particular 
+	 * recursion depth is reached. This method implements the behaviour required.
+	 * @author Aimee T
+	 *///####[86]####
+    @Override//####[86]####
+    protected void doParallel(BnBSchedule s) {//####[86]####
+        createTask(s);//####[87]####
+    }//####[88]####
+//####[94]####
+    /**
+	 * Class responsible for expanding partial schedules, which are the subtasks the branch and bound
+	 * algorithm is split into.
+	 *///####[94]####
+    private class WorkerBnb extends BranchAndBoundAlgorithmManager {//####[94]####
+//####[94]####
+        /*  ParaTask helper method to access private/protected slots *///####[94]####
+        public void __pt__accessPrivateSlot(Method m, Object instance, TaskID arg, Object interResult ) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException {//####[94]####
+            if (m.getParameterTypes().length == 0)//####[94]####
+                m.invoke(instance);//####[94]####
+            else if ((m.getParameterTypes().length == 1))//####[94]####
+                m.invoke(instance, arg);//####[94]####
+            else //####[94]####
+                m.invoke(instance, arg, interResult);//####[94]####
+        }//####[94]####
+//####[95]####
+        private BnBSchedule _initialPartialSchedule;//####[95]####
+//####[96]####
+        private int _localOptimalLength;//####[96]####
+//####[104]####
+        /**
+		 * Constructor sets all the necessary fields, cloning values from the input 
+		 * ParallelBranchAndBoundAlgorithmManager when necessasry.
+		 * 
+		 * @author Aimee
+		 *///####[104]####
+        public WorkerBnb(ParallelBranchAndBoundAlgorithmManager m, BnBSchedule currentPartialSchedule, int processingCores) {//####[104]####
+            super(processingCores);//####[105]####
+            _initialPartialSchedule = currentPartialSchedule;//####[106]####
+            upperBound = m.upperBound;//####[107]####
+            bottomLevels = m.bottomLevels.clone();//####[108]####
+            numNodes = m.numNodes;//####[109]####
+            totalNodeWeights = m.totalNodeWeights;//####[110]####
+            brokenTrees = m.brokenTrees;//####[111]####
+            atomicBound = m.atomicBound;//####[112]####
+            atomicListener = m.atomicListener;//####[113]####
+            _nodeWeights = m._nodeWeights.clone();//####[115]####
+            _arcs = m._arcs.clone();//####[116]####
+            _arcWeights = m._arcWeights.clone();//####[117]####
+        }//####[118]####
+//####[127]####
+        /**
+		 * Starts running the branch and bound algorithm (without taking input or generating
+		 * and output file)
+		 * 
+		 * @author Aimee T
+		 *///####[127]####
+        @Override//####[127]####
+        public void execute() {//####[127]####
+            bnb(_initialPartialSchedule);//####[128]####
+        }//####[129]####
+//####[137]####
+        /**
+		 * Sets the value of the length of this worker's optimal schedule
+		 * 
+		 * @author Aimee T
+		 *///####[137]####
+        @Override//####[137]####
+        protected void setOptimalSchedule(BnBSchedule schedule) {//####[137]####
+            super.setOptimalSchedule(schedule);//####[138]####
+            _localOptimalLength = schedule.getMaxFinishTime();//####[139]####
+        }//####[140]####
+//####[147]####
+        /**
+		 * Sets the value of the length of this worker's optimal schedule
+		 * 
+		 * @author Aimee T
+		 *///####[147]####
+        protected int getLocalOptimalLength() {//####[147]####
+            return _localOptimalLength;//####[148]####
+        }//####[149]####
+    }//####[149]####
+}//####[149]####
