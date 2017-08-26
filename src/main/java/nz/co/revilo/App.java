@@ -94,6 +94,10 @@ public class App {
         return _inst._inputFilename;
     }
 
+    public static int getNumParallelCores() {
+        return _inst._numParallelProcessors;
+    }
+
     /**
      * Get the length that the algorithm has been running for, unless it is
      * already done, then get the final time
