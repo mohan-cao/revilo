@@ -1,0 +1,10 @@
+digraph multisource {
+    1   [Weight=3];
+    0   [Weight=4];
+    2   [Weight=5];
+    3   [Weight=6];
+    4   [Weight=4];
+    0 -> 3  [Weight=1];
+    1 -> 4  [Weight=3];
+    0 -> 4  [Weight=4];
+}

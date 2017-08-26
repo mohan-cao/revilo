@@ -1,0 +1,96 @@
+.button {
+    /*-fx-border-radius: 40 40 40 40;*/
+    -fx-background-radius: 15;
+    -fx-border-style: none;
+    -fx-background-color: #F1F1F1;
+}
+
+.button:hover {
+    -fx-background-color: #DEDEDE;
+}
+
+.default-color0.chart-bar {
+    -fx-background-color: rgba(0, 0, 0, 0); /* hide idle series */
+}
+
+.gantt0 {
+    -fx-background-color: linear-gradient(from 0% 0% to 0% 100%, #19d7fb, #1e63ee);
+    -fx-border-color: white;
+    /*-fx-padding: 15px;*/
+}
+.gantt1 {
+    -fx-background-color: linear-gradient(from 0% 0% to 0% 100%, #4cd964, #02b21f);
+    -fx-border-color: white;
+    /*-fx-padding: 15px;*/
+}
+
+.gantt2 {
+    -fx-background-color: linear-gradient(from 0% 0% to 0% 100%, #fc2a19, #fc5fa6);
+    -fx-border-color: white;
+    /*-fx-padding: 15px;*/
+}
+
+.gantt3 {
+    -fx-background-color: linear-gradient(from 0% 0% to 0% 100%, #fea700, #fa661e);
+    -fx-border-color: white;
+    /*-fx-padding: 15px;*/
+}
+
+.gantt4 {
+    -fx-background-color: linear-gradient(from 0% 0% to 0% 100%, #00d8eb, #008dcd);
+    -fx-border-color: white;
+    /*-fx-padding: 15px;*/
+}
+
+.gantt {
+    -fx-background-color: linear-gradient(from 0% 0% to 0% 100%, #8a8a92, #dedede);
+    -fx-border-color: white;
+    /*-fx-padding: 15px;*/
+}
+
+
+.scroll-pane {
+    -fx-background-color: white;
+}
+
+.scroll-bar {
+    -fx-background-color: white;
+}
+
+.increment-button, .decrement-button {
+    -fx-background-color: white;
+    -fx-border-color: white;
+}
+
+.scroll-bar:horizontal .track,
+.scroll-bar:vertical .track {
+    -fx-background-color: white;
+    -fx-border-color: white;
+}
+
+.scroll-bar:horizontal .thumb,
+.scroll-bar:vertical .thumb {
+    -fx-background-color: #dedede;
+    -fx-background-insets: 0 4 0 4;
+    -fx-background-radius: 2em;
+}
+
+.scroll-pane > .corner {
+    -fx-background-color: white;
+}
+
+.scroll-bar:vertical .increment-arrow {
+    -fx-background-color: #dedede;
+    -fx-shape: "M 0 0 L 4 8 L 8 0 Z";
+    -fx-padding: 0.25em;
+    -fx-rotate: 0;
+}
+
+/* https://farrukhobaid.wordpress.com/2013/01/16/dark-scrollbar-skin-for-javafx/ */
+
+.scroll-bar:vertical .decrement-arrow {
+    -fx-background-color: #dedede;
+    -fx-shape: "M 0 0 L 4 8 L 8 0 Z";
+    -fx-padding: 0.25em;
+    -fx-rotate: -180;
+}

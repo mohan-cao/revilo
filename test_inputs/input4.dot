@@ -1,0 +1,11 @@
+digraph G {
+    4   [Weight=5];
+    1   [Weight=5];
+    2   [Weight=5];
+    3   [Weight=5];
+    0   [Weight=5];
+    0 -> 1  [Weight=1];
+    0 -> 2  [Weight=1];
+    0 -> 3  [Weight=1];
+    0 -> 4  [Weight=1];
+}

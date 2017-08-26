@@ -1,21 +1,25 @@
 package nz.co.revilo;
 
+import org.junit.AfterClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
+
+import java.io.File;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 /**
- * Test cases for edge cases of algorithm
- * 
- * TODO: make input.dot
- * 
- * @author Abby S
- *
+ * Tests Application interface
  */
 public class AppTest {
+    public static String TEST_PATH = "test_inputs/";
+
+    @AfterClass
+    public static void cleanup(){
+        new File(TEST_PATH + "input-output.dot").delete();
+    }
 
     /**
      * Test for no valid params
@@ -28,26 +32,6 @@ public class AppTest {
             assertEquals(re.getMessage(),"Insufficient arguments given. Needs [input file] [# processors]");
         }
     }
-    
-    /**
-     * Serial
-     */
-    
-    
-    /**
-     * One on each processor
-     */
-    
-    
-    /**
-     * Even split
-     */
-    
-    
-    /**
-     * No gaps
-     */
-
 
     /**
      * Test that a valid file was given to the application
@@ -55,7 +39,7 @@ public class AppTest {
     @Test
     public void AppFileError() {
         try{
-            App.main(new String[]{"asdfghjkl-nice.dot","1"});
+            App.main(new String[]{TEST_PATH + "asdfghjkl-nice.dot","1"});
         }catch(RuntimeException re){
             assertEquals(re.getMessage(),"Input file does not exist");
         }
@@ -67,11 +51,15 @@ public class AppTest {
     @Test
     public void AppProcNumError() {
         try{
-            App.main(new String[]{"input.dot","yes"});
+            App.main(new String[]{TEST_PATH + "input.dot","yes"});
         }catch(RuntimeException re){
             assertEquals(re.getMessage(),"Invalid number of processors");
         }
     }
+    
+    /**
+     * TODO: test passing in 0 or negative number of processors
+     */
 
     /**
      * SMOKE TEST. Runs automatically with Maven build. Disable with -DexcludedGroups=SlowTest.class
@@ -79,6 +67,6 @@ public class AppTest {
     @Test
     @Category(SlowTest.class)
     public void AppSmokeTest(){
-        App.main(new String[]{"input.dot","1"});
+        App.main(new String[]{TEST_PATH + "input.dot","1"});
     }
 }

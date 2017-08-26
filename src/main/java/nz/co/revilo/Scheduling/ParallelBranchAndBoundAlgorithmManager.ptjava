@@ -1,0 +1,101 @@
+package nz.co.revilo.Scheduling;
+
+import java.util.concurrent.ExecutionException;
+
+/**
+ * Algorithm manager for the parallelised implementation of branch and bound, which makes use
+ * pf ParallelTask
+ * 
+ * @author Aimee T
+ */
+public class ParallelBranchAndBoundAlgorithmManager extends BranchAndBoundAlgorithmManager {
+	private TaskIDGroup<BnBSchedule> _schedulesToComplete;
+	
+	/**
+	 * Constructor which sets the number of processing cores we are scheduling for
+	 * @author Aimee T
+	 */
+	public ParallelBranchAndBoundAlgorithmManager(int processingCores, int threads) {
+		super(processingCores);
+		_schedulesToComplete = new TaskIDGroup<BnBSchedule>(threads);
+	}
+
+    @Override
+	protected void startBnb() {
+    	while(!rootSchedules.isEmpty()){
+    		bnb(rootSchedules.remove(0));
+        }
+    	try {
+    		_schedulesToComplete.waitTillFinished();
+    	} catch (InterruptedException e) {
+    		e.printStackTrace();
+    	} catch (ExecutionException e) {
+    		e.printStackTrace();
+    	}
+    }
+
+	/**
+	 * Creates the ParallelTask task which needs to be scheduled for execution
+	 */
+	private void createTask(BnBSchedule schedule) {
+		TaskID<Void> partial = startNewBnbThread(schedule);
+		_schedulesToComplete.add(partial);
+	}
+	
+	TASK private void startNewBnbThread(BnBSchedule schedule) {
+		WorkerBnb worker = new WorkerBnb(this, schedule, _processingCores);
+		worker.execute();
+		if(worker.upperBound < upperBound) {
+			optimalSchedule = worker.optimalSchedule;
+		}
+		worker = null; // null it for hopeful garbage collection
+	}
+	
+    /**
+     * Hook method to be implemented by subclasses which need specific behaviour when a particular 
+     * recursion depth is reached. This method implements the depth check.
+     * @author Aimee T
+     */
+	@Override
+	protected boolean isParallel() {
+    	return true;
+    }
+    
+    /**
+     * Hook method to be implemented by subclasses which need specific behaviour when a particular 
+     * recursion depth is reached. This method implements the behaviour required.
+     * @author Aimee T
+     */
+	@Override
+	protected void doParallel(BnBSchedule s) {
+		createTask(s);
+    }
+	
+	private class WorkerBnb extends BranchAndBoundAlgorithmManager{
+		private BnBSchedule _initialPartialSchedule;
+
+		public WorkerBnb(ParallelBranchAndBoundAlgorithmManager m, BnBSchedule currentPartialSchedule, int processingCores) {
+			super(processingCores);
+			_initialPartialSchedule = currentPartialSchedule;
+			upperBound = m.upperBound;
+			sources = new ArrayList<Integer>(m.sources);
+			bottomUpSinks = new ArrayList<Integer>(m.bottomUpSinks);
+			bottomLevels = m.bottomLevels.clone();
+			numNodes = m.numNodes;
+			totalNodeWeights = m.totalNodeWeights;
+			nodeStartTimes = new ArrayList<Integer>(m.nodeStartTimes);
+			nodeProcessors = new ArrayList<Integer>(m.nodeProcessors);
+			brokenTrees = m.brokenTrees;
+
+			_nodeWeights = m._nodeWeights.clone();
+			_arcs = m._arcs.clone();
+			_arcWeights = m._arcWeights.clone();
+		}
+
+        @Override
+		public void execute() {
+			bnb(_initialPartialSchedule);
+		}
+	}
+}
+
