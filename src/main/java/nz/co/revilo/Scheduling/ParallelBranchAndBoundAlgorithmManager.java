@@ -237,41 +237,42 @@ public class ParallelBranchAndBoundAlgorithmManager extends BranchAndBoundAlgori
             numNodes = m.numNodes;//####[109]####
             totalNodeWeights = m.totalNodeWeights;//####[110]####
             brokenTrees = m.brokenTrees;//####[111]####
-            _nodeWeights = m._nodeWeights.clone();//####[113]####
-            _arcs = m._arcs.clone();//####[114]####
-            _arcWeights = m._arcWeights.clone();//####[115]####
-        }//####[116]####
-//####[125]####
+            atomicBound = m.atomicBound;//####[112]####
+            atomicListener = m.atomicListener;//####[113]####
+            _nodeWeights = m._nodeWeights.clone();//####[115]####
+            _arcs = m._arcs.clone();//####[116]####
+            _arcWeights = m._arcWeights.clone();//####[117]####
+        }//####[118]####
+//####[127]####
         /**
 		 * Starts running the branch and bound algorithm (without taking input or generating
 		 * and output file)
 		 * 
 		 * @author Aimee T
-		 *///####[125]####
-        @Override//####[125]####
-        public void execute() {//####[125]####
-            bnb(_initialPartialSchedule);//####[126]####
-        }//####[127]####
-//####[135]####
+		 *///####[127]####
+        @Override//####[127]####
+        public void execute() {//####[127]####
+            bnb(_initialPartialSchedule);//####[128]####
+        }//####[129]####
+//####[137]####
         /**
 		 * Sets the value of the length of this worker's optimal schedule
 		 * 
 		 * @author Aimee T
-		 *///####[135]####
-        @Override//####[135]####
-        protected void setOptimalSchedule(BnBSchedule schedule) {//####[135]####
-            super.setOptimalSchedule(schedule);//####[136]####
-            _localOptimalLength = schedule.getMaxFinishTime();//####[137]####
-        }//####[138]####
-//####[145]####
+		 *///####[137]####
+        @Override//####[137]####
+        protected void setOptimalSchedule(BnBSchedule schedule) {//####[137]####
+            super.setOptimalSchedule(schedule);//####[138]####
+            _localOptimalLength = schedule.getMaxFinishTime();//####[139]####
+        }//####[140]####
+//####[147]####
         /**
 		 * Sets the value of the length of this worker's optimal schedule
 		 * 
 		 * @author Aimee T
-		 *///####[145]####
-        protected int getLocalOptimalLength() {//####[145]####
-            return _localOptimalLength;//####[146]####
-        }//####[147]####
-    }//####[147]####
-}//####[147]####
-
+		 *///####[147]####
+        protected int getLocalOptimalLength() {//####[147]####
+            return _localOptimalLength;//####[148]####
+        }//####[149]####
+    }//####[149]####
+}//####[149]####

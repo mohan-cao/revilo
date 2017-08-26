@@ -98,6 +98,7 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
      * @author Abby S
      */
     private void returnResults() {
+    	System.out.println("Returning Results");
         for (int nodeId = 0; nodeId < numNodes; nodeId++) {
             nodeStartTimes.add(optimalSchedule.closedNodes.get(nodeId).getA());//start times
             nodeProcessors.add(optimalSchedule.closedNodes.get(nodeId).getB());//processors scheduled on
@@ -128,7 +129,8 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
         // if OptimalListener is null it means that we're not actually asking for updates
         // because we are likely not using a visualization
         if (getOptimalListener() != null) {
-            getOptimalListener().newOptimal(optimalSchedule);
+        	getOptimalListener().get().newOptimal(optimalSchedule);
+        	atomicBound.set(upperBound.get());
         }
         
         upperBound.set(schedule.getMaxFinishTime());
@@ -168,17 +170,8 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
         if (schedule.openNodes.isEmpty()) {
             //to make sure only optimal schedules get through
           
-            if (schedule.getMaxFinishTime() < upperBound) {
-                optimalSchedule = schedule;
-
-                // if OptimalListener is null it means that we're not actually asking for updates
-                // because we are likely not using a visualization
-                if (getOptimalListener().get() != null) {
-                    getOptimalListener().get().newOptimal(optimalSchedule);
-                }
-
-                upperBound = schedule.getMaxFinishTime();
-                atomicBound.set(upperBound);
+            if (schedule.getMaxFinishTime() < upperBound.get()) {
+            	setOptimalSchedule(schedule);
                 return;
             } 
            
