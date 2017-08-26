@@ -274,3 +274,4 @@ public class ParallelBranchAndBoundAlgorithmManager extends BranchAndBoundAlgori
         }//####[147]####
     }//####[147]####
 }//####[147]####
+

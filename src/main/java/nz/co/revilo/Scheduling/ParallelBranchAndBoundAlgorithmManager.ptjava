@@ -109,6 +109,8 @@ public class ParallelBranchAndBoundAlgorithmManager extends BranchAndBoundAlgori
 			numNodes = m.numNodes;
 			totalNodeWeights = m.totalNodeWeights;
 			brokenTrees = m.brokenTrees;
+			atomicBound = m.atomicBound;
+			atomicListener = m.atomicListener;
 
 			_nodeWeights = m._nodeWeights.clone();
 			_arcs = m._arcs.clone();
