@@ -22,8 +22,8 @@ public abstract class AlgorithmManager extends Observable implements ParseResult
 
     protected int _processingCores;
     protected AtomicLong brokenTrees;
+    protected AtomicInteger upperBound; // used in subclasses
     protected AtomicInteger atomicBound;
-    protected int upperBound; // used in subclasses
     protected int[] _nodeWeights;
     protected boolean[][] _arcs;
     protected int[][] _arcWeights;
@@ -40,6 +40,7 @@ public abstract class AlgorithmManager extends Observable implements ParseResult
     public AlgorithmManager(int processingCores) {
         _processingCores = processingCores;
         brokenTrees = new AtomicLong(0);
+        upperBound = new AtomicInteger(0);
         atomicBound = new AtomicInteger(0);
         atomicListener = new AtomicReference<>(null);
     }
@@ -71,7 +72,7 @@ public abstract class AlgorithmManager extends Observable implements ParseResult
      *
      * @return current best
      */
-    public int getUpperBound() {
+    public AtomicInteger getUpperBound() {
         return upperBound;
     }
 
