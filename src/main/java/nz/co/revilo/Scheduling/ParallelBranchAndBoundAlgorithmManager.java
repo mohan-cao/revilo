@@ -125,7 +125,7 @@ public class ParallelBranchAndBoundAlgorithmManager extends BranchAndBoundAlgori
     public void __pt__startNewBnbThread(BnBSchedule schedule) {//####[45]####
         WorkerBnb worker = new WorkerBnb(this, schedule, _processingCores);//####[46]####
         worker.execute();//####[47]####
-        if (upperBound > worker.upperBound) //####[48]####
+        if (worker.upperBound < upperBound) //####[48]####
         {//####[48]####
             upperBound = worker.upperBound;//####[49]####
             optimalSchedule = worker.optimalSchedule;//####[50]####
@@ -140,8 +140,8 @@ public class ParallelBranchAndBoundAlgorithmManager extends BranchAndBoundAlgori
      * @author Aimee T
      *///####[61]####
     @Override//####[61]####
-    protected boolean isAtExitDepth(BnBSchedule s) {//####[61]####
-        return s.getClosedNodes().size() >= 0;//####[62]####
+    protected boolean isParallel() {//####[61]####
+        return true;//####[62]####
     }//####[63]####
 //####[71]####
     /**
@@ -150,7 +150,7 @@ public class ParallelBranchAndBoundAlgorithmManager extends BranchAndBoundAlgori
      * @author Aimee T
      *///####[71]####
     @Override//####[71]####
-    protected void exitDepthAction(BnBSchedule s) {//####[71]####
+    protected void doParallel(BnBSchedule s) {//####[71]####
         createTask(s);//####[72]####
     }//####[73]####
 //####[75]####
