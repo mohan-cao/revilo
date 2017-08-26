@@ -68,7 +68,7 @@ public class ParallelBranchAndBoundAlgorithmManager extends BranchAndBoundAlgori
 	@Override
 	protected boolean isParallel(int closedSet) {
 		// Start parallelising when deeper than 3 nodes into the branching
-    	return closedSet > 3;
+    	return closedSet > 2;
     }
     
     /**
@@ -99,7 +99,6 @@ public class ParallelBranchAndBoundAlgorithmManager extends BranchAndBoundAlgori
 			super(processingCores);
 			_initialPartialSchedule = currentPartialSchedule;
 			upperBound = m.upperBound;
-			sources = new ArrayList<Integer>(m.sources);
 			bottomLevels = m.bottomLevels.clone();
 			numNodes = m.numNodes;
 			totalNodeWeights = m.totalNodeWeights;

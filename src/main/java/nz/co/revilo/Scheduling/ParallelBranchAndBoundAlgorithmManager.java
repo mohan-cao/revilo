@@ -182,7 +182,7 @@ public class ParallelBranchAndBoundAlgorithmManager extends BranchAndBoundAlgori
      *///####[69]####
     @Override//####[69]####
     protected boolean isParallel(int closedSet) {//####[69]####
-        return closedSet > 3;//####[71]####
+        return closedSet > 2;//####[71]####
     }//####[72]####
 //####[80]####
     /**
@@ -225,45 +225,44 @@ public class ParallelBranchAndBoundAlgorithmManager extends BranchAndBoundAlgori
             super(processingCores);//####[99]####
             _initialPartialSchedule = currentPartialSchedule;//####[100]####
             upperBound = m.upperBound;//####[101]####
-            sources = new ArrayList<Integer>(m.sources);//####[102]####
-            bottomLevels = m.bottomLevels.clone();//####[103]####
-            numNodes = m.numNodes;//####[104]####
-            totalNodeWeights = m.totalNodeWeights;//####[105]####
-            brokenTrees = m.brokenTrees;//####[106]####
-            _nodeWeights = m._nodeWeights.clone();//####[108]####
-            _arcs = m._arcs.clone();//####[109]####
-            _arcWeights = m._arcWeights.clone();//####[110]####
-        }//####[111]####
-//####[120]####
+            bottomLevels = m.bottomLevels.clone();//####[102]####
+            numNodes = m.numNodes;//####[103]####
+            totalNodeWeights = m.totalNodeWeights;//####[104]####
+            brokenTrees = m.brokenTrees;//####[105]####
+            _nodeWeights = m._nodeWeights.clone();//####[107]####
+            _arcs = m._arcs.clone();//####[108]####
+            _arcWeights = m._arcWeights.clone();//####[109]####
+        }//####[110]####
+//####[119]####
         /**
 		 * Starts running the branch and bound algorithm (without taking input or generating
 		 * and output file)
 		 * 
 		 * @author Aimee T
-		 *///####[120]####
-        @Override//####[120]####
-        public void execute() {//####[120]####
-            bnb(_initialPartialSchedule);//####[121]####
-        }//####[122]####
-//####[130]####
+		 *///####[119]####
+        @Override//####[119]####
+        public void execute() {//####[119]####
+            bnb(_initialPartialSchedule);//####[120]####
+        }//####[121]####
+//####[129]####
         /**
          * Sets the value of the length of this worker's optimal schedule
          * 
          * @author Aimee T
-         *///####[130]####
-        @Override//####[130]####
-        protected void setOptimalSchedule(BnBSchedule schedule) {//####[130]####
-            super.setOptimalSchedule(schedule);//####[131]####
-            _localOptimalLength = schedule.getMaxFinishTime();//####[132]####
-        }//####[133]####
-//####[140]####
+         *///####[129]####
+        @Override//####[129]####
+        protected void setOptimalSchedule(BnBSchedule schedule) {//####[129]####
+            super.setOptimalSchedule(schedule);//####[130]####
+            _localOptimalLength = schedule.getMaxFinishTime();//####[131]####
+        }//####[132]####
+//####[139]####
         /**
          * Sets the value of the length of this worker's optimal schedule
          * 
          * @author Aimee T
-         *///####[140]####
-        protected int getLocalOptimalLength() {//####[140]####
-            return _localOptimalLength;//####[141]####
-        }//####[142]####
-    }//####[142]####
-}//####[142]####
+         *///####[139]####
+        protected int getLocalOptimalLength() {//####[139]####
+            return _localOptimalLength;//####[140]####
+        }//####[141]####
+    }//####[141]####
+}//####[141]####
