@@ -10,6 +10,7 @@ import java.util.concurrent.ExecutionException;
  */
 public class ParallelBranchAndBoundAlgorithmManager extends BranchAndBoundAlgorithmManager {
 	private TaskIDGroup<BnBSchedule> _schedulesToComplete;
+	private int _threads;
 	
 	/**
 	 * Constructor which sets the number of processing cores we are scheduling for
@@ -18,6 +19,7 @@ public class ParallelBranchAndBoundAlgorithmManager extends BranchAndBoundAlgori
 	public ParallelBranchAndBoundAlgorithmManager(int processingCores, int threads) {
 		super(processingCores);
 		_schedulesToComplete = new TaskIDGroup<BnBSchedule>(threads);
+		_threads = threads;
 	}
 
     @Override
@@ -45,7 +47,7 @@ public class ParallelBranchAndBoundAlgorithmManager extends BranchAndBoundAlgori
 	TASK private void startNewBnbThread(BnBSchedule schedule) {
 		WorkerBnb worker = new WorkerBnb(this, schedule, _processingCores);
 		worker.execute();
-		if(worker.upperBound < upperBound) {
+		if(worker.getLocalOptimalLength() == upperBound.get()) {
 			optimalSchedule = worker.optimalSchedule;
 		}
 		worker = null; // null it for hopeful garbage collection
@@ -57,8 +59,13 @@ public class ParallelBranchAndBoundAlgorithmManager extends BranchAndBoundAlgori
      * @author Aimee T
      */
 	@Override
-	protected boolean isParallel() {
-    	return true;
+	protected boolean isParallel(int closedSet) {
+		// Start parallelising when deeper than 3 nodes into the branching
+		if(_threads == 1) {
+			return false;
+		} else {
+			return closedSet > 2;
+		}
     }
     
     /**
@@ -73,6 +80,7 @@ public class ParallelBranchAndBoundAlgorithmManager extends BranchAndBoundAlgori
 	
 	private class WorkerBnb extends BranchAndBoundAlgorithmManager{
 		private BnBSchedule _initialPartialSchedule;
+		private int _localOptimalLength = 0;
 
 		public WorkerBnb(ParallelBranchAndBoundAlgorithmManager m, BnBSchedule currentPartialSchedule, int processingCores) {
 			super(processingCores);
@@ -97,6 +105,26 @@ public class ParallelBranchAndBoundAlgorithmManager extends BranchAndBoundAlgori
         @Override
 		public void execute() {
 			bnb(_initialPartialSchedule);
+		}
+        
+		/**
+		 * Sets the value of the length of this worker's optimal schedule
+		 * 
+		 * @author Aimee T
+		 */
+		@Override
+		protected void setOptimalSchedule(BnBSchedule schedule) {
+			super.setOptimalSchedule(schedule);
+			_localOptimalLength = schedule.getMaxFinishTime();
+		}
+
+		/**
+		 * Sets the value of the length of this worker's optimal schedule
+		 * 
+		 * @author Aimee T
+		 */
+		protected int getLocalOptimalLength() {
+			return _localOptimalLength;
 		}
 	}
 }
