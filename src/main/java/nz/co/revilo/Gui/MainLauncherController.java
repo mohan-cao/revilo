@@ -57,12 +57,6 @@ public class MainLauncherController implements Initializable, ScheduleResultList
     }
 
     @FXML
-    private Button closeBtn;
-
-    @FXML
-    private Button hideBtn;
-
-    @FXML
     private Label processorLabel;
 
     @FXML
@@ -70,6 +64,9 @@ public class MainLauncherController implements Initializable, ScheduleResultList
 
     @FXML
     private Label timeLabel;
+
+    @FXML
+    private Label parallelLabel;
 
     @FXML
     private Label timeUnits;
@@ -100,17 +97,11 @@ public class MainLauncherController implements Initializable, ScheduleResultList
     private ArrayList<String> processorCatStr;
     private ArrayList<XYChart.Series> processorCat;
 
-    @FXML
-    private void closeRevilo(ActionEvent event) {
-        Platform.exit();
-        System.exit(0);
-    }
-
-    @FXML
-    private void minimizeRevilo(ActionEvent event) {
-        ml.getPrimaryStage().setIconified(true);
-    }
-
+    /**
+     * JavaFX method to set up the GUI and listeners
+      * @param location
+     * @param resources
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         App.getAlgorithmManager().inform(this);
@@ -128,7 +119,6 @@ public class MainLauncherController implements Initializable, ScheduleResultList
 
 
         processorLabel.setText(App.getExecCores() + "");
-//        app.startParsing();
         Task task = new Task<Void>() {
             @Override
             public Void call() throws Exception {
@@ -136,11 +126,9 @@ public class MainLauncherController implements Initializable, ScheduleResultList
                 return null;
             }
         };
-        graphNameLabel.setText(App.getInputFileName()); //padding
-        systemLabel.setText("PROCESSING");
-        statusLabel.setText("Starting up...");
         Thread thread = new Thread(task);
         thread.start();
+
         Timer timer = new Timer();
         timer.schedule(new TimerTask() {
             @Override
@@ -152,8 +140,8 @@ public class MainLauncherController implements Initializable, ScheduleResultList
                         double timeElapsed = App.getRunningTime();
                         memoryLabel.setText((currentMemory)  / (1024l * 1024l) + ""); //needs to be better
                         timeLabel.setText(
-                                (timeElapsed>=60)?
-                                String.format("%.0f:%02.0f", timeElapsed/60, timeElapsed%60)
+                                (timeElapsed>60)?
+                                String.format("%d:%02.0f", (int)timeElapsed/60, timeElapsed%60)
                                 :
                                 String.format("%.2f", timeElapsed)
                         );
@@ -161,16 +149,36 @@ public class MainLauncherController implements Initializable, ScheduleResultList
 //                        timeLabel.setText(new SimpleDateFormat("mm:ss:SS").format(new Date(App.getRunningTime())));
                         bestLabel.setText(App.getAlgorithmManager().getUpperBound() + "");
                         branchesLabel.setText(App.getAlgorithmManager().getBrokenTrees() + "");
-
-//                        timeLabel.setText(app.getRunningTime() + "");
                     }
                 });
             }
         }, 0, 50);
 
-        createGantt();
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                graphNameLabel.setText(App.getInputFileName()); //padding
+                systemLabel.setText("PROCESSING");
+                statusLabel.setText("Starting up...");
+                parallelLabel.setText(App.getNumParallelCores() + "");
+                createGantt();
+            }
+        });
+
     }
 
+    /**
+     * Notifies the UI that the final schedule has been found and update the status bar
+     * @author Terran Kroft
+     *
+     * @param graphName     Name of graph
+     * @param nodeNames     Name of each task
+     * @param arcs          The existence of arcs
+     * @param arcWeights    How long to transfer results of task completion to another processor
+     * @param nodeWeights   How long each task takes
+     * @param nodeStarts    When each task starts
+     * @param nodeProcessor What processor each task is on
+     */
     @Override
     public void finalSchedule(String graphName, List<String> nodeNames, List<List<Boolean>> arcs, List<List<Integer>> arcWeights, List<Integer> nodeWeights, List<Integer> nodeStarts, List<Integer> nodeProcessor) {
         _graphName = graphName;
@@ -190,6 +198,10 @@ public class MainLauncherController implements Initializable, ScheduleResultList
         results.setIsDoneProcessing(true);
     }
 
+    /**
+     * Creates a blank Gantt Chart with all the required series and axes
+     * @author Terran Kroft
+     */
     public void createGantt() {
         NumberAxis xAxis = new NumberAxis();
         CategoryAxis yAxis = new CategoryAxis();
@@ -204,19 +216,20 @@ public class MainLauncherController implements Initializable, ScheduleResultList
 
         yAxis.setCategories(FXCollections.observableArrayList(processorCatStr));
         ganttChart = new GanttChart<Number, String>(xAxis, yAxis);
-
-
         ganttPane.setCenter(ganttChart);
     }
 
+    /**
+     * Updates the Gantt chart with new found information.
+     */
     public void updateGantt() {
         int processorStripLength = processorTitle.length();
         ArrayList<String> processorCatStr = new ArrayList<>();
         ArrayList<XYChart.Series> processorCat = new ArrayList<>();
         ArrayList<ArrayList<String>> pcatName = new ArrayList<>();
 
-        long lowestNodeWeight = Collections.min(_nodeWeights);
-        long highestNodeWeight = Collections.max(_nodeWeights);
+        long lowestNodeWeight = (long) Collections.min(_nodeWeights);
+        long highestNodeWeight = (long) Collections.max(_nodeWeights);
 
         for (int i = 0; i < App.getExecCores(); i++) {
             processorCatStr.add(processorTitle + i);
@@ -267,7 +280,6 @@ public class MainLauncherController implements Initializable, ScheduleResultList
                     percentage = 0.0; // don't want NaNs
                 }
                 ColorAdjust ca = new ColorAdjust();
-                System.out.println(percentage);
                 ca.setBrightness(percentage);
                 bar.setEffect(ca);
 
@@ -275,6 +287,10 @@ public class MainLauncherController implements Initializable, ScheduleResultList
         }
     }
 
+    /**
+     * Notifies the GUI that a new optimal has been found.
+     * @param optimal
+     */
     @Override
     public void newOptimal(BnBSchedule optimal) {
         _graphName = App.getAlgorithmManager().getGraphName();
