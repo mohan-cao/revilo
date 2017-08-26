@@ -48,7 +48,6 @@ public class ParallelBranchAndBoundAlgorithmManager extends BranchAndBoundAlgori
 		if(worker.upperBound < upperBound) {
 			optimalSchedule = worker.optimalSchedule;
 		}
-		System.out.println("Worker Done");
 		worker = null; // null it for hopeful garbage collection
 	}
 	
