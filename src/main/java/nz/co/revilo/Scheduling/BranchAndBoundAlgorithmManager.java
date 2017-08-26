@@ -125,6 +125,11 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
      * @author Abby S, Terran K
      */
     protected void bnb(BnBSchedule schedule) {
+    	if(isParallel()) {
+    		doParallel(schedule);
+    		return;
+    	}
+    	
         if (schedule.lowerBound >= upperBound) { //>= @ Michael K, huge optimisation
             schedule = null; //garbage collect that schedule
             brokenTrees++; //this tree has broken
@@ -140,11 +145,6 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
             existingScheduleStructures.put(schedule._scheduleStructureId, null);
         }
         
-        if(isAtExitDepth(schedule)) {
-    		exitDepthAction(schedule);
-    		return;
-    	}
-
         //found optimal for the root started with
         //reached end of a valid schedule. Never broke off, so is optimal
         if (schedule.openNodes.isEmpty()) {
@@ -180,7 +180,7 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
      * recursion depth is reached. This method implements the depth check.
      * @author Aimee T
      */
-    protected boolean isAtExitDepth(BnBSchedule s) {
+    protected boolean isParallel() {
     	return false;
     }
     
@@ -189,8 +189,8 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
      * recursion depth is reached. This method implements the behaviour required.
      * @author Aimee T
      */
-    protected void exitDepthAction(BnBSchedule s) {
-    	
+    protected void doParallel(BnBSchedule s) {
+    	//nothing as not parallel
     }
 
     /**

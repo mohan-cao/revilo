@@ -17,7 +17,7 @@ public class ParallelBranchAndBoundAlgorithmManager extends BranchAndBoundAlgori
 	 */
 	public ParallelBranchAndBoundAlgorithmManager(int processingCores, int threads) {
 		super(processingCores);
-		_schedulesToComplete = new TaskIDGroup<BnBSchedule>(threads);//instead of 4 set with parallel cores depending on CLI argument
+		_schedulesToComplete = new TaskIDGroup<BnBSchedule>(threads);
 	}
 
     @Override
@@ -45,7 +45,7 @@ public class ParallelBranchAndBoundAlgorithmManager extends BranchAndBoundAlgori
 	TASK private void startNewBnbThread(BnBSchedule schedule) {
 		WorkerBnb worker = new WorkerBnb(this, schedule, _processingCores);
 		worker.execute();
-		if(upperBound > worker.upperBound) {
+		if(worker.upperBound < upperBound) {
 			upperBound = worker.upperBound;
 			optimalSchedule = worker.optimalSchedule;
 		}
@@ -58,8 +58,8 @@ public class ParallelBranchAndBoundAlgorithmManager extends BranchAndBoundAlgori
      * @author Aimee T
      */
 	@Override
-	protected boolean isAtExitDepth(BnBSchedule s) {
-    	return s.getClosedNodes().size() >= 0;
+	protected boolean isParallel() {
+    	return true;
     }
     
     /**
@@ -68,7 +68,7 @@ public class ParallelBranchAndBoundAlgorithmManager extends BranchAndBoundAlgori
      * @author Aimee T
      */
 	@Override
-	protected void exitDepthAction(BnBSchedule s) {
+	protected void doParallel(BnBSchedule s) {
 		createTask(s);
     }
 	
