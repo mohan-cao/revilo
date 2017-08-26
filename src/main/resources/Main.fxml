@@ -23,7 +23,7 @@
                                     <Font name="SF UI Display Bold" size="13.0" />
                                  </font>
                               </Label>
-                              <Label fx:id="processorLabel" alignment="BOTTOM_RIGHT" contentDisplay="RIGHT" text="0" textAlignment="RIGHT" textFill="WHITE" AnchorPane.bottomAnchor="8.0" AnchorPane.rightAnchor="5.0">
+                              <Label fx:id="processorLabel" alignment="BOTTOM_RIGHT" contentDisplay="RIGHT" styleClass="mono" text="0" textAlignment="RIGHT" textFill="WHITE" AnchorPane.bottomAnchor="8.0" AnchorPane.rightAnchor="5.0">
                                  <font>
                                     <Font name="SF UI Display Light" size="48.0" />
                                  </font>
@@ -37,7 +37,7 @@
                         </AnchorPane>
                         <AnchorPane maxHeight="80.0" maxWidth="190.0" prefHeight="90.0" prefWidth="190.0" style="-fx-background-color: linear-gradient(from 0% 0% to 0% 100%, #d56efd, #842abf); -fx-background-radius: 5;">
                            <children>
-                              <Label text="PARALLEL PROCESSING" textFill="WHITE" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="5.0">
+                              <Label styleClass="heavy-lab\el" text="PARALLEL PROCESSING" textFill="WHITE" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="5.0">
                                  <font>
                                     <Font name="SF UI Display Bold" size="13.0" />
                                  </font>
@@ -56,12 +56,12 @@
                         </AnchorPane>
                         <AnchorPane maxHeight="80.0" maxWidth="190.0" prefHeight="90.0" prefWidth="190.0" style="-fx-background-color: linear-gradient(from 0% 0% to 0% 100%, #19d7fb, #1e63ee); -fx-background-radius: 5;">
                            <children>
-                              <Label text="CURRENT BEST" textFill="WHITE" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="5.0">
+                              <Label styleClass="heavy-label" text="CURRENT BEST" textFill="WHITE" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="5.0">
                                  <font>
                                     <Font name="SF UI Display Bold" size="13.0" />
                                  </font>
                               </Label>
-                              <Label fx:id="bestLabel" alignment="BOTTOM_RIGHT" contentDisplay="RIGHT" text="0" textAlignment="RIGHT" textFill="WHITE" AnchorPane.bottomAnchor="8.0" AnchorPane.rightAnchor="5.0">
+                              <Label fx:id="bestLabel" alignment="BOTTOM_RIGHT" contentDisplay="RIGHT" styleClass="mono" text="0" textAlignment="RIGHT" textFill="WHITE" AnchorPane.bottomAnchor="8.0" AnchorPane.rightAnchor="5.0">
                                  <font>
                                     <Font name="SF UI Display Light" size="48.0" />
                                  </font>
@@ -75,12 +75,12 @@
                         </AnchorPane>
                         <AnchorPane maxHeight="80.0" maxWidth="190.0" prefHeight="90.0" prefWidth="190.0" style="-fx-background-color: linear-gradient(from 0% 0% to 0% 100%, #fea700, #fa661e); -fx-background-radius: 5;">
                            <children>
-                              <Label text="MEMORY USED" textFill="WHITE" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="5.0">
+                              <Label styleClass="heavy-label" text="MEMORY USED" textFill="WHITE" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="5.0">
                                  <font>
                                     <Font name="SF UI Display Bold" size="13.0" />
                                  </font>
                               </Label>
-                              <Label fx:id="memoryLabel" alignment="BOTTOM_RIGHT" contentDisplay="RIGHT" text="0" textAlignment="RIGHT" textFill="WHITE" AnchorPane.bottomAnchor="8.0" AnchorPane.rightAnchor="5.0">
+                              <Label fx:id="memoryLabel" alignment="BOTTOM_RIGHT" contentDisplay="RIGHT" styleClass="mono" text="0" textAlignment="RIGHT" textFill="WHITE" AnchorPane.bottomAnchor="8.0" AnchorPane.rightAnchor="5.0">
                                  <font>
                                     <Font name="SF UI Display Light" size="48.0" />
                                  </font>
@@ -94,12 +94,12 @@
                         </AnchorPane>
                         <AnchorPane maxHeight="80.0" maxWidth="190.0" prefHeight="90.0" prefWidth="190.0" style="-fx-background-color: linear-gradient(from 0% 0% to 0% 100%, #00d8eb, #008dcd); -fx-background-radius: 5;">
                            <children>
-                              <Label text="BOUND BRANCHES" textFill="WHITE" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="5.0">
+                              <Label styleClass="heavy-label" text="BOUND BRANCHES" textFill="WHITE" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="5.0">
                                  <font>
                                     <Font name="SF UI Display Bold" size="13.0" />
                                  </font>
                               </Label>
-                              <Label fx:id="branchesLabel" alignment="BOTTOM_RIGHT" contentDisplay="RIGHT" text="0" textAlignment="RIGHT" textFill="WHITE" AnchorPane.bottomAnchor="12.0" AnchorPane.rightAnchor="5.0">
+                              <Label fx:id="branchesLabel" alignment="BOTTOM_RIGHT" contentDisplay="RIGHT" styleClass="mono" text="0" textAlignment="RIGHT" textFill="WHITE" AnchorPane.bottomAnchor="12.0" AnchorPane.rightAnchor="5.0">
                                  <font>
                                     <Font name="SF UI Display Light" size="36.0" />
                                  </font>
@@ -113,12 +113,12 @@
                         </AnchorPane>
                         <AnchorPane maxHeight="80.0" maxWidth="190.0" prefHeight="90.0" prefWidth="190.0" style="-fx-background-color: linear-gradient(from 0% 0% to 0% 100%, #4cd964, #02b21f); -fx-background-radius: 5;">
                            <children>
-                              <Label text="ELAPSED TIME" textFill="WHITE" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="5.0">
+                              <Label styleClass="heavy-label" text="ELAPSED TIME" textFill="WHITE" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="5.0">
                                  <font>
                                     <Font name="SF UI Display Bold" size="13.0" />
                                  </font>
                               </Label>
-                              <Label fx:id="timeLabel" alignment="BOTTOM_RIGHT" contentDisplay="RIGHT" text="0" textAlignment="RIGHT" textFill="WHITE" AnchorPane.bottomAnchor="8.0" AnchorPane.rightAnchor="5.0">
+                              <Label fx:id="timeLabel" alignment="BOTTOM_RIGHT" contentDisplay="RIGHT" styleClass="mono" text="0" textAlignment="RIGHT" textFill="WHITE" AnchorPane.bottomAnchor="8.0" AnchorPane.rightAnchor="5.0">
                                  <font>
                                     <Font name="SF UI Display Light" size="48.0" />
                                  </font>
@@ -132,12 +132,12 @@
                         </AnchorPane>
                         <AnchorPane maxHeight="80.0" maxWidth="190.0" prefHeight="90.0" prefWidth="190.0" style="-fx-background-color: linear-gradient(from 0% 0% to 0% 100%, #8a8a92, #dedede); -fx-background-radius: 5;">
                            <children>
-                              <Label text="DOLOR SIT AMET" textFill="WHITE" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="5.0">
+                              <Label styleClass="heavy-label" text="DOLOR SIT AMET" textFill="WHITE" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="5.0">
                                  <font>
                                     <Font name="SF UI Display Bold" size="13.0" />
                                  </font>
                               </Label>
-                              <Label alignment="BOTTOM_RIGHT" contentDisplay="RIGHT" text="0" textAlignment="RIGHT" textFill="WHITE" AnchorPane.bottomAnchor="8.0" AnchorPane.rightAnchor="5.0">
+                              <Label alignment="BOTTOM_RIGHT" contentDisplay="RIGHT" styleClass="mono" text="0" textAlignment="RIGHT" textFill="WHITE" AnchorPane.bottomAnchor="8.0" AnchorPane.rightAnchor="5.0">
                                  <font>
                                     <Font name="SF UI Display Light" size="48.0" />
                                  </font>
