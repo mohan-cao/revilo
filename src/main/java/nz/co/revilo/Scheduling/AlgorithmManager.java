@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Observable;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * Abstract class defining the data structures, and information to be used when implementing any algorithms as part of a
@@ -18,7 +19,7 @@ import java.util.Observable;
 public abstract class AlgorithmManager extends Observable implements ParseResultListener {
 
     protected int _processingCores;
-    protected long brokenTrees;
+    protected AtomicLong brokenTrees;
     protected int upperBound; // used in subclasses
     protected int[] _nodeWeights;
     protected boolean[][] _arcs;
@@ -34,7 +35,7 @@ public abstract class AlgorithmManager extends Observable implements ParseResult
      */
     public AlgorithmManager(int processingCores) {
         _processingCores = processingCores;
-        brokenTrees = 0;
+        brokenTrees = new AtomicLong(0);
     }
 
     /**
@@ -42,7 +43,7 @@ public abstract class AlgorithmManager extends Observable implements ParseResult
      *
      * @return
      */
-    public long getBrokenTrees() {
+    public AtomicLong getBrokenTrees() {
         return brokenTrees;
     }
 

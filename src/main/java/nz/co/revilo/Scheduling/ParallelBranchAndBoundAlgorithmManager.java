@@ -127,58 +127,58 @@ public class ParallelBranchAndBoundAlgorithmManager extends BranchAndBoundAlgori
         worker.execute();//####[47]####
         if (worker.upperBound < upperBound) //####[48]####
         {//####[48]####
-            upperBound = worker.upperBound;//####[49]####
-            optimalSchedule = worker.optimalSchedule;//####[50]####
-        }//####[51]####
-        worker = null;//####[52]####
-    }//####[53]####
-//####[53]####
-//####[61]####
+            optimalSchedule = worker.optimalSchedule;//####[49]####
+        }//####[50]####
+        worker = null;//####[51]####
+    }//####[52]####
+//####[52]####
+//####[60]####
     /**
      * Hook method to be implemented by subclasses which need specific behaviour when a particular 
      * recursion depth is reached. This method implements the depth check.
      * @author Aimee T
-     *///####[61]####
-    @Override//####[61]####
-    protected boolean isParallel() {//####[61]####
-        return true;//####[62]####
-    }//####[63]####
-//####[71]####
+     *///####[60]####
+    @Override//####[60]####
+    protected boolean isParallel() {//####[60]####
+        return true;//####[61]####
+    }//####[62]####
+//####[70]####
     /**
      * Hook method to be implemented by subclasses which need specific behaviour when a particular 
      * recursion depth is reached. This method implements the behaviour required.
      * @author Aimee T
-     *///####[71]####
-    @Override//####[71]####
-    protected void doParallel(BnBSchedule s) {//####[71]####
-        createTask(s);//####[72]####
-    }//####[73]####
+     *///####[70]####
+    @Override//####[70]####
+    protected void doParallel(BnBSchedule s) {//####[70]####
+        createTask(s);//####[71]####
+    }//####[72]####
+//####[74]####
+    private class WorkerBnb extends BranchAndBoundAlgorithmManager {//####[74]####
+//####[74]####
+        /*  ParaTask helper method to access private/protected slots *///####[74]####
+        public void __pt__accessPrivateSlot(Method m, Object instance, TaskID arg, Object interResult ) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException {//####[74]####
+            if (m.getParameterTypes().length == 0)//####[74]####
+                m.invoke(instance);//####[74]####
+            else if ((m.getParameterTypes().length == 1))//####[74]####
+                m.invoke(instance, arg);//####[74]####
+            else //####[74]####
+                m.invoke(instance, arg, interResult);//####[74]####
+        }//####[74]####
 //####[75]####
-    private class WorkerBnb extends BranchAndBoundAlgorithmManager {//####[75]####
-//####[75]####
-        /*  ParaTask helper method to access private/protected slots *///####[75]####
-        public void __pt__accessPrivateSlot(Method m, Object instance, TaskID arg, Object interResult ) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException {//####[75]####
-            if (m.getParameterTypes().length == 0)//####[75]####
-                m.invoke(instance);//####[75]####
-            else if ((m.getParameterTypes().length == 1))//####[75]####
-                m.invoke(instance, arg);//####[75]####
-            else //####[75]####
-                m.invoke(instance, arg, interResult);//####[75]####
-        }//####[75]####
-//####[76]####
-        private BnBSchedule _initialPartialSchedule;//####[76]####
-//####[78]####
-        public WorkerBnb(ParallelBranchAndBoundAlgorithmManager m, BnBSchedule currentPartialSchedule, int processingCores) {//####[78]####
-            super(processingCores);//####[79]####
-            _initialPartialSchedule = currentPartialSchedule;//####[80]####
-            upperBound = m.upperBound;//####[81]####
-            sources = new ArrayList<Integer>(m.sources);//####[82]####
-            bottomUpSinks = new ArrayList<Integer>(m.bottomUpSinks);//####[83]####
-            bottomLevels = m.bottomLevels.clone();//####[84]####
-            numNodes = m.numNodes;//####[85]####
-            totalNodeWeights = m.totalNodeWeights;//####[86]####
-            nodeStartTimes = new ArrayList<Integer>(m.nodeStartTimes);//####[87]####
-            nodeProcessors = new ArrayList<Integer>(m.nodeProcessors);//####[88]####
+        private BnBSchedule _initialPartialSchedule;//####[75]####
+//####[77]####
+        public WorkerBnb(ParallelBranchAndBoundAlgorithmManager m, BnBSchedule currentPartialSchedule, int processingCores) {//####[77]####
+            super(processingCores);//####[78]####
+            _initialPartialSchedule = currentPartialSchedule;//####[79]####
+            upperBound = m.upperBound;//####[80]####
+            sources = new ArrayList<Integer>(m.sources);//####[81]####
+            bottomUpSinks = new ArrayList<Integer>(m.bottomUpSinks);//####[82]####
+            bottomLevels = m.bottomLevels.clone();//####[83]####
+            numNodes = m.numNodes;//####[84]####
+            totalNodeWeights = m.totalNodeWeights;//####[85]####
+            nodeStartTimes = new ArrayList<Integer>(m.nodeStartTimes);//####[86]####
+            nodeProcessors = new ArrayList<Integer>(m.nodeProcessors);//####[87]####
+            brokenTrees = m.brokenTrees;//####[88]####
             _nodeWeights = m._nodeWeights.clone();//####[90]####
             _arcs = m._arcs.clone();//####[91]####
             _arcWeights = m._arcWeights.clone();//####[92]####
