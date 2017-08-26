@@ -144,8 +144,8 @@ public class App {
         // Start an AlgorithmManager
         if(_inst._numParallelProcessors > 1) {
             ParaTask.setThreadPoolSize(ParaTask.ThreadPoolType.ALL, _inst._numParallelProcessors);
-            ParaTask.init();
-        	_manager = new ParallelBranchAndBoundAlgorithmManager(_inst._numExecutionCores);
+            //ParaTask.init();
+        	_manager = new ParallelBranchAndBoundAlgorithmManager(_inst._numExecutionCores, _inst._numParallelProcessors);
         } else {
         	_manager = new BranchAndBoundAlgorithmManager(_inst._numExecutionCores);
         	System.out.println("One Processor!");

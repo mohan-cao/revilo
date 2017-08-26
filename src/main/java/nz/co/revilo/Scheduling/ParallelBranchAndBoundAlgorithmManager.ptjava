@@ -10,16 +10,14 @@ import java.util.concurrent.ExecutionException;
  */
 public class ParallelBranchAndBoundAlgorithmManager extends BranchAndBoundAlgorithmManager {
 	private TaskIDGroup<BnBSchedule> _schedulesToComplete;
-	private int _currentThreadCount;
 	
 	/**
 	 * Constructor which sets the number of processing cores we are scheduling for
 	 * @author Aimee T
 	 */
-	public ParallelBranchAndBoundAlgorithmManager(int processingCores) {
+	public ParallelBranchAndBoundAlgorithmManager(int processingCores, int threads) {
 		super(processingCores);
-		_schedulesToComplete = new TaskIDGroup(4);
-		_currentThreadCount = 0;
+		_schedulesToComplete = new TaskIDGroup<BnBSchedule>(threads);//instead of 4 set with parallel cores depending on CLI argument
 	}
 
     @Override
@@ -33,8 +31,6 @@ public class ParallelBranchAndBoundAlgorithmManager extends BranchAndBoundAlgori
     		e.printStackTrace();
     	} catch (ExecutionException e) {
     		e.printStackTrace();
-    	} finally {
-    		System.out.println("Exectuion interrupted");
     	}
     }
 
@@ -48,14 +44,12 @@ public class ParallelBranchAndBoundAlgorithmManager extends BranchAndBoundAlgori
 	
 	TASK private void startNewBnbThread(BnBSchedule schedule) {
 		WorkerBnb worker = new WorkerBnb(this, schedule, _processingCores);
-		_currentThreadCount++;
 		worker.execute();
 		if(upperBound > worker.upperBound) {
 			upperBound = worker.upperBound;
 			optimalSchedule = worker.optimalSchedule;
 		}
 		worker = null; // null it for hopeful garbage collection
-		_currentThreadCount--;
 	}
 	
     /**
@@ -65,7 +59,7 @@ public class ParallelBranchAndBoundAlgorithmManager extends BranchAndBoundAlgori
      */
 	@Override
 	protected boolean isAtExitDepth(BnBSchedule s) {
-    	return 3*numNodes/4 <= s.getClosedNodes().size();
+    	return s.getClosedNodes().size() >= 0;
     }
     
     /**

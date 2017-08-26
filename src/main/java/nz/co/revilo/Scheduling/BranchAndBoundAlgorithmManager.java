@@ -72,12 +72,9 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
         for (int nodeId : sources) {
             BnBSchedule newSchedule = new BnBSchedule(this, null, nodeId, 0);
             rootSchedules.add(newSchedule);
-        }
-        
+        }    
                 
-        while (!rootSchedules.isEmpty()) {
-        	startBnb();
-        }
+        startBnb(); //polymorphic call depending on Parallel or not
 
         returnResults();
     }
@@ -133,11 +130,6 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
             brokenTrees++; //this tree has broken
             return; //break tree at this point
         }
-        
-        if(isAtExitDepth(schedule)) {
-    		exitDepthAction(schedule);
-    		return;
-    	}
 
         //compare to existing schedule structures and remove if duplicate
         if (existingScheduleStructures.containsKey(schedule._scheduleStructureId)) {
@@ -147,6 +139,11 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
         } else {
             existingScheduleStructures.put(schedule._scheduleStructureId, null);
         }
+        
+        if(isAtExitDepth(schedule)) {
+    		exitDepthAction(schedule);
+    		return;
+    	}
 
         //found optimal for the root started with
         //reached end of a valid schedule. Never broke off, so is optimal
