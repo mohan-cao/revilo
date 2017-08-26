@@ -116,7 +116,6 @@ public class MainLauncherController implements Initializable, ScheduleResultList
 
 
         processorLabel.setText(App.getExecCores() + "");
-//        app.startParsing();
         Task task = new Task<Void>() {
             @Override
             public Void call() throws Exception {
@@ -124,11 +123,9 @@ public class MainLauncherController implements Initializable, ScheduleResultList
                 return null;
             }
         };
-        graphNameLabel.setText(App.getInputFileName()); //padding
-        systemLabel.setText("PROCESSING");
-        statusLabel.setText("Starting up...");
         Thread thread = new Thread(task);
         thread.start();
+
         Timer timer = new Timer();
         timer.schedule(new TimerTask() {
             @Override
@@ -140,8 +137,8 @@ public class MainLauncherController implements Initializable, ScheduleResultList
                         double timeElapsed = App.getRunningTime();
                         memoryLabel.setText((currentMemory)  / (1024l * 1024l) + ""); //needs to be better
                         timeLabel.setText(
-                                (timeElapsed>=60)?
-                                String.format("%.0f:%02.0f", timeElapsed/60, timeElapsed%60)
+                                (timeElapsed>60)?
+                                String.format("%d:%02.0f", (int)timeElapsed/60, timeElapsed%60)
                                 :
                                 String.format("%.2f", timeElapsed)
                         );
@@ -149,14 +146,21 @@ public class MainLauncherController implements Initializable, ScheduleResultList
 //                        timeLabel.setText(new SimpleDateFormat("mm:ss:SS").format(new Date(App.getRunningTime())));
                         bestLabel.setText(App.getAlgorithmManager().getUpperBound() + "");
                         branchesLabel.setText(App.getAlgorithmManager().getBrokenTrees() + "");
-
-//                        timeLabel.setText(app.getRunningTime() + "");
                     }
                 });
             }
         }, 0, 50);
 
-        createGantt();
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                graphNameLabel.setText(App.getInputFileName()); //padding
+                systemLabel.setText("PROCESSING");
+                statusLabel.setText("Starting up...");
+                createGantt();
+            }
+        });
+
     }
 
     /**
