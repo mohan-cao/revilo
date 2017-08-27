@@ -1,7 +1,5 @@
 package nz.co.revilo.Scheduling;
 
-import java.util.concurrent.ExecutionException;
-
 /**
  * Algorithm manager for the parallelised implementation of branch and bound, which makes use
  * pf ParallelTask
@@ -22,6 +20,12 @@ public class ParallelBranchAndBoundAlgorithmManager extends BranchAndBoundAlgori
 		_threads = threads;
 	}
 
+	/**
+	 * Starts the branch and bound algorithm on a thread, and then waits for the 
+	 * tasks occurring in parallel to finish
+	 * 
+	 * @author Aimee T.
+	 */
     @Override
 	protected void startBnb() {
     	while(!rootSchedules.isEmpty()){
@@ -38,6 +42,8 @@ public class ParallelBranchAndBoundAlgorithmManager extends BranchAndBoundAlgori
 
 	/**
 	 * Creates the ParallelTask task which needs to be scheduled for execution
+	 * 
+	 * @author Aimee T
 	 */
 	private void createTask(BnBSchedule schedule) {
 		TaskID<Void> partial = startNewBnbThread(schedule);
@@ -47,6 +53,8 @@ public class ParallelBranchAndBoundAlgorithmManager extends BranchAndBoundAlgori
 	TASK private void startNewBnbThread(BnBSchedule schedule) {
 		WorkerBnb worker = new WorkerBnb(this, schedule, _processingCores);
 		worker.execute();
+		// If the worker found the last optimal length schedule, set that
+		// to be the optimal schedule
 		if(worker.getLocalOptimalLength() == upperBound.get()) {
 			optimalSchedule = worker.optimalSchedule;
 		}
@@ -56,6 +64,7 @@ public class ParallelBranchAndBoundAlgorithmManager extends BranchAndBoundAlgori
     /**
      * Hook method to be implemented by subclasses which need specific behaviour when a particular 
      * recursion depth is reached. This method implements the depth check.
+     * 
      * @author Aimee T
      */
 	@Override
@@ -78,6 +87,10 @@ public class ParallelBranchAndBoundAlgorithmManager extends BranchAndBoundAlgori
 		createTask(s);
     }
 	
+	/**
+	 * Class responsible for expanding partial schedules, which are the subtasks the branch and bound
+	 * algorithm is split into.
+	 */
 	private class WorkerBnb extends BranchAndBoundAlgorithmManager{
 		private BnBSchedule _initialPartialSchedule;
 		private int _localOptimalLength = 0;
@@ -101,7 +114,13 @@ public class ParallelBranchAndBoundAlgorithmManager extends BranchAndBoundAlgori
 			_arcs = m._arcs.clone();
 			_arcWeights = m._arcWeights.clone();
 		}
-
+		
+		/**
+		 * Starts running the branch and bound algorithm (without taking input or generating
+		 * and output file)
+		 * 
+		 * @author Aimee T
+		 */
         @Override
 		public void execute() {
 			bnb(_initialPartialSchedule);
