@@ -1,60 +1,52 @@
 package nz.co.revilo;
 
 import nz.co.revilo.Input.DotFileReader;
+import nz.co.revilo.Input.FileParser;
+import nz.co.revilo.Input.GxlFileReader;
 import nz.co.revilo.Scheduling.AlgorithmManager;
 
 import java.io.FileNotFoundException;
 import java.util.List;
 
 /**
- * Abstract class which can act as a parent for all test classes implementing validity tests. Child classes will inherit
- * the methods which are necessary to check that dependencies are satisfied, and that there is no overlap of tasks on
- * the same core.
- * @author Aimee
- * @version alpha
+ * Redone as a utility class.
  */
-public abstract class ValidityTest {
-    protected AlgorithmManager _algorithmManager;
+public class ValidityTest {
+    static class Tuple<T,V>{
+        T a; V b;
+        Tuple(T x, V y){
+            a = x; b = y;
+        }
 
+        public T getA() {
+            return a;
+        }
+
+        public V getB() {
+            return b;
+        }
+    }
     /**
      * Reads in the graph's DOT file, and finds the schedule based on the supplied AlgorithmManager. The final schedule
      * is provided to the output TestResultListener
+     *
+     * @author Mohan Cao
+     *
      * @param filename name of the file containing the graph we want schedule, and then test the schedule of
      * @return a TestResultListener containing the information about the final schedule
      */
-    public TestResultListener schedule(String filename) {
-        DotFileReader reader = new DotFileReader(filename);
-        TestResultListener listener = new TestResultListener();
-        _algorithmManager.inform(listener);
-        try {
-            reader.startParsing(_algorithmManager);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-            System.out.println("File " + filename+ " does not exist");
+    public synchronized static Tuple<TestResultListener,FileParser> schedule(final AlgorithmManager aManager, final String filename, final boolean isBnB) {
+        FileParser reader;
+        if (filename.toUpperCase().contains("GXL")) {
+            reader = new GxlFileReader(filename);
+        } else {
+            reader = new DotFileReader(filename);
         }
-        return listener;
-    }
-    
-    /**
-     * As above method, for testing BnB
-     * By specifying to TestResultListener that the algotithm manager is BnB
-     * 
-     * @author Abby S
-     * 
-     * @param filename
-     * @return
-     */
-    public TestResultListener scheduleBnB(String filename) {
-        DotFileReader reader = new DotFileReader(filename);
-        TestResultListener listener = new TestResultListener(true);
-        _algorithmManager.inform(listener);
-        try {
-            reader.startParsing(_algorithmManager);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-            System.out.println("File " + filename+ " does not exist");
-        }
-        return listener;
+
+        TestResultListener listener;
+        listener = (isBnB)?new TestResultListener(true):new TestResultListener();
+        aManager.inform(listener);
+        return new Tuple<>(listener,reader);
     }
 
     /**
@@ -63,7 +55,7 @@ public abstract class ValidityTest {
      * @param listener the test result listener containing the information from
      * @return boolean representing if dependencies are satisfied
      */
-    public boolean satisfiesDependencies(TestResultListener listener) {
+    public synchronized static boolean satisfiesDependencies(final TestResultListener listener) {
         List<TestResultListener.Node> nodes = listener.getNodes();
         int nNodes = nodes.size();
 
@@ -99,7 +91,7 @@ public abstract class ValidityTest {
      * @param listener the test result listener containing the information from
      * @return boolean true if it satisfies that no processor has two tasks starting at the same time
      */
-    public boolean validStartTimeForTasks(TestResultListener listener){
+    public synchronized static boolean validStartTimeForTasks(final TestResultListener listener){
         // Iterate through all processors
         List<TestResultListener.Node> nodes = listener.getNodes();
         for(List<TestResultListener.Node> processor : listener.getCores()) {
@@ -112,7 +104,7 @@ public abstract class ValidityTest {
                     // If the node at index j has a start time between the start and end times of the task at index j,
                     // there is overlap, and the start time is not valid i.e. the start time of the task at index j is
                     // in the range [start, end)
-                    if ((nodes.get(j).getStartTime() >= start) && (nodes.get(j).getStartTime() < end)) {
+                    if ((nodes.get(j).getStartTime() >= start) && (nodes.get(j).getStartTime() < end) && i == j) {
                         System.out.print("Error: Tasks " + nodes.get(j) + " and " + nodes.get(i) + "overlap in the " +
                                 "schedule on core " + nodes.get(i).getCore());
                         return false;

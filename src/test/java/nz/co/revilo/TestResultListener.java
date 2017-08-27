@@ -3,6 +3,8 @@ package nz.co.revilo;
 import nz.co.revilo.Output.ScheduleResultListener;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  * Output/final ScheduleResultListener which allows access to graph properties for testing
@@ -122,10 +124,7 @@ public class TestResultListener implements ScheduleResultListener {
         }
 
         // Initialise the ArrayList to store the nodes in cores
-        _cores = new ArrayList<>(_nCores);
-        for (int i = 0; i < _nCores; i++) {
-            _cores.add(new ArrayList<Node>());
-        }
+        _cores = IntStream.rangeClosed(0,_nCores).mapToObj(i-> new ArrayList<Node>()).collect(Collectors.toList());
 
         for(Node node : _nodes) {
         	//Changed by @Abby S slightly to accommodate for BnB
