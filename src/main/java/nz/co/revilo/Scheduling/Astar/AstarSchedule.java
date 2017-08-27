@@ -5,6 +5,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * Basic representation of an Astar schedule
+ *
+ * @author Michael Kemp
+ */
 public class AstarSchedule implements Cloneable {
     public Set<AstarTask> _scheduled = new HashSet<>();
     public Set<AstarTask> _schedulable = new HashSet<>();
@@ -22,6 +27,11 @@ public class AstarSchedule implements Cloneable {
         _processorLastUsed = new ArrayList<>(processorLastUsed);
     }
 
+    /**
+     * Calculates the cost of the schedule so far
+     *
+     * @return cost of the schedule
+     */
     public int cost() {
         int cost = 0;
         for (Integer processorCost : _processorLastUsed) {
@@ -32,6 +42,10 @@ public class AstarSchedule implements Cloneable {
         return cost;
     }
 
+    /**
+     * Clones the schedule to make a child schedule
+     * @return schedule clone
+     */
     public AstarSchedule clone() {
         return new AstarSchedule(_scheduled, _schedulable, _unschedulable, _processorLastUsed);
     }

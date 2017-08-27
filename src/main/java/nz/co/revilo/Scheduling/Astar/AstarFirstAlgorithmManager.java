@@ -7,6 +7,11 @@ import java.util.*;
 
 import static nz.co.revilo.Scheduling.PrimitiveInterfaceHelper.*;
 
+/**
+ * Basic Astar algorithm, no pruning or cost functions. Doesn't work well above 5 and not at all above 10 tasks
+ *
+ * @author Michael Kemp
+ */
 public class AstarFirstAlgorithmManager extends AlgorithmManager {
 
     int numTasks;
@@ -142,6 +147,7 @@ public class AstarFirstAlgorithmManager extends AlgorithmManager {
                                     break;
                                 }
                             }
+                            //if they are schedulable then make them so
                             if (schedulable) {
                                 newSchedule._schedulable.add(unshedulable);
                             }

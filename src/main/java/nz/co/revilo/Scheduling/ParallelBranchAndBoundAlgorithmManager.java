@@ -1,14 +1,14 @@
 package nz.co.revilo.Scheduling;//####[1]####
 //####[1]####
 //-- ParaTask related imports//####[1]####
-import pt.runtime.*;//####[1]####
-import java.util.concurrent.ExecutionException;//####[1]####
-import java.util.concurrent.locks.*;//####[1]####
-import java.lang.reflect.*;//####[1]####
-import pt.runtime.GuiThread;//####[1]####
-import java.util.concurrent.BlockingQueue;//####[1]####
-import java.util.ArrayList;//####[1]####
-import java.util.List;//####[1]####
+
+import pt.runtime.*;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ExecutionException;
 //####[1]####
 /**
  * Algorithm manager for the parallelised implementation of branch and bound, which makes use

@@ -1,14 +1,12 @@
 package nz.co.revilo.Examples;//####[1]####
 //####[1]####
 //-- ParaTask related imports//####[1]####
-import pt.runtime.*;//####[1]####
-import java.util.concurrent.ExecutionException;//####[1]####
-import java.util.concurrent.locks.*;//####[1]####
-import java.lang.reflect.*;//####[1]####
-import pt.runtime.GuiThread;//####[1]####
-import java.util.concurrent.BlockingQueue;//####[1]####
-import java.util.ArrayList;//####[1]####
-import java.util.List;//####[1]####
+
+import pt.runtime.ParaTask;
+import pt.runtime.TaskID;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 //####[1]####
 public class TestPT {//####[3]####
     static{ParaTask.init();}//####[3]####

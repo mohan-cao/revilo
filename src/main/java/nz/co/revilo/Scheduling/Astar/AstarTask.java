@@ -1,6 +1,10 @@
 package nz.co.revilo.Scheduling.Astar;
 
-
+/**
+ * Basic representation of a task for the Astar algorithm
+ *
+ * @author Michael Kemp
+ */
 public class AstarTask implements Cloneable, Comparable<AstarTask> {
     public int _taskNum = -1;
     public int _start = -1;
@@ -16,6 +20,10 @@ public class AstarTask implements Cloneable, Comparable<AstarTask> {
         _taskNum = taskNum;
     }
 
+    /**
+     * Clones the task for modification in children of schedules
+     * @return task clone
+     */
     public AstarTask clone() {
         return new AstarTask(_start, _processor, _taskNum);
     }

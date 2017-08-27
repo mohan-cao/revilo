@@ -24,10 +24,7 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
     protected List<Integer> nodeStartTimes = new ArrayList<>();
     protected List<Integer> nodeProcessors = new ArrayList<>();
     protected Map<String, Void> existingScheduleStructures = new HashMap<>();
-
-    public BranchAndBoundAlgorithmManager(int processingCores) {
-        super(processingCores);
-    }
+    private DFSInitial _mode;
 
     @Override
     protected void execute() {
@@ -41,7 +38,7 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
                 //if they don't have parents, then add it to a sources queue
                 sources.add(nodeId);
             }
-            
+
             //get sinks
             else if (!NeighbourManagerHelper.hasOutneighbours(nodeId)) {
                 bottomUpSinks.add(nodeId);
@@ -51,17 +48,28 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
             totalNodeWeights += _nodeWeights[nodeId];
         }
 
-        //Take a greedy path down the tree to find a more realistic upper bound
-        upperBound.set(greedyUpperBound());
-        if ((totalNodeWeights + 1) < upperBound.get()) {
-            upperBound.set(totalNodeWeights + 1);
-            System.out.println("topological cost was better");
-        } else if ((totalNodeWeights + 1) == upperBound.get()) {
-            System.out.println("no difference");
-        } else {
-            System.out.println("greedy wins. Upper bound is: " + upperBound);
-            upperBound.incrementAndGet();
+        //Take a greedy path down the tree to find a more realistic upper bound based on either the lowest DRT, second
+        //lowest or the highest task weight first
+        upperBound.set(totalNodeWeights);
+/*        _mode = DFSInitial.LOWDRT;
+        int lo = heuristicUpperBound();
+        _mode = DFSInitial.HIWEIGHT;
+        int hi = heuristicUpperBound();
+        _mode = DFSInitial.SECONDLOWDRT;
+        int second = heuristicUpperBound();
+        if (lo < upperBound.get()) {
+            upperBound.set(lo);
+            System.out.println("greedy");
         }
+        if (hi < upperBound.get()) {
+            upperBound.set(hi);
+            System.out.println("hi weight");
+        }
+        if (second < upperBound.get()) {
+            upperBound.set(second);
+            System.out.println("second best greedy");
+        }*/
+        upperBound.incrementAndGet();
 
         calculateBottomLevels();
 
@@ -72,163 +80,15 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
         for (int nodeId : sources) {
             BnBSchedule newSchedule = new BnBSchedule(this, null, nodeId, 0);
             rootSchedules.add(newSchedule);
-        }    
-                
+        }
+
         startBnb(); //polymorphic call depending on Parallel or not
 
         returnResults();
     }
-    
-    /**
-     * Starts the branch and bound algorithm. To be overridden by child classes which need a different
-     * implementation.
-     * 
-     * @author Aimee
-     */
-	protected void startBnb() {
-		while(!rootSchedules.isEmpty()){
-			bnb(rootSchedules.remove(0));
-		}
-	}
 
-
-    /**
-     * Return the optimal schedule found and it's information
-     *
-     * @author Abby S
-     */
-    private void returnResults() {
-        for (int nodeId = 0; nodeId < numNodes; nodeId++) {
-            nodeStartTimes.add(optimalSchedule.closedNodes.get(nodeId).getA());//start times
-            nodeProcessors.add(optimalSchedule.closedNodes.get(nodeId).getB());//processors scheduled on
-        }
-        System.out.println("Optimal length found: " + optimalSchedule.getMaxFinishTime());
-
-        //pass to outputs
-        for (ScheduleResultListener listener : getListeners()) {
-            listener.finalSchedule(
-                    _graphName,
-                    Arrays.asList(_nodeNames),
-                    PrimitiveInterfaceHelper.primToBoolean2D(_arcs),
-                    PrimitiveInterfaceHelper.primToInteger2D(_arcWeights),
-                    PrimitiveInterfaceHelper.primToInteger1D(_nodeWeights),
-                    nodeStartTimes,
-                    nodeProcessors
-            );
-        }
-    }
-
-    /**
-     * bnb based on the current schedule s
-     *
-     * @param schedule
-     * @author Abby S, Terran K
-     */
-    protected void bnb(BnBSchedule schedule) {    	
-        if (schedule.lowerBound >= upperBound.get()) { //>= @ Michael K, huge optimisation
-            schedule = null; //garbage collect that schedule
-            brokenTrees.incrementAndGet(); //this tree has broken
-//            atomicBound.incrementAndGet();
-            return; //break tree at this point
-        }
-
-        //compare to existing schedule structures and remove if duplicate
-        if (existingScheduleStructures.containsKey(schedule._scheduleStructureId)) {
-            schedule = null; //garbage collect that schedule
-            brokenTrees.incrementAndGet(); // this tree has broken
-//            atomicBound.incrementAndGet();
-            return; //break tree at this point
-        } else {
-            existingScheduleStructures.put(schedule._scheduleStructureId, null);
-        }
-        
-        if(isParallel(schedule.getClosedNodes().size())) {
-    		doParallel(schedule);
-    		return;
-    	}
-        
-        //found optimal for the root started with
-        //reached end of a valid schedule. Never broke off, so is optimal
-        if (schedule.openNodes.isEmpty()) {
-            //to make sure only optimal schedules get through
-            if (schedule.getMaxFinishTime() < upperBound.get()) {
-            	setOptimalSchedule(schedule);
-                return;
-            }
-        }
-
-        //continue DFS
-        List<BnBSchedule> nextSchedules = new ArrayList<>();
-        for (int node : schedule.independentNodes) {
-            for (int processor = 0; processor < _processingCores; processor++) {
-                nextSchedules.add(new BnBSchedule(this, schedule, node, processor));
-            }
-        }
-        for (BnBSchedule nextSchedule : nextSchedules) {
-            bnb(nextSchedule);
-        }
-    }
-    
-    /**
-     * If the schedule found is optimal, set it to be the optimal schedule and notify listeners
-     * 
-     * @author Aimee T
-     */
-    protected void setOptimalSchedule(BnBSchedule schedule) {
-        optimalSchedule = schedule;
-
-        // if OptimalListener is null it means that we're not actually asking for updates
-        // because we are likely not using a visualization
-        if (getOptimalListener().get() != null) {
-            getOptimalListener().get().newOptimal(optimalSchedule);
-        }
-
-        upperBound.set(schedule.getMaxFinishTime());
-        atomicBound.set(upperBound.get());
-    }
-    
-    /**
-     * Hook method to be implemented by subclasses which need specific behaviour when a particular 
-     * recursion depth is reached. This method implements the depth check.
-     * @author Aimee T
-     */
-    protected boolean isParallel(int closedSet) {
-    	return false;
-    }
-    
-    /**
-     * Hook method to be implemented by subclasses which need specific behaviour when a particular 
-     * recursion depth is reached. This method implements the behaviour required.
-     * @author Aimee T
-     */
-    protected void doParallel(BnBSchedule s) {
-    	//nothing as not parallel
-    }
-
-    /**
-     * Calculates bottom level of each node in the graph
-     * Using bottom-up approach
-     *
-     * @author Abby S
-     */
-    private void calculateBottomLevels() {
-        while (!bottomUpSinks.isEmpty()) {
-            int nodeId = bottomUpSinks.remove(0);
-            List<Integer> inneighbours = NeighbourManagerHelper.getInneighbours(nodeId);
-
-            for (int inneighbour : inneighbours) {
-                //bottom up add its weight to child's
-                int fromGivenNode = bottomLevels[nodeId] + _nodeWeights[inneighbour];
-                //Farthest distance needed from bottom
-                bottomLevels[inneighbour] = bottomLevels[inneighbour] > fromGivenNode ? bottomLevels[inneighbour] : fromGivenNode;
-
-                List<Integer> inneighboursChildren = NeighbourManagerHelper.getOutneighbours(inneighbour); //nodes with 1 on the node's row
-                inneighboursChildren.remove(Integer.valueOf(nodeId)); //Integer or will treat the int as index
-                if (inneighboursChildren.isEmpty()) {
-                    bottomUpSinks.add(inneighbour);//become a sink now that child is removed
-                }
-            }
-        }
+    public BranchAndBoundAlgorithmManager(int processingCores) {
+        super(processingCores);
     }
 
     /**
@@ -236,7 +96,7 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
      * @author Michael Kemp
      * @return an upper bound
      */
-    private int greedyUpperBound() {
+    private int heuristicUpperBound() {
         //Number of Tasks
         int numTasks = _nodeWeights.length;
 
@@ -351,15 +211,52 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
                 DataReadyTimes.add(drt);
             }
 
-            //Find the lowest DRT of the nodes
-            int lowestDRT = Integer.MAX_VALUE;
+            //Depending on which heuristic is selected then different path will be chosen
             int index = 0;
-            for (int i = 0; i < DataReadyTimes.size(); i++) {
-                if (DataReadyTimes.get(i) < lowestDRT) {
-                    lowestDRT = DataReadyTimes.get(i);
-                    index = i;
-                }
+            int lowestDRT = Integer.MAX_VALUE;
+            int highestWeight = Integer.MAX_VALUE;
+            int secondLowestDRT = Integer.MAX_VALUE;
+            System.out.println("HI");
+            switch (_mode) {
+                case LOWDRT:
+                    //Find the lowest DRT of the nodes
+                    lowestDRT = Integer.MAX_VALUE;
+                    index = 0;
+                    for (int i = 0; i < DataReadyTimes.size(); i++) {
+                        if (DataReadyTimes.get(i) < lowestDRT) {
+                            lowestDRT = DataReadyTimes.get(i);
+                            index = i;
+                        }
+                    }
+                    break;
+                case HIWEIGHT:
+                    //Find the lowest DRT of the nodes
+                    highestWeight = Integer.MAX_VALUE;
+                    index = 0;
+                    for (int i = 0; i < DataReadyTasks.size(); i++) {
+                        if (_nodeWeights[DataReadyTasks.get(i)._taskNum] < highestWeight) {
+                            highestWeight = _nodeWeights[DataReadyTasks.get(i)._taskNum];
+                            index = i;
+                        }
+                    }
+                    break;
+                case SECONDLOWDRT:
+                    //Find the second lowest DRT of the nodes
+                    lowestDRT = Integer.MAX_VALUE;
+                    secondLowestDRT = Integer.MAX_VALUE;
+                    index = 0;
+                    for (int i = 0; i < DataReadyTimes.size(); i++) {
+                        if (DataReadyTimes.get(i) < lowestDRT) {
+                            secondLowestDRT = lowestDRT;
+                            lowestDRT = DataReadyTimes.get(i);
+                        } else if (DataReadyTimes.get(i) < secondLowestDRT) {
+                            secondLowestDRT = DataReadyTimes.get(i);
+                            index = i;
+                        }
+                    }
+                    break;
             }
+
 
             //Pick best task to schedule
             AstarTask newTask = DataReadyTasks.get(index);
@@ -376,5 +273,163 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
         //Return the greedy cost
         System.out.println("done pre proc");
         return levels.get(levels.size() - 1).get(0).cost();
+    }
+
+    /**
+     * Starts the branch and bound algorithm. To be overridden by child classes which need a different
+     * implementation.
+     *
+     * @author Aimee
+     */
+    protected void startBnb() {
+        while (!rootSchedules.isEmpty()) {
+            bnb(rootSchedules.remove(0));
+        }
+    }
+
+
+    /**
+     * Return the optimal schedule found and it's information
+     *
+     * @author Abby S
+     */
+    private void returnResults() {
+        for (int nodeId = 0; nodeId < numNodes; nodeId++) {
+            nodeStartTimes.add(optimalSchedule.closedNodes.get(nodeId).getA());//start times
+            nodeProcessors.add(optimalSchedule.closedNodes.get(nodeId).getB());//processors scheduled on
+        }
+        System.out.println("Optimal length found: " + optimalSchedule.getMaxFinishTime());
+
+        //pass to outputs
+        for (ScheduleResultListener listener : getListeners()) {
+            listener.finalSchedule(
+                    _graphName,
+                    Arrays.asList(_nodeNames),
+                    PrimitiveInterfaceHelper.primToBoolean2D(_arcs),
+                    PrimitiveInterfaceHelper.primToInteger2D(_arcWeights),
+                    PrimitiveInterfaceHelper.primToInteger1D(_nodeWeights),
+                    nodeStartTimes,
+                    nodeProcessors
+            );
+        }
+    }
+
+    /**
+     * bnb based on the current schedule s
+     *
+     * @param schedule
+     * @author Abby S, Terran K
+     */
+    protected void bnb(BnBSchedule schedule) {
+        if (schedule.lowerBound >= upperBound.get()) { //>= @ Michael K, huge optimisation
+            schedule = null; //garbage collect that schedule
+            brokenTrees.incrementAndGet(); //this tree has broken
+//            atomicBound.incrementAndGet();
+            return; //break tree at this point
+        }
+
+        //compare to existing schedule structures and remove if duplicate
+        if (existingScheduleStructures.containsKey(schedule._scheduleStructureId)) {
+            schedule = null; //garbage collect that schedule
+            brokenTrees.incrementAndGet(); // this tree has broken
+//            atomicBound.incrementAndGet();
+            return; //break tree at this point
+        } else {
+            existingScheduleStructures.put(schedule._scheduleStructureId, null);
+        }
+
+        if (isParallel(schedule.getClosedNodes().size())) {
+            doParallel(schedule);
+            return;
+        }
+
+        //found optimal for the root started with
+        //reached end of a valid schedule. Never broke off, so is optimal
+        if (schedule.openNodes.isEmpty()) {
+            //to make sure only optimal schedules get through
+            if (schedule.getMaxFinishTime() < upperBound.get()) {
+                setOptimalSchedule(schedule);
+                return;
+            }
+        }
+
+        //continue DFS
+        List<BnBSchedule> nextSchedules = new ArrayList<>();
+        for (int node : schedule.independentNodes) {
+            for (int processor = 0; processor < _processingCores; processor++) {
+                nextSchedules.add(new BnBSchedule(this, schedule, node, processor));
+            }
+        }
+        for (BnBSchedule nextSchedule : nextSchedules) {
+            bnb(nextSchedule);
+        }
+    }
+
+    /**
+     * If the schedule found is optimal, set it to be the optimal schedule and notify listeners
+     *
+     * @author Aimee T
+     */
+    protected void setOptimalSchedule(BnBSchedule schedule) {
+        optimalSchedule = schedule;
+
+        // if OptimalListener is null it means that we're not actually asking for updates
+        // because we are likely not using a visualization
+        if (getOptimalListener().get() != null) {
+            getOptimalListener().get().newOptimal(optimalSchedule);
+        }
+
+        upperBound.set(schedule.getMaxFinishTime());
+        atomicBound.set(upperBound.get());
+    }
+
+    /**
+     * Hook method to be implemented by subclasses which need specific behaviour when a particular
+     * recursion depth is reached. This method implements the depth check.
+     *
+     * @author Aimee T
+     */
+    protected boolean isParallel(int closedSet) {
+        return false;
+    }
+
+    /**
+     * Hook method to be implemented by subclasses which need specific behaviour when a particular
+     * recursion depth is reached. This method implements the behaviour required.
+     *
+     * @author Aimee T
+     */
+    protected void doParallel(BnBSchedule s) {
+        //nothing as not parallel
+    }
+
+    /**
+     * Calculates bottom level of each node in the graph
+     * Using bottom-up approach
+     *
+     * @author Abby S
+     */
+    private void calculateBottomLevels() {
+        while (!bottomUpSinks.isEmpty()) {
+            int nodeId = bottomUpSinks.remove(0);
+            List<Integer> inneighbours = NeighbourManagerHelper.getInneighbours(nodeId);
+
+            for (int inneighbour : inneighbours) {
+                //bottom up add its weight to child's
+                int fromGivenNode = bottomLevels[nodeId] + _nodeWeights[inneighbour];
+                //Farthest distance needed from bottom
+                bottomLevels[inneighbour] = bottomLevels[inneighbour] > fromGivenNode ? bottomLevels[inneighbour] : fromGivenNode;
+
+                List<Integer> inneighboursChildren = NeighbourManagerHelper.getOutneighbours(inneighbour); //nodes with 1 on the node's row
+                inneighboursChildren.remove(Integer.valueOf(nodeId)); //Integer or will treat the int as index
+                if (inneighboursChildren.isEmpty()) {
+                    bottomUpSinks.add(inneighbour);//become a sink now that child is removed
+                }
+            }
+        }
+    }
+
+    public enum DFSInitial {
+        LOWDRT, HIWEIGHT, SECONDLOWDRT
     }
 }
