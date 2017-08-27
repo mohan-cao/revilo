@@ -130,25 +130,6 @@
                               </Label>
                            </children>
                         </AnchorPane>
-                        <AnchorPane maxHeight="80.0" maxWidth="190.0" prefHeight="90.0" prefWidth="190.0" style="-fx-background-color: linear-gradient(from 0% 0% to 0% 100%, #8a8a92, #dedede); -fx-background-radius: 5;">
-                           <children>
-                              <Label styleClass="heavy-label" text="DOLOR SIT AMET" textFill="WHITE" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="5.0">
-                                 <font>
-                                    <Font name="SF UI Display Bold" size="13.0" />
-                                 </font>
-                              </Label>
-                              <Label alignment="BOTTOM_RIGHT" contentDisplay="RIGHT" styleClass="mono" text="0" textAlignment="RIGHT" textFill="WHITE" AnchorPane.bottomAnchor="8.0" AnchorPane.rightAnchor="5.0">
-                                 <font>
-                                    <Font name="SF UI Display Light" size="48.0" />
-                                 </font>
-                              </Label>
-                              <Label layoutX="10.0" layoutY="10.0" text="OLIVERS" textAlignment="RIGHT" textFill="#ffffffcc" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="5.0">
-                                 <font>
-                                    <Font name="SF UI Display Medium" size="12.0" />
-                                 </font>
-                              </Label>
-                           </children>
-                        </AnchorPane>
                      </children>
                      <padding>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
