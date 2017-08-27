@@ -78,6 +78,9 @@ public class MainLauncherController implements Initializable, ScheduleResultList
     private Label bestLabel;
 
     @FXML
+    private Label threadsLabel;
+
+    @FXML
     private Label graphNameLabel;
 
     @FXML
@@ -106,6 +109,7 @@ public class MainLauncherController implements Initializable, ScheduleResultList
     public void initialize(URL location, ResourceBundle resources) {
         App.getAlgorithmManager().inform(this);
         App.getAlgorithmManager().optimalInform(this);
+
         results = new GUIScheduleResult();
         //set up change listeners
         results.isDoneProcessingProperty().addListener(new ChangeListener<Boolean>() {
@@ -147,8 +151,11 @@ public class MainLauncherController implements Initializable, ScheduleResultList
                         );
                         timeUnits.setText((timeElapsed>=60)?"MIN":"SEC");
 //                        timeLabel.setText(new SimpleDateFormat("mm:ss:SS").format(new Date(App.getRunningTime())));
-                        bestLabel.setText(App.getAlgorithmManager().getUpperBound() + "");
+//                        bestLabel.setText(App.getAlgorithmManager().getUpperBound() + "");
+//                        System.out.println("Get: " + App.getAlgorithmManager().getAtomicUpperBound().get());
                         branchesLabel.setText(App.getAlgorithmManager().getBrokenTrees() + "");
+//                        bestLabel.setText(App.getAlgorithmManager().getAtomicBound() + "");
+
                     }
                 });
             }
@@ -161,6 +168,8 @@ public class MainLauncherController implements Initializable, ScheduleResultList
                 systemLabel.setText("PROCESSING");
                 statusLabel.setText("Starting up...");
                 parallelLabel.setText(App.getNumParallelCores() + "");
+                String thr = App.getNumParallelCores() == 1 ? "THREAD" : "THREADS";
+                threadsLabel.setText(thr);
                 createGantt();
             }
         });
@@ -306,7 +315,8 @@ public class MainLauncherController implements Initializable, ScheduleResultList
             @Override
             public void run() {
                 updateGantt();
-                statusLabel.setText("New optimal schedule found with length " + App.getAlgorithmManager().getUpperBound() + ".");
+                statusLabel.setText("New optimal schedule found with length " + App.getAlgorithmManager().getAtomicBound() + ".");
+                bestLabel.setText(App.getAlgorithmManager().getAtomicBound() + "");
             }
         });
 

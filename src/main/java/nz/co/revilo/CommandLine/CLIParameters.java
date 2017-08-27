@@ -18,6 +18,8 @@ public class CLIParameters {
     private boolean _visualise = false;
     @Parameter(names = {"--output", "-o"})
     private String _outputName = null; //should get input name actually
+    @Parameter(names={"--help", "-h"}, help = true)
+    private boolean help;
 
     /**
      * Gets the amount of cores to paralelise processing on
@@ -44,6 +46,10 @@ public class CLIParameters {
      */
     public String getOutputName() {
         return _outputName;
+    }
+
+    public boolean getHelp() {
+        return help;
     }
 
     /**
