@@ -5,10 +5,25 @@
 </div>
 
 # Revilo Task Scheduler
+The official page for the Revilo (**ruh-*VEE*-low**) Task Scheduler Project!
 
-The official page for the Revilo (**ruh -*VEE*- low**) Task Scheduler Project!
+## Introduction and Usage
+Revilo Task Scheduler takes in a graph file (.dot or .gxl) and outputs a DOT file with an optimal schedule.
 
-Planning and documentation can be found here: [Revilo Wiki](https://github.com/mohan-cao/revilo/wiki)
+``java -jar revilo.jar [INPUT.DOT] [NUM-OF-PROCESSORS] [OPTIONAL ARGS]``
+
+The output file will be created in the same directory. Optional arguments are as followed:
+
+* ``-v`` Enables GUI visualization with live statistics and schedule updating.
+* ``-o [FILENAME]`` Specifies the output file's name.
+* ``-p [THREADS]`` Specifies the number of threads Revilo should be run on.
+
+By default, Revilo will be run sequentially with no visualization.
+
+## Quick References
+Meeting minutes, plans, research, and other administrivia can be found in the [Revilo Wiki](https://github.com/mohan-cao/revilo/wiki).
+
+Issue tracking is mainly done through the Issues tab.
 
 Shared Google Drive folder for resources: [Revilo Project Folder](https://drive.google.com/open?id=0B6EjuC_mOLoyZ2NCa0RuOEp4Y3c)
 

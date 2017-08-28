@@ -99,9 +99,9 @@
                                     <Font name="SF UI Display Bold" size="13.0" />
                                  </font>
                               </Label>
-                              <Label fx:id="branchesLabel" alignment="BOTTOM_RIGHT" contentDisplay="RIGHT" styleClass="mono" text="0" textAlignment="RIGHT" textFill="WHITE" AnchorPane.bottomAnchor="12.0" AnchorPane.rightAnchor="5.0">
+                              <Label fx:id="branchesLabel" alignment="BOTTOM_RIGHT" contentDisplay="RIGHT" style="-fx-font-family: &quot;SF Mono&quot;, &quot;Inconsolata&quot;, monospace;" styleClass="mono" text="0" textAlignment="RIGHT" textFill="WHITE" AnchorPane.bottomAnchor="12.0" AnchorPane.rightAnchor="5.0">
                                  <font>
-                                    <Font name="SF UI Display Light" size="36.0" />
+                                    <Font name="SF UI Display Light" size="30.0" />
                                  </font>
                               </Label>
                               <Label layoutX="10.0" layoutY="10.0" text="BRANCHES" textAlignment="RIGHT" textFill="#ffffffcc" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="5.0">
@@ -168,7 +168,7 @@
    <bottom>
       <AnchorPane maxHeight="30.0" minHeight="30.0" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #dedede;" BorderPane.alignment="CENTER">
          <children>
-            <Label fx:id="statusLabel" layoutX="66.0" layoutY="16.0" maxHeight="24.0" prefHeight="24.0" prefWidth="575.0" style="-fx-background-color: #dedede; -fx-background-radius: 5;" text="Placeholder text name" AnchorPane.bottomAnchor="3.0" AnchorPane.leftAnchor="100.0" AnchorPane.topAnchor="3.0">
+            <Label fx:id="statusLabel" layoutX="66.0" layoutY="16.0" maxHeight="24.0" prefHeight="24.0" prefWidth="575.0" style="-fx-background-color: #dedede; -fx-background-radius: 5;" text="Placeholder text name" AnchorPane.bottomAnchor="3.0" AnchorPane.leftAnchor="150.0" AnchorPane.topAnchor="3.0">
                <font>
                   <Font name="System Font" size="12.0" />
                </font>
@@ -179,7 +179,7 @@
                   <Insets bottom="2.0" left="6.0" right="2.0" top="2.0" />
                </padding>
             </Label>
-            <Label fx:id="systemLabel" alignment="CENTER" layoutX="14.0" layoutY="17.0" prefHeight="26.0" prefWidth="85.0" text="COMPLETE" textAlignment="CENTER" AnchorPane.bottomAnchor="2.0" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="2.0">
+            <Label fx:id="systemLabel" alignment="CENTER" layoutX="14.0" layoutY="17.0" prefHeight="26.0" prefWidth="130.0" text="COMPLETE" textAlignment="CENTER" AnchorPane.bottomAnchor="2.0" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="2.0">
                <font>
                   <Font name="System Bold" size="13.0" />
                </font>
