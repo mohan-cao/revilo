@@ -4,7 +4,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  * Algorithm manager for the parallelised implementation of branch and bound, which makes use
- * pf ParallelTask
+ * of ParallelTask
  * 
  * @author Aimee T
  */
@@ -37,8 +37,10 @@ public class ParallelBranchAndBoundAlgorithmManager extends BranchAndBoundAlgori
 	}
 
 	/**
-	 * Multi task dequeueing of the root schedules
-	 * Makes a new threads
+	 * Multi-task dequeueing of the root schedules
+	 * Schedules tasks to the threadpool.
+	 *
+	 * @author Mohan Cao
 	 */
 	TASK(*) public void removeAndExecute(ConcurrentLinkedQueue<BnBSchedule> rootSchedules) {
 		BnBSchedule b = null;
