@@ -1,11 +1,9 @@
 package nz.co.revilo.Gui;
 
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -14,12 +12,15 @@ import nz.co.revilo.App;
 
 import java.io.IOException;
 
+/**
+ * Launches GUI
+ *
+ * @author Terran Kroft
+ */
 public class MainLauncher extends Application {
     App app = App.getInstance();
     private Stage primaryStage;
     private BorderPane rootLayout;
-    private double xOffset = 0;
-    private double yOffset = 0;
 
     public Stage getPrimaryStage() {
         return primaryStage;
@@ -27,7 +28,7 @@ public class MainLauncher extends Application {
 
     /**
      * Entry point for the GUI, called by the main app entry point
-     * @param primaryStage
+     * @param primaryStage stage
      * @throws Exception
      */
     @Override
@@ -50,12 +51,7 @@ public class MainLauncher extends Application {
             primaryStage.setMinWidth(800);
             primaryStage.setMinHeight(400);
             // Prevent algorithm from running once we close the window (i.e. force)
-            primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-                @Override
-                public void handle(WindowEvent event) {
-                    System.exit(0);
-                }
-            });
+            primaryStage.setOnCloseRequest(event -> System.exit(0));
             primaryStage.show();
         } catch (IOException e) {
             e.printStackTrace();
