@@ -146,11 +146,12 @@ public class App {
         processArguments(args);
         
         // Start an AlgorithmManager
-        if(_inst._numParallelProcessors > 1) {
+        if(_inst._numParallelProcessors > 2) { // Don't want PT on two threads, since all it's doing is making a redundant thread
             // Subtract one from the input number of processors to account for the master in the
             // parallelisation methods used in ParallelBranchAndBoundAlgorithmManager, where
             // there will always be one thread allocating to other threads
             ParaTask.setThreadPoolSize(ParaTask.ThreadPoolType.ALL, _inst._numParallelProcessors - 1);
+            ParaTask.init();
         	_manager = new ParallelBranchAndBoundAlgorithmManager(_inst._numExecutionCores,  _inst._numParallelProcessors - 1);
         } else {
         	_manager = new BranchAndBoundAlgorithmManager(_inst._numExecutionCores);
