@@ -1,6 +1,7 @@
 package nz.co.revilo;
 
 import org.junit.AfterClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
@@ -72,6 +73,7 @@ public class AppTest {
     }
 
     @Test
+    @Ignore
     @Category(SlowTest.class)
     public void AppConcurrencyTest() {
         IntStream.range(0,20).parallel().forEach(i->{
