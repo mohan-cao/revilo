@@ -54,6 +54,25 @@
                               </Label>
                            </children>
                         </AnchorPane>
+                        <AnchorPane maxHeight="80.0" maxWidth="190.0" prefHeight="90.0" prefWidth="190.0" style="-fx-background-color: linear-gradient(from 0% 0% to 0% 100%, #4cd964, #02b21f); -fx-background-radius: 5;">
+                           <children>
+                              <Label styleClass="heavy-label" text="ELAPSED TIME" textFill="WHITE" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="5.0">
+                                 <font>
+                                    <Font name="SF UI Display Bold" size="13.0" />
+                                 </font>
+                              </Label>
+                              <Label fx:id="timeLabel" alignment="BOTTOM_RIGHT" contentDisplay="RIGHT" styleClass="mono" text="0" textAlignment="RIGHT" textFill="WHITE" AnchorPane.bottomAnchor="8.0" AnchorPane.rightAnchor="5.0">
+                                 <font>
+                                    <Font name="SF UI Display Light" size="48.0" />
+                                 </font>
+                              </Label>
+                              <Label fx:id="timeUnits" layoutX="10.0" layoutY="10.0" text="SEC" textAlignment="RIGHT" textFill="#ffffffcc" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="5.0">
+                                 <font>
+                                    <Font name="SF UI Display Medium" size="12.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </AnchorPane>
                         <AnchorPane maxHeight="80.0" maxWidth="190.0" prefHeight="90.0" prefWidth="190.0" style="-fx-background-color: linear-gradient(from 0% 0% to 0% 100%, #19d7fb, #1e63ee); -fx-background-radius: 5;">
                            <children>
                               <Label styleClass="heavy-label" text="CURRENT BEST" textFill="WHITE" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="5.0">
@@ -94,12 +113,31 @@
                         </AnchorPane>
                         <AnchorPane maxHeight="80.0" maxWidth="190.0" prefHeight="90.0" prefWidth="190.0" style="-fx-background-color: linear-gradient(from 0% 0% to 0% 100%, #00d8eb, #008dcd); -fx-background-radius: 5;">
                            <children>
-                              <Label styleClass="heavy-label" text="BOUND BRANCHES" textFill="WHITE" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="5.0">
+                              <Label styleClass="heavy-label" text="BRANCHES BOUNDED" textFill="WHITE" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="5.0">
                                  <font>
                                     <Font name="SF UI Display Bold" size="13.0" />
                                  </font>
                               </Label>
-                              <Label fx:id="branchesLabel" alignment="BOTTOM_RIGHT" contentDisplay="RIGHT" style="-fx-font-family: &quot;SF Mono&quot;, &quot;Inconsolata&quot;, monospace;" styleClass="mono" text="0" textAlignment="RIGHT" textFill="WHITE" AnchorPane.bottomAnchor="12.0" AnchorPane.rightAnchor="5.0">
+                              <Label fx:id="percentLabel" alignment="BOTTOM_RIGHT" contentDisplay="RIGHT" styleClass="mono" text="0" textAlignment="RIGHT" textFill="WHITE" AnchorPane.bottomAnchor="8.0" AnchorPane.rightAnchor="5.0">
+                                 <font>
+                                    <Font name="SF UI Display Light" size="48.0" />
+                                 </font>
+                              </Label>
+                              <Label layoutX="10.0" layoutY="10.0" text="\%" textAlignment="RIGHT" textFill="#ffffffcc" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="5.0">
+                                 <font>
+                                    <Font name="SF UI Display Medium" size="12.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </AnchorPane>
+                        <AnchorPane maxHeight="80.0" maxWidth="190.0" prefHeight="90.0" prefWidth="190.0" style="-fx-background-color: linear-gradient(from 0% 0% to 0% 100%, #00d8eb, #008dcd); -fx-background-radius: 5;">
+                           <children>
+                              <Label styleClass="heavy-label" text="BRANCHES KILLED" textFill="WHITE" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="5.0">
+                                 <font>
+                                    <Font name="SF UI Display Bold" size="13.0" />
+                                 </font>
+                              </Label>
+                              <Label fx:id="branchesLabel" alignment="BOTTOM_RIGHT" contentDisplay="RIGHT" style="-fx-font-family: &quot;SF Mono&quot;, &quot;Inconsolata&quot;, monospace; -fx-font-size: 26;" styleClass="mono" text="0" textAlignment="RIGHT" textFill="WHITE" AnchorPane.bottomAnchor="14.0" AnchorPane.rightAnchor="5.0">
                                  <font>
                                     <Font name="SF UI Display Light" size="30.0" />
                                  </font>
@@ -111,19 +149,19 @@
                               </Label>
                            </children>
                         </AnchorPane>
-                        <AnchorPane maxHeight="80.0" maxWidth="190.0" prefHeight="90.0" prefWidth="190.0" style="-fx-background-color: linear-gradient(from 0% 0% to 0% 100%, #4cd964, #02b21f); -fx-background-radius: 5;">
+                        <AnchorPane maxHeight="80.0" maxWidth="190.0" prefHeight="90.0" prefWidth="190.0" style="-fx-background-color: linear-gradient(from 0% 0% to 0% 100%, #00d8eb, #008dcd); -fx-background-radius: 5;">
                            <children>
-                              <Label styleClass="heavy-label" text="ELAPSED TIME" textFill="WHITE" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="5.0">
+                              <Label styleClass="heavy-label" text="SCHEDULES GENERATED" textFill="WHITE" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="5.0">
                                  <font>
                                     <Font name="SF UI Display Bold" size="13.0" />
                                  </font>
                               </Label>
-                              <Label fx:id="timeLabel" alignment="BOTTOM_RIGHT" contentDisplay="RIGHT" styleClass="mono" text="0" textAlignment="RIGHT" textFill="WHITE" AnchorPane.bottomAnchor="8.0" AnchorPane.rightAnchor="5.0">
+                              <Label fx:id="partialLabel" alignment="BOTTOM_RIGHT" contentDisplay="RIGHT" style="-fx-font-family: &quot;SF Mono&quot;, &quot;Inconsolata&quot;, monospace; -fx-font-size: 26;" styleClass="mono" text="0" textAlignment="RIGHT" textFill="WHITE" AnchorPane.bottomAnchor="14.0" AnchorPane.rightAnchor="5.0">
                                  <font>
-                                    <Font name="SF UI Display Light" size="48.0" />
+                                    <Font name="SF UI Display Light" size="30.0" />
                                  </font>
                               </Label>
-                              <Label fx:id="timeUnits" layoutX="10.0" layoutY="10.0" text="SEC" textAlignment="RIGHT" textFill="#ffffffcc" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="5.0">
+                              <Label layoutX="10.0" layoutY="10.0" text="PARTIAL SCHEDULES" textAlignment="RIGHT" textFill="#ffffffcc" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="5.0">
                                  <font>
                                     <Font name="SF UI Display Medium" size="12.0" />
                                  </font>

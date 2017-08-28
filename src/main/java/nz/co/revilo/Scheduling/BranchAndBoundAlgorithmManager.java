@@ -124,7 +124,8 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
      * @param schedule
      * @author Abby S, Terran K
      */
-    protected void bnb(BnBSchedule schedule) {    	
+    protected void bnb(BnBSchedule schedule) {
+        exploredStates.incrementAndGet();
         if (schedule.lowerBound >= upperBound.get()) { //>= @ Michael K, huge optimisation
             schedule = null; //garbage collect that schedule
             brokenTrees.incrementAndGet(); //this tree has broken

@@ -22,6 +22,7 @@ public abstract class AlgorithmManager extends Observable implements ParseResult
 
     protected int _processingCores;
     protected AtomicLong brokenTrees;
+    protected AtomicLong exploredStates;
     protected AtomicInteger atomicBound;
     protected AtomicInteger upperBound; // used in subclasses
     protected int[] _nodeWeights;
@@ -41,6 +42,7 @@ public abstract class AlgorithmManager extends Observable implements ParseResult
         _processingCores = processingCores;
         brokenTrees = new AtomicLong(0);
         atomicBound = new AtomicInteger(0);
+        exploredStates = new AtomicLong(0);
         upperBound = new AtomicInteger();
         atomicListener = new AtomicReference<>(null);
     }
@@ -59,13 +61,8 @@ public abstract class AlgorithmManager extends Observable implements ParseResult
         return brokenTrees;
     }
     public AtomicInteger getAtomicBound() { return atomicBound; }
+    public AtomicLong getExploredStates() { return exploredStates; }
 
-
-    /**
-     * Get the number of branches broken (i.e. branches that have been deemed not as good)
-     *
-     * @return
-     */
 
     /**
      * Gets the upper bound value (current best)

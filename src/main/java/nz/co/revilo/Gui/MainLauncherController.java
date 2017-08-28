@@ -75,6 +75,9 @@ public class MainLauncherController implements Initializable, ScheduleResultList
     private Label branchesLabel;
 
     @FXML
+    private Label partialLabel;
+
+    @FXML
     private Label bestLabel;
 
     @FXML
@@ -88,6 +91,9 @@ public class MainLauncherController implements Initializable, ScheduleResultList
 
     @FXML
     private Label statusLabel;
+
+    @FXML
+    private Label percentLabel;
 
     @FXML
     private BorderPane ganttPane;
@@ -137,6 +143,10 @@ public class MainLauncherController implements Initializable, ScheduleResultList
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
+
+                double explored = App.getAlgorithmManager().getExploredStates().get();
+                double broken = App.getAlgorithmManager().getBrokenTrees().get();
+                double percentage = explored == 0 ? 0 : 100.0*broken/explored;
                 Platform.runLater(new Runnable() {
                     public void run() {
                         // calculate current used memory
@@ -150,16 +160,16 @@ public class MainLauncherController implements Initializable, ScheduleResultList
                                 String.format("%.2f", timeElapsed)
                         );
                         timeUnits.setText((timeElapsed>=60)?"MIN":"SEC");
-//                        timeLabel.setText(new SimpleDateFormat("mm:ss:SS").format(new Date(App.getRunningTime())));
-//                        bestLabel.setText(App.getAlgorithmManager().getUpperBound() + "");
-//                        System.out.println("Get: " + App.getAlgorithmManager().getAtomicUpperBound().get());
                         branchesLabel.setText(App.getAlgorithmManager().getBrokenTrees() + "");
-//                        bestLabel.setText(App.getAlgorithmManager().getAtomicBound() + "");
+                        partialLabel.setText(App.getAlgorithmManager().getExploredStates() + "");
+                        percentLabel.setText(String.format("%.1f", percentage));
 
                     }
                 });
             }
         }, 0, 50);
+
+
 
         Platform.runLater(new Runnable() {
             @Override
