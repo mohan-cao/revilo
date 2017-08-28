@@ -40,3 +40,6 @@ __Previews
 
 # GraphViz output files. These should be local.
 # *-output.dot
+
+# ParallelTask output files
+*Parallel*.java
