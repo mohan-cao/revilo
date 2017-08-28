@@ -170,6 +170,7 @@ public class App {
         //Launch GUI if visualization is desired, otherwise just start parsing.
         if (_inst._visualise) {
             Application.launch(MainLauncher.class);
+
         } else {
             startParsing();
         }

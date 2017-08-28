@@ -231,7 +231,6 @@ public class MainLauncherController implements Initializable, ScheduleResultList
         ganttChart.heightProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                System.out.println(ganttChart.getHeight());
                 ganttChart.setBlockHeight(newValue.doubleValue()*0.70/(App.getExecCores()));
 
             }
