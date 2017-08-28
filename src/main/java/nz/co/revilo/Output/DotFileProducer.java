@@ -59,7 +59,6 @@ public abstract class DotFileProducer implements ScheduleResultListener {
         _nodeWeights = nodeWeights;
         _nodeStarts = nodeStarts;
         _nodeProcessor = nodeProcessor;
-        System.out.println("This is notified!");
 
         // Attempts to print the graph to a file
         try {
@@ -68,9 +67,9 @@ public abstract class DotFileProducer implements ScheduleResultListener {
             pw.flush();
             pw.close();
         } catch (Exception e) {
-            System.out.println("File could not be saved");
-            System.out.println(e.getMessage());
-            System.out.println(e.getStackTrace());
+            System.err.println("File could not be saved");
+            System.err.println(e.getMessage());
+            System.err.println(e.getStackTrace());
             System.exit(FILE_CANT_BE_SAVED_EXIT_STATUS);
         }
     }

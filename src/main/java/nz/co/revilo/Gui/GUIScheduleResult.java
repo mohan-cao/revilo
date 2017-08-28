@@ -1,9 +1,7 @@
 package nz.co.revilo.Gui;
 
-import javafx.beans.property.*;
-import javafx.collections.FXCollections;
-
-import java.util.List;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 
 /**
  * Helper class to notify the GUI that values have been changed with change listeners.
@@ -12,20 +10,19 @@ import java.util.List;
 public class GUIScheduleResult {
     private BooleanProperty isDoneProcessing = new SimpleBooleanProperty();
 
-
-
-    public final boolean getIsDoneProcessing() {
-        return isDoneProcessing.get();
-    }
-
+    /**
+     * Setter for isDoneProcessing for change listeners
+     * @param isDoneProcessing boolean
+     */
     public final void setIsDoneProcessing(boolean isDoneProcessing) {
         this.isDoneProcessing.set(isDoneProcessing);
     }
 
+    /**
+     * Getter for isDoneProcessing for change listeners
+     * @return isDoneProcessing
+     */
     public BooleanProperty isDoneProcessingProperty() {
         return isDoneProcessing;
     }
-
-
-
 }

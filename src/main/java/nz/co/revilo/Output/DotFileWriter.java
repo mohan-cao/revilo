@@ -43,7 +43,7 @@ public class DotFileWriter extends DotFileProducer {
         // Prints nodes with their weights
         for (int node = 0; node < _arcs.size(); node++) {
             output.println("\t\t" + _nodeNames.get(node) + "\t\t[Weight=" + _nodeWeights.get(node) + ",Start=" +
-                    _nodeStarts.get(node) + ",Processor=" + _nodeProcessor.get(node) + "];");
+                    _nodeStarts.get(node) + ",Processor=" + (_nodeProcessor.get(node)+1) + "];");
         }
 
         // Prints arcs with their weights

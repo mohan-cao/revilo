@@ -20,7 +20,6 @@ public class BnBSchedule {
     int[] finishTimes;
     int totalIdleTime=0;
 	int lowerBound;
-	int scheduledWeight = 0;
 	String _scheduleStructureId = "";
 	BranchAndBoundAlgorithmManager bnb;
 	Set<Integer> openNodes=new HashSet<>(); //need to assign to processor
@@ -68,7 +67,6 @@ public class BnBSchedule {
 			addedIdleTime=startTime-finishTimes[processor]; //added by this node
 			totalIdleTime+=addedIdleTime;//total processor idle time
 
-            //TODO: cost function. Does this actually work as a heuristic?
             int perfectLoadBalancing = (bnb.totalNodeWeights + totalIdleTime) / bnb._processingCores;
             lowerBound=(startTime+bnb.bottomLevels[nodeId])>perfectLoadBalancing?(startTime+bnb.bottomLevels[nodeId]):perfectLoadBalancing;
 		}
@@ -90,12 +88,17 @@ public class BnBSchedule {
         _scheduleStructureId = generateScheduleStructureId();
     }
 
+	/**
+	 * Getter for closed nodes
+	 * @return map of closed nodes
+	 */
     public Map<Integer, Tuple<Integer, Integer>> getClosedNodes() {
         return closedNodes;
     }
 
 	/**
-	 * create schedule structure map for id comparison
+	 * Create schedule structure map for id comparison based on parent schedule
+	 * then adds current schedule to the map
 	 * @param bnb
 	 * 
 	 * @author Abby S
@@ -120,11 +123,13 @@ public class BnBSchedule {
 	 * Generates id for identifying the structure of this schedule
 	 * To be compared to existing structures for mirrors
 	 * 
-	 * @return
+	 * @return ID of the schedule structure
 	 */
     private String generateScheduleStructureId() {
+    	// ID for assignments on each processor
         String[] ids = new String[bnb._processingCores];
         Arrays.fill(ids, " ");
+        // Gets assignments and sorts them by tuple order and hashes it
         for (int p = 0; p < bnb._processingCores; p++) {
             List<Tuple<Integer, Integer>> list = scheduleStructure.get(p);
             Collections.sort(list);
@@ -132,6 +137,7 @@ public class BnBSchedule {
                 ids[p] += t.hashCode();
             }
         }
+        // Normalizes processor permutations
 		Arrays.sort(ids);
 		return Arrays.toString(ids);
 	}
@@ -151,11 +157,6 @@ public class BnBSchedule {
 		}
 		return max;
 	}
-
-	//TODO: remove if unused
-	public boolean isBounded(int maxFinishTime) {
-        return this.lowerBound >= maxFinishTime;
-    }
 
 	/**
 	 * Clones the parent schedule for this next schedule
@@ -219,12 +220,8 @@ public class BnBSchedule {
 		}
 	}
 
-    // TODO: design decision to not compare BnBSchedule objects
-
 	/**
 	 * Method to show current schedule in a string form
-	 * 
-	 * TODO: delete if unused
 	 * 
 	 * @author Abby S
 	 * 

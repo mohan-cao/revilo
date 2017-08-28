@@ -94,6 +94,10 @@ public class App {
         return _inst._inputFilename;
     }
 
+    /**
+     * Returns number of parallel threads in the instance
+     * @return number of parallel threads
+     */
     public static int getNumParallelCores() {
         return _inst._numParallelProcessors;
     }
@@ -158,7 +162,7 @@ public class App {
         }
 
         // Parse file and give it algorithm manager to give results to depending on the file extension
-        if (_inst._inputFilename.toUpperCase().matches(".*GXL")) {
+        if (_inst._inputFilename.toUpperCase().matches(".*\\.GXL")) {
             _reader = new GxlFileReader(_inst._inputFilename);
         } else {
             _reader = new DotFileReader(_inst._inputFilename);
@@ -171,7 +175,6 @@ public class App {
         //Launch GUI if visualization is desired, otherwise just start parsing.
         if (_inst._visualise) {
             Application.launch(MainLauncher.class);
-
         } else {
             startParsing();
         }
@@ -251,10 +254,11 @@ public class App {
     public static void startParsing() {
         try {
             _isDone = false;
-            _startingTime = System.currentTimeMillis();
+            _startingTime = System.currentTimeMillis(); // for timing
             _reader.startParsing(_manager);
             _endingTime = System.currentTimeMillis();
             _isDone = true;
+            System.out.println("Time taken: " + getRunningTime() + " seconds");
         } catch (FileNotFoundException e) {
             throw new RuntimeException("Input file does not exist");
         }

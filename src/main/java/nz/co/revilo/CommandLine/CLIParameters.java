@@ -41,6 +41,7 @@ public class CLIParameters {
 
     /**
      * The desired file output name
+     * Default file name is "input-name-OUTPUT.dot"
      *
      * @return filename for output filename
      */
@@ -48,6 +49,10 @@ public class CLIParameters {
         return _outputName;
     }
 
+    /**
+     * Checks if help flag is present
+     * @return true if flag is present
+     */
     public boolean getHelp() {
         return help;
     }

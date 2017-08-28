@@ -1,6 +1,8 @@
 package nz.co.revilo.Scheduling.Astar;
 
-
+/**
+ * A node in A*
+ */
 public class AstarTask implements Cloneable, Comparable<AstarTask> {
     public int _taskNum = -1;
     public int _start = -1;

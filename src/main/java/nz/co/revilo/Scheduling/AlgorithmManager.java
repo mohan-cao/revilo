@@ -15,6 +15,7 @@ import java.util.concurrent.atomic.AtomicReference;
 /**
  * Abstract class defining the data structures, and information to be used when implementing any algorithms as part of a
  * scheduling solution.
+ * Stats for GUI extracted from this class
  *
  * @author Michael Kemp
  */
@@ -104,7 +105,7 @@ public abstract class AlgorithmManager extends Observable implements ParseResult
      * Executes the scheduling algorithm associated with the specific implementation of AlgorithmManager. This is the
      * hook method associated with the template method inform()
      */
-    protected abstract void execute();//TODO
+    protected abstract void execute();
 
     /**
      * Associates a ScheduleResultListener implementation to the AlgorithmManager, which will receive the final result as

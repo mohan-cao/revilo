@@ -6,21 +6,16 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.geometry.Pos;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
-import javafx.scene.text.Text;
-import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import nz.co.revilo.App;
 import nz.co.revilo.Gui.GanttChart.ExtraData;
@@ -31,9 +26,12 @@ import nz.co.revilo.Scheduling.BnBSchedule;
 import java.net.URL;
 import java.util.*;
 
+/**
+ * Controller class for the GUI
+ */
 public class MainLauncherController implements Initializable, ScheduleResultListener, NewOptimalResultListener {
 
-    public final String processorTitle = "PSR ";
+    public static final String processorTitle = "PSR ";
 
     App app;
     protected String _graphName;
@@ -48,7 +46,11 @@ public class MainLauncherController implements Initializable, ScheduleResultList
     private GUIScheduleResult results;
     private MainLauncher ml;
 
-
+    /**
+     * Main Launcher constructor
+     * @param app app
+     * @param ml main launcher
+     */
     public MainLauncherController(App app, MainLauncher ml) {
         _nodeStarts = new ArrayList<>();
         thisStage = ml.getPrimaryStage();
@@ -109,22 +111,20 @@ public class MainLauncherController implements Initializable, ScheduleResultList
 
     /**
      * JavaFX method to set up the GUI and listeners
-      * @param location
-     * @param resources
+     * @param location url location
+     * @param resources resource
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        App.getAlgorithmManager().inform(this);
-        App.getAlgorithmManager().optimalInform(this);
+        App.getAlgorithmManager().inform(this); // set up listener for algorithm manager completion
+        App.getAlgorithmManager().optimalInform(this); // set up listener for algo manager changes
 
         results = new GUIScheduleResult();
         //set up change listeners
         results.isDoneProcessingProperty().addListener(new ChangeListener<Boolean>() {
             @Override
             public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-                Platform.runLater(() -> {
-                    updateGantt();
-                });
+                Platform.runLater(() -> updateGantt());
             }
         });
 
@@ -150,40 +150,35 @@ public class MainLauncherController implements Initializable, ScheduleResultList
                 double explored = App.getAlgorithmManager().getExploredStates().get();
                 double broken = App.getAlgorithmManager().getBrokenTrees().get();
                 double percentage = explored == 0 ? 0 : 100.0*broken/explored;
-                Platform.runLater(new Runnable() {
-                    public void run() {
-                        // calculate current used memory
-                        long currentMemory = Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory();
-                        double timeElapsed = App.getRunningTime();
-                        memoryLabel.setText((currentMemory)  / (1024l * 1024l) + "");
-                        timeLabel.setText(
-                                (timeElapsed>60)?
-                                String.format("%d:%02.0f", (int)timeElapsed/60, timeElapsed%60)
-                                :
-                                String.format("%.2f", timeElapsed)
-                        );
-                        timeUnits.setText((timeElapsed>=60)?"MIN":"SEC");
-                        branchesLabel.setText(App.getAlgorithmManager().getBrokenTrees() + "");
-                        partialLabel.setText(App.getAlgorithmManager().getExploredStates() + "");
-                        percentLabel.setText(String.format("%.1f", percentage));
+                Platform.runLater(() -> {
+                    // calculate current used memory
+                    long currentMemory = Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory();
+                    double timeElapsed = App.getRunningTime();
+                    memoryLabel.setText((currentMemory)  / (1024l * 1024l) + "");
+                    timeLabel.setText(
+                            (timeElapsed>60)?
+                            String.format("%d:%02.0f", (int)timeElapsed/60, timeElapsed%60)
+                            :
+                            String.format("%.2f", timeElapsed)
+                    );
+                    timeUnits.setText((timeElapsed>=60)?"MIN":"SEC");
+                    branchesLabel.setText(App.getAlgorithmManager().getBrokenTrees() + "");
+                    partialLabel.setText(App.getAlgorithmManager().getExploredStates() + "");
+                    percentLabel.setText(String.format("%.1f", percentage));
 
-                    }
                 });
             }
         }, 0, 50);
 
         // Set up rest of GUI in a GUI thread. This will run only once
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                graphNameLabel.setText(App.getInputFileName()); //padding
-                systemLabel.setText("PROCESSING");
-                statusLabel.setText("Starting up...");
-                parallelLabel.setText(App.getNumParallelCores() + "");
-                String thr = App.getNumParallelCores() == 1 ? "THREAD" : "THREADS";
-                threadsLabel.setText(thr);
-                createGantt();
-            }
+        Platform.runLater(() -> {
+            graphNameLabel.setText(App.getInputFileName()); //padding
+            systemLabel.setText("PROCESSING");
+            statusLabel.setText("Starting up...");
+            parallelLabel.setText(App.getNumParallelCores() + "");
+            String thr = App.getNumParallelCores() == 1 ? "THREAD" : "THREADS";
+            threadsLabel.setText(thr);
+            createGantt();
         });
 
     }
@@ -208,12 +203,9 @@ public class MainLauncherController implements Initializable, ScheduleResultList
         _nodeStarts = nodeStarts;
         _nodeProcessor = nodeProcessor;
 
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                systemLabel.setText("COMPLETE");
-                statusLabel.setText("Optimal length: " + App.getAlgorithmManager().getUpperBound() + " (Time taken: " + App.getRunningTime() + " seconds)");
-            }
+        Platform.runLater(() -> {
+            systemLabel.setText("COMPLETE");
+            statusLabel.setText("Optimal length: " + App.getAlgorithmManager().getUpperBound() + " (Time taken: " + App.getRunningTime() + " seconds)");
         });
         results.setIsDoneProcessing(true);
     }
@@ -228,28 +220,17 @@ public class MainLauncherController implements Initializable, ScheduleResultList
         ArrayList<String> processorCatStr = new ArrayList<>();
         ArrayList<XYChart.Series> processorCat = new ArrayList<>();
 
-
         for (int i = 0; i < App.getExecCores(); i++) {
-            processorCatStr.add(processorTitle + i);
+            processorCatStr.add(processorTitle + (i+1));
             processorCat.add(new XYChart.Series()); // each processor has its own series
         }
 
         yAxis.setCategories(FXCollections.observableArrayList(processorCatStr));
-        ganttChart = new GanttChart<Number, String>(xAxis, yAxis);
-
+        ganttChart = new GanttChart<>(xAxis, yAxis);
         ganttPane.setCenter(ganttChart);
 
-
-
         //live adjust gantt chart based on window size
-        ganttChart.heightProperty().addListener(new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                ganttChart.setBlockHeight(newValue.doubleValue()*0.70/(App.getExecCores()));
-
-            }
-        });
-
+        ganttChart.heightProperty().addListener((observable, oldValue, newValue) -> ganttChart.setBlockHeight(newValue.doubleValue()*0.70/(App.getExecCores())));
     }
 
     /**
@@ -283,7 +264,7 @@ public class MainLauncherController implements Initializable, ScheduleResultList
                 case 4: styleclass = "gantt4"; break;
                 default: styleclass = "ganttdefault"; break;
             }
-            XYChart.Data data = new XYChart.Data(_nodeStarts.get(i), (processorTitle + psr), new ExtraData(_nodeWeights.get(i), styleclass));
+            XYChart.Data data = new XYChart.Data(_nodeStarts.get(i), (processorTitle + (psr + 1)), new ExtraData(_nodeWeights.get(i), styleclass));
             String iterNodeName = _nodeNames.get(i);
 
             psrCat.getData().add(data);
@@ -321,7 +302,7 @@ public class MainLauncherController implements Initializable, ScheduleResultList
 
     /**
      * Notifies the GUI that a new optimal has been found.
-     * @param optimal
+     * @param optimal optimal schedule
      */
     @Override
     public void newOptimal(BnBSchedule optimal) {
@@ -334,15 +315,10 @@ public class MainLauncherController implements Initializable, ScheduleResultList
             _nodeStarts.add(optimal.getClosedNodes().get(nodeId).getA());//start times
             _nodeProcessor.add(optimal.getClosedNodes().get(nodeId).getB());//processors scheduled on
         }
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                updateGantt();
-                statusLabel.setText("New optimal schedule found with length " + App.getAlgorithmManager().getAtomicBound() + ".");
-                bestLabel.setText(App.getAlgorithmManager().getAtomicBound() + "");
-            }
+        Platform.runLater(() -> {
+            updateGantt();
+            statusLabel.setText("New optimal schedule found with length " + App.getAlgorithmManager().getAtomicBound() + ".");
+            bestLabel.setText(App.getAlgorithmManager().getAtomicBound() + "");
         });
-
     }
-
 }

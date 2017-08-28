@@ -26,8 +26,16 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
+/**
+ * Extends XYChart to allow for finite Gantt element lengths
+ * Supports plotting of the Gantt chart
+ * @param <X> X Axis type
+ * @param <Y> Y Axis type
+ */
 public class GanttChart<X,Y> extends XYChart<X,Y> {
-
+    /**
+     * Provide extra way to get information for Gantt chart processing
+     */
     public static class ExtraData {
 
         public long length;
@@ -51,13 +59,9 @@ public class GanttChart<X,Y> extends XYChart<X,Y> {
         public void setStyleClass(String styleClass) {
             this.styleClass = styleClass;
         }
-
-
     }
 
-
     private double blockHeight = 50;
-
 
     public GanttChart(@NamedArg("xAxis") Axis<X> xAxis, @NamedArg("yAxis") Axis<Y> yAxis) {
         this(xAxis, yAxis, FXCollections.<Series<X, Y>>observableArrayList());
