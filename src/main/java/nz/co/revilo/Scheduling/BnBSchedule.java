@@ -68,7 +68,6 @@ public class BnBSchedule {
 			addedIdleTime=startTime-finishTimes[processor]; //added by this node
 			totalIdleTime+=addedIdleTime;//total processor idle time
 
-            //TODO: cost function. Does this actually work as a heuristic?
             int perfectLoadBalancing = (bnb.totalNodeWeights + totalIdleTime) / bnb._processingCores;
             lowerBound=(startTime+bnb.bottomLevels[nodeId])>perfectLoadBalancing?(startTime+bnb.bottomLevels[nodeId]):perfectLoadBalancing;
 		}
@@ -120,7 +119,7 @@ public class BnBSchedule {
 	 * Generates id for identifying the structure of this schedule
 	 * To be compared to existing structures for mirrors
 	 * 
-	 * @return
+	 * @return ID of the schedule structure
 	 */
     private String generateScheduleStructureId() {
         String[] ids = new String[bnb._processingCores];
@@ -151,11 +150,6 @@ public class BnBSchedule {
 		}
 		return max;
 	}
-
-	//TODO: remove if unused
-	public boolean isBounded(int maxFinishTime) {
-        return this.lowerBound >= maxFinishTime;
-    }
 
 	/**
 	 * Clones the parent schedule for this next schedule
@@ -219,12 +213,8 @@ public class BnBSchedule {
 		}
 	}
 
-    // TODO: design decision to not compare BnBSchedule objects
-
 	/**
 	 * Method to show current schedule in a string form
-	 * 
-	 * TODO: delete if unused
 	 * 
 	 * @author Abby S
 	 * 

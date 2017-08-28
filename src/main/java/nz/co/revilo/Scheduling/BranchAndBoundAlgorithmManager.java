@@ -132,7 +132,6 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
 			if (schedule.lowerBound >= upperBound.get()) { //>= @ Michael K, huge optimisation
 				schedule = null; //garbage collect that schedule
 				brokenTrees.incrementAndGet(); //this tree has broken
-				//            atomicBound.incrementAndGet();
 				return; //break tree at this point
 			}
 		}
@@ -142,7 +141,6 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
 			if (existingScheduleStructures.containsKey(schedule._scheduleStructureId)) {
 				schedule = null; //garbage collect that schedule
 				brokenTrees.incrementAndGet(); // this tree has broken
-				//            atomicBound.incrementAndGet();
 				return; //break tree at this point
 			} else {
 				existingScheduleStructures.put(schedule._scheduleStructureId, stubObject);
@@ -383,7 +381,6 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
 		}
 
 		//Return the greedy cost
-		System.out.println("done pre proc");
 		return levels.get(levels.size() - 1).get(0).cost();
 	}
 }
