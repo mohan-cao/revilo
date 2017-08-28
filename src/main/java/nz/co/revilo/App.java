@@ -260,6 +260,11 @@ public class App {
         }
     }
 
+    /**
+     * Shows help for the inputs and optional flags.
+     *
+     * @author Aimee T
+     */
     private static void showHelp(){
         System.out.println(
                 "\n Welcome to Revilo Task Scheduler. " +
