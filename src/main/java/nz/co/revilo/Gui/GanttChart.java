@@ -3,7 +3,6 @@ package nz.co.revilo.Gui;
 /**
  * This class was designed by user: Roland from StackOverflow
  * https://stackoverflow.com/questions/27975898/gantt-chart-from-scratch
- * It will be made into a separate JAR file as a library instead.
  */
 
 import java.util.ArrayList;
