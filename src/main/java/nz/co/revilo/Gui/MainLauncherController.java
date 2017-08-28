@@ -51,6 +51,7 @@ public class MainLauncherController implements Initializable, ScheduleResultList
 
     public MainLauncherController(App app, MainLauncher ml) {
         _nodeStarts = new ArrayList<>();
+        thisStage = ml.getPrimaryStage();
         this.app = app;
         this.ml = ml;
 
@@ -223,7 +224,19 @@ public class MainLauncherController implements Initializable, ScheduleResultList
 
         yAxis.setCategories(FXCollections.observableArrayList(processorCatStr));
         ganttChart = new GanttChart<Number, String>(xAxis, yAxis);
+
         ganttPane.setCenter(ganttChart);
+
+        //live adjust gantt chart based on window size
+        ganttChart.heightProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                System.out.println(ganttChart.getHeight());
+                ganttChart.setBlockHeight(newValue.doubleValue()*0.70/(App.getExecCores()));
+
+            }
+        });
+
     }
 
     /**

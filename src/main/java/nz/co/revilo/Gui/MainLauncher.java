@@ -47,7 +47,7 @@ public class MainLauncher extends Application {
             Scene scene = new Scene(rootLayout);
             scene.getStylesheets().add("/main.css");
             primaryStage.setScene(scene);
-            primaryStage.setMinWidth(680);
+            primaryStage.setMinWidth(800);
             primaryStage.setMinHeight(400);
             // Prevent algorithm from running once we close the window (i.e. force)
             primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
