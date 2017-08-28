@@ -76,6 +76,9 @@ public class MainLauncherController implements Initializable, ScheduleResultList
     private Label branchesLabel;
 
     @FXML
+    private Label partialLabel;
+
+    @FXML
     private Label bestLabel;
 
     @FXML
@@ -89,6 +92,9 @@ public class MainLauncherController implements Initializable, ScheduleResultList
 
     @FXML
     private Label statusLabel;
+
+    @FXML
+    private Label percentLabel;
 
     @FXML
     private BorderPane ganttPane;
@@ -140,6 +146,10 @@ public class MainLauncherController implements Initializable, ScheduleResultList
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
+
+                double explored = App.getAlgorithmManager().getExploredStates().get();
+                double broken = App.getAlgorithmManager().getBrokenTrees().get();
+                double percentage = explored == 0 ? 0 : 100.0*broken/explored;
                 Platform.runLater(new Runnable() {
                     public void run() {
                         // calculate current used memory
@@ -154,6 +164,8 @@ public class MainLauncherController implements Initializable, ScheduleResultList
                         );
                         timeUnits.setText((timeElapsed>=60)?"MIN":"SEC");
                         branchesLabel.setText(App.getAlgorithmManager().getBrokenTrees() + "");
+                        partialLabel.setText(App.getAlgorithmManager().getExploredStates() + "");
+                        percentLabel.setText(String.format("%.1f", percentage));
 
                     }
                 });
@@ -226,6 +238,8 @@ public class MainLauncherController implements Initializable, ScheduleResultList
         ganttChart = new GanttChart<Number, String>(xAxis, yAxis);
 
         ganttPane.setCenter(ganttChart);
+
+
 
         //live adjust gantt chart based on window size
         ganttChart.heightProperty().addListener(new ChangeListener<Number>() {
