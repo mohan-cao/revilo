@@ -7,8 +7,6 @@ import java.util.List;
  * Static helper class to manage in and out neighbours
  * Uses the primitive interface and loops through matrices
  * 
- * TODO: Javadoc
- * 
  * @author Abby S
  *
  */
@@ -57,21 +55,4 @@ public class NeighbourManagerHelper {
 		return false;
 	}
 
-	static int numInneighbours(int nodeId) {
-		int count=0;
-
-		for(int node=0; node<numNodes; node++){
-			if(arcs[node][nodeId]) count++;
-		}
-		return count;
-	}
-
-	static int numOutneighbours(int nodeId) {
-		int count=0;
-
-		for(int node=0; node<numNodes; node++){
-			if(arcs[nodeId][node]) count++;
-		}
-		return count;
-	}
 }

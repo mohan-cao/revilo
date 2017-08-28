@@ -122,11 +122,10 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
 	 * @param schedule
 	 * @author Abby S, Terran K
 	 */
-	protected void bnb(BnBSchedule schedule) {
+	protected void bnb(final BnBSchedule schedule) {
         exploredStates.incrementAndGet();
 		synchronized (this) {
-			if (schedule.lowerBound >= upperBound.get()) { //>= @ Michael K, huge optimisation
-				schedule = null; //garbage collect that schedule
+			if (schedule.lowerBound >= upperBound.get()) {
 				brokenTrees.incrementAndGet(); //this tree has broken
 				return; //break tree at this point
 			}
@@ -135,17 +134,11 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
 		synchronized (this) {
 			//compare to existing schedule structures and remove if duplicate
 			if (existingScheduleStructures.containsKey(schedule._scheduleStructureId)) {
-				schedule = null; //garbage collect that schedule
 				brokenTrees.incrementAndGet(); // this tree has broken
 				return; //break tree at this point
 			} else {
 				existingScheduleStructures.put(schedule._scheduleStructureId, stubObject);
 			}
-		}
-
-		if(isParallel(schedule.getClosedNodes().size())) {
-			doParallel(schedule);
-			return;
 		}
 
 		synchronized (this) {
@@ -191,24 +184,6 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
 	}
 
 	/**
-	 * Hook method to be implemented by subclasses which need specific behaviour when a particular 
-	 * recursion depth is reached. This method implements the depth check.
-	 * @author Aimee T
-	 */
-	protected boolean isParallel(int closedSet) {
-		return false;
-	}
-
-	/**
-	 * Hook method to be implemented by subclasses which need specific behaviour when a particular 
-	 * recursion depth is reached. This method implements the behaviour required.
-	 * @author Aimee T
-	 */
-	protected void doParallel(BnBSchedule s) {
-		//nothing as not parallel
-	}
-
-	/**
 	 * Calculates bottom level of each node in the graph
 	 * Using bottom-up approach
 	 *
@@ -235,7 +210,7 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
 	}
 
 	/**
-	 * Calculates an upper bound using a greedy algorithm
+	 * Calculates an upper bound using a greedy A* based algorithm
 	 * @author Michael Kemp
 	 * @return an upper bound
 	 */
@@ -243,14 +218,14 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
 		//Number of Tasks
 		int numTasks = _nodeWeights.length;
 
-		//Sort Tasks into start and other tasks
+		//Categorize Tasks into root nodes/tasks and other tasks
 		Set<Integer> startTasks = new HashSet<>();
 		Set<Integer> otherTasks = new HashSet<>();
-		for (int task = 0; task < numTasks; task++) {
+		for (int task = 0; task < numTasks; task++) { // init to contain all tasks
 			startTasks.add(task);
 			otherTasks.add(task);
 		}
-		for (int fromTask = 0; fromTask < numTasks; fromTask++) {
+		for (int fromTask = 0; fromTask < numTasks; fromTask++) { // remove tasks that have parents from start tasks
 			for (int toTask = 0; toTask < numTasks; toTask++) {
 				if (_arcs[fromTask][toTask]) {
 					startTasks.remove(toTask);
@@ -260,6 +235,7 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
 		otherTasks.removeAll(startTasks);
 
 		//Determine partial dependencies for every task
+		//For every node, add a list of all its parents
 		List<List<Integer>> partialDependencies = new ArrayList<>();
 		for (int toTask = 0; toTask < numTasks; toTask++) {
 			List<Integer> subList = new ArrayList<>();
@@ -274,13 +250,13 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
 		//Initialises root schedule
 		//Adds tasks
 		AstarSchedule root = new AstarSchedule();
-		for (int unschedulableTask : otherTasks) {
+		for (int unschedulableTask : otherTasks) { // non sources are not eligible to be scheduled
 			root._unschedulable.add(new AstarTask(unschedulableTask));
 		}
 		for (int schedulableTask : startTasks) {
 			root._schedulable.add(new AstarTask(schedulableTask));
 		}
-		//Sets when the processors were last used
+		//Initializes to zeroes when the processors were last used
 		root._processorLastUsed = new ArrayList<>(_processingCores);
 		for (int processor = 0; processor < _processingCores; processor++) {
 			root._processorLastUsed.add(0);
@@ -299,15 +275,16 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
 			List<AstarSchedule> nextLevel = levels.get(level + 1);
 
 			//Special case for first level
+			//For sources
 			if (level == 0) {
 				currentLevel.add(root);
 			}
 
-			//Load parent schedule
+			//Load parent schedule for the next level
 			AstarSchedule childSchedule = currentLevel.get(0);
 			AstarSchedule newSchedule = childSchedule.clone();
 
-			//Check if unschedulables are schedulable
+			//Check if children have become schedulable
 			for (AstarTask unshedulable : newSchedule._unschedulable) {
 				boolean schedulable = true;
 				int taskNum = unshedulable._taskNum;
@@ -323,7 +300,7 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
 			}
 			newSchedule._unschedulable.removeAll(newSchedule._schedulable);
 
-			//How to determine which node will go first
+			//Determines which node goes first
 			List<Integer> DataReadyTimes = new ArrayList<>();
 			List<AstarTask> DataReadyTasks = new ArrayList<>();
 
@@ -332,18 +309,23 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
 				AstarTask newTask = schedulable.clone();
 				int drt = Integer.MAX_VALUE;
 				for (int processorNum = 0; processorNum < getProcessingCores(); processorNum++) {
+					// processor finish time
 					int workingDrt = childSchedule._processorLastUsed.get(processorNum);
 					for (AstarTask t : newSchedule._scheduled) {
+						// if there is a dependency
 						if (_arcs[t._taskNum][newTask._taskNum]) {
 							int temp = t._start + _nodeWeights[t._taskNum];
+							// add the edge weights if switching processors
 							if (t._processor != processorNum) {
 								temp += _arcWeights[t._taskNum][newTask._taskNum];
 							}
+							// max of when parents are done and processor is available
 							if (temp > workingDrt) {
 								workingDrt = temp;
 							}
 						}
 					}
+					// assigns node
 					if (workingDrt < drt) {
 						drt = workingDrt;
 						newTask._processor = processorNum;
@@ -364,11 +346,11 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
 				}
 			}
 
-			//Pick best task to schedule
+			//Pick the earliest data ready time task
 			AstarTask newTask = DataReadyTasks.get(index);
 			//Update schedule
 			newSchedule._processorLastUsed.set(newTask._processor, (newTask._start + _nodeWeights[newTask._taskNum]));
-			//Move task to scheduled from schedulable
+			//Move task from schedulable to scheduled
 			newSchedule._schedulable.remove(newTask);
 			newSchedule._scheduled.add(newTask);
 			//Put new sub schedule in parent and the level below
