@@ -175,7 +175,6 @@ public class App {
         //Launch GUI if visualization is desired, otherwise just start parsing.
         if (_inst._visualise) {
             Application.launch(MainLauncher.class);
-
         } else {
             startParsing();
         }
@@ -259,6 +258,7 @@ public class App {
             _reader.startParsing(_manager);
             _endingTime = System.currentTimeMillis();
             _isDone = true;
+            System.out.println("Time taken: " + getRunningTime() + " seconds");
         } catch (FileNotFoundException e) {
             throw new RuntimeException("Input file does not exist");
         }

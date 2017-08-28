@@ -57,11 +57,7 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
 		upperBound.set(greedyUpperBound());
 		if ((totalNodeWeights + 1) < upperBound.get()) {
 			upperBound.set(totalNodeWeights + 1);
-			System.out.println("topological cost was better");
-		} else if ((totalNodeWeights + 1) == upperBound.get()) {
-			System.out.println("no difference");
 		} else {
-			System.out.println("greedy wins. Upper bound is: " + upperBound);
 			upperBound.incrementAndGet();
 		}
 
