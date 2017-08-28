@@ -3,6 +3,9 @@ package nz.co.revilo.Scheduling;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Primitive to Object conversion helper for results
+ */
 public class PrimitiveInterfaceHelper {
 	/**
 	 * Creates an object type 2d Boolean list from primitive matrix
