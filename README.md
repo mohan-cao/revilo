@@ -10,15 +10,19 @@ The official page for the Revilo (**ruh-*VEE*-low**) Task Scheduler Project!
 ## Introduction and Usage
 Revilo Task Scheduler takes in a graph file (.dot or .gxl) and outputs a DOT file with an optimal schedule.
 
-``java -jar revilo.jar [INPUT.DOT] [NUM-OF-PROCESSORS] [OPTIONAL ARGS]``
+``java -jar scheduler.jar [INPUT.DOT] [NUM-OF-PROCESSORS] [OPTIONAL ARGS]``
 
-The output file will be created in the same directory. Optional arguments are as followed:
+The first two (2) arguments (input file and processor count) are required. The output file will be created in the same directory. Optional arguments are as followed:
 
 * ``-v`` Enables GUI visualization with live statistics and schedule updating.
 * ``-o [FILENAME]`` Specifies the output file's name.
 * ``-p [THREADS]`` Specifies the number of threads Revilo should be run on.
 
 By default, Revilo will be run sequentially with no visualization.
+
+ParallelTask and incompatible JavaFX versions will output a few lines to console, but do not affect the functionality of Revilo.
+
+On Canvas, the submitted file is called `scheduler-1.jar` as the basic milestone submission was called `schedular.jar`.
 
 ## Quick References
 Meeting minutes, plans, research, and other administrivia can be found in the [Revilo Wiki](https://github.com/mohan-cao/revilo/wiki).
