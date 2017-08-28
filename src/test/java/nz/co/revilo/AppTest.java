@@ -5,6 +5,7 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
 import java.io.File;
+import java.util.stream.IntStream;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -68,5 +69,13 @@ public class AppTest {
     @Category(SlowTest.class)
     public void AppSmokeTest(){
         App.main(new String[]{TEST_PATH + "input.dot","1"});
+    }
+
+    @Test
+    @Category(SlowTest.class)
+    public void AppConcurrencyTest() {
+        IntStream.range(0,20).parallel().forEach(i->{
+            App.main(new String[]{TEST_PATH + "Random_Nodes_10_Density_0.20_CCR_1.00_WeightType_Random.gxl","4","-p","4"});
+        });
     }
 }

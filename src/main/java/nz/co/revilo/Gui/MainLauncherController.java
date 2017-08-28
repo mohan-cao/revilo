@@ -230,7 +230,7 @@ public class MainLauncherController implements Initializable, ScheduleResultList
 
 
         for (int i = 0; i < App.getExecCores(); i++) {
-            processorCatStr.add(processorTitle + i);
+            processorCatStr.add(processorTitle + (i+1));
             processorCat.add(new XYChart.Series()); // each processor has its own series
         }
 
@@ -283,7 +283,7 @@ public class MainLauncherController implements Initializable, ScheduleResultList
                 case 4: styleclass = "gantt4"; break;
                 default: styleclass = "ganttdefault"; break;
             }
-            XYChart.Data data = new XYChart.Data(_nodeStarts.get(i), (processorTitle + psr), new ExtraData(_nodeWeights.get(i), styleclass));
+            XYChart.Data data = new XYChart.Data(_nodeStarts.get(i), (processorTitle + (psr + 1)), new ExtraData(_nodeWeights.get(i), styleclass));
             String iterNodeName = _nodeNames.get(i);
 
             psrCat.getData().add(data);
