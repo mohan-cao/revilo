@@ -3,6 +3,8 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.VBox?>
@@ -184,12 +186,7 @@
    <top>
       <AnchorPane maxHeight="50.0" minHeight="50.0" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #f1f1f1;" BorderPane.alignment="CENTER">
          <children>
-            <Label text="REVILO" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="0.0">
-               <font>
-                  <Font name="SF UI Display Heavy" size="36.0" />
-               </font>
-            </Label>
-            <Label fx:id="graphNameLabel" layoutX="85.0" layoutY="23.0" maxHeight="24.0" prefHeight="24.0" prefWidth="575.0" style="-fx-background-color: #E5E5E5; -fx-background-radius: 5;" text="Placeholder text name" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="148.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
+            <Label fx:id="graphNameLabel" layoutX="118.0" layoutY="23.0" maxHeight="30.0" prefHeight="30.0" prefWidth="672.0" style="-fx-background-color: #E5E5E5; -fx-background-radius: 5;" text="Placeholder text name" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="120.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
                <font>
                   <Font name="System Font" size="14.0" />
                </font>
@@ -200,6 +197,11 @@
                   <Insets bottom="2.0" left="4.0" right="2.0" top="2.0" />
                </padding>
             </Label>
+            <ImageView fitHeight="50.0" fitWidth="120.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <image>
+                  <Image url="@reviloLogo.png" />
+               </image>
+            </ImageView>
          </children>
       </AnchorPane>
    </top>

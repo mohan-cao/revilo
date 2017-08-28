@@ -236,6 +236,8 @@ public class MainLauncherController implements Initializable, ScheduleResultList
         yAxis.setCategories(FXCollections.observableArrayList(processorCatStr));
         ganttChart = new GanttChart<Number, String>(xAxis, yAxis);
         ganttPane.setCenter(ganttChart);
+
+        
     }
 
     /**
