@@ -74,24 +74,13 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
             rootSchedules.add(newSchedule);
         }    
                 
-        startBnb(); //polymorphic call depending on Parallel or not
-
+        while(!rootSchedules.isEmpty()){
+			bnb(rootSchedules.remove(0));
+		}
+        
         returnResults();
     }
     
-    /**
-     * Starts the branch and bound algorithm. To be overridden by child classes which need a different
-     * implementation.
-     * 
-     * @author Aimee
-     */
-	protected void startBnb() {
-		while(!rootSchedules.isEmpty()){
-			bnb(rootSchedules.remove(0));
-		}
-	}
-
-
     /**
      * Return the optimal schedule found and it's information
      *
@@ -141,18 +130,14 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
         } else {
             existingScheduleStructures.put(schedule._scheduleStructureId, null);
         }
-        
-        if(isParallel(schedule.getClosedNodes().size())) {
-    		doParallel(schedule);
-    		return;
-    	}
-        
+                
         //found optimal for the root started with
         //reached end of a valid schedule. Never broke off, so is optimal
         if (schedule.openNodes.isEmpty()) {
             //to make sure only optimal schedules get through
             if (schedule.getMaxFinishTime() < upperBound.get()) {
             	setOptimalSchedule(schedule);
+            	System.out.println(schedule.getMaxFinishTime());
                 return;
             }
         }
@@ -164,10 +149,15 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
                 nextSchedules.add(new BnBSchedule(this, schedule, node, processor));
             }
         }
-        for (BnBSchedule nextSchedule : nextSchedules) {
+        
+        bnbRecursive(nextSchedules);
+    }
+
+	protected void bnbRecursive(List<BnBSchedule> nextSchedules) {
+		for (BnBSchedule nextSchedule : nextSchedules) {
             bnb(nextSchedule);
         }
-    }
+	}
     
     /**
      * If the schedule found is optimal, set it to be the optimal schedule and notify listeners
@@ -187,24 +177,6 @@ public class BranchAndBoundAlgorithmManager extends AlgorithmManager {
         atomicBound.set(upperBound.get());
     }
     
-    /**
-     * Hook method to be implemented by subclasses which need specific behaviour when a particular 
-     * recursion depth is reached. This method implements the depth check.
-     * @author Aimee T
-     */
-    protected boolean isParallel(int closedSet) {
-    	return false;
-    }
-    
-    /**
-     * Hook method to be implemented by subclasses which need specific behaviour when a particular 
-     * recursion depth is reached. This method implements the behaviour required.
-     * @author Aimee T
-     */
-    protected void doParallel(BnBSchedule s) {
-    	//nothing as not parallel
-    }
-
     /**
      * Calculates bottom level of each node in the graph
      * Using bottom-up approach

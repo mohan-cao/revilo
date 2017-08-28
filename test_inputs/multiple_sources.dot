@@ -1,10 +1,23 @@
 digraph multisource {
-    1   [Weight=3];
-    0   [Weight=4];
-    2   [Weight=5];
-    3   [Weight=6];
-    4   [Weight=4];
-    0 -> 3  [Weight=1];
-    1 -> 4  [Weight=3];
-    0 -> 4  [Weight=4];
+    21   [Weight=3];
+    20   [Weight=4];
+    22   [Weight=5];
+    23   [Weight=6];
+    24   [Weight=4];
+    20 -> 23  [Weight=1];
+    21 -> 24  [Weight=3];
+    20 -> 24  [Weight=4];
+    0	 [Weight=50];
+	1	 [Weight=70];
+	0 -> 1	 [Weight=9];
+	2	 [Weight=90];
+	0 -> 2	 [Weight=7];
+	3	 [Weight=100];
+	20 -> 0	 [Weight=4];
+	4	 [Weight=40];
+	21 -> 4	 [Weight=10];
+	5	 [Weight=20];
+	1 -> 5	 [Weight=7];
+	6	 [Weight=100];
+	1 -> 6	 [Weight=5];
 }

@@ -11,7 +11,7 @@ import nz.co.revilo.Output.DotFileProducer;
 import nz.co.revilo.Output.DotFileWriter;
 import nz.co.revilo.Scheduling.AlgorithmManager;
 import nz.co.revilo.Scheduling.BranchAndBoundAlgorithmManager;
-import nz.co.revilo.Scheduling.ParallelBranchAndBoundAlgorithmManager;
+import nz.co.revilo.Scheduling.RunnableBranchAndBoundAlgorithmManager;
 import pt.runtime.ParaTask;
 
 import java.io.FileNotFoundException;
@@ -150,8 +150,7 @@ public class App {
             // Subtract one from the input number of processors to account for the master in the
             // parallelisation methods used in ParallelBranchAndBoundAlgorithmManager, where
             // there will always be one thread allocating to other threads
-            ParaTask.setThreadPoolSize(ParaTask.ThreadPoolType.ALL, _inst._numParallelProcessors - 1);
-        	_manager = new ParallelBranchAndBoundAlgorithmManager(_inst._numExecutionCores,  _inst._numParallelProcessors - 1);
+        	_manager = new RunnableBranchAndBoundAlgorithmManager(_inst._numExecutionCores,  _inst._numParallelProcessors - 1);
         } else {
         	_manager = new BranchAndBoundAlgorithmManager(_inst._numExecutionCores);
         }
