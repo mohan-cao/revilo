@@ -99,9 +99,9 @@
                                     <Font name="SF UI Display Bold" size="13.0" />
                                  </font>
                               </Label>
-                              <Label fx:id="branchesLabel" alignment="BOTTOM_RIGHT" contentDisplay="RIGHT" styleClass="mono" text="0" textAlignment="RIGHT" textFill="WHITE" AnchorPane.bottomAnchor="12.0" AnchorPane.rightAnchor="5.0">
+                              <Label fx:id="branchesLabel" alignment="BOTTOM_RIGHT" contentDisplay="RIGHT" style="-fx-font-family: &quot;SF Mono&quot;, &quot;Inconsolata&quot;, monospace;" styleClass="mono" text="0" textAlignment="RIGHT" textFill="WHITE" AnchorPane.bottomAnchor="12.0" AnchorPane.rightAnchor="5.0">
                                  <font>
-                                    <Font name="SF UI Display Light" size="36.0" />
+                                    <Font name="SF UI Display Light" size="30.0" />
                                  </font>
                               </Label>
                               <Label layoutX="10.0" layoutY="10.0" text="BRANCHES" textAlignment="RIGHT" textFill="#ffffffcc" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="5.0">
