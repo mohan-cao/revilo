@@ -36,6 +36,10 @@ public class ParallelBranchAndBoundAlgorithmManager extends BranchAndBoundAlgori
 		}
 	}
 
+	/**
+	 * Multi task dequeueing of the root schedules
+	 * Makes a new threads
+	 */
 	TASK(*) public void removeAndExecute(ConcurrentLinkedQueue<BnBSchedule> rootSchedules) {
 		BnBSchedule b = null;
 		while ((b = rootSchedules.poll()) != null) {
