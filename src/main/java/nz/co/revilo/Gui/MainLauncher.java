@@ -25,6 +25,11 @@ public class MainLauncher extends Application {
         return primaryStage;
     }
 
+    /**
+     * Entry point for the GUI, called by the main app entry point
+     * @param primaryStage
+     * @throws Exception
+     */
     @Override
     public void start(Stage primaryStage) throws Exception {
         this.primaryStage = primaryStage;
@@ -42,8 +47,9 @@ public class MainLauncher extends Application {
             Scene scene = new Scene(rootLayout);
             scene.getStylesheets().add("/main.css");
             primaryStage.setScene(scene);
-            primaryStage.setMinWidth(680);
+            primaryStage.setMinWidth(800);
             primaryStage.setMinHeight(400);
+            // Prevent algorithm from running once we close the window (i.e. force)
             primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
                 @Override
                 public void handle(WindowEvent event) {

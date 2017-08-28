@@ -171,6 +171,7 @@ public class App {
         //Launch GUI if visualization is desired, otherwise just start parsing.
         if (_inst._visualise) {
             Application.launch(MainLauncher.class);
+
         } else {
             startParsing();
         }
@@ -207,6 +208,10 @@ public class App {
                 }
             } catch (NumberFormatException nfe) {
                 throw new RuntimeException("Invalid number of processors");
+            }
+
+            if(params.getHelp()) {
+                showHelp();
             }
 
             // Sets the number of cores to do the scheduling on
@@ -253,5 +258,27 @@ public class App {
         } catch (FileNotFoundException e) {
             throw new RuntimeException("Input file does not exist");
         }
+    }
+
+    /**
+     * Shows help for the inputs and optional flags.
+     *
+     * @author Aimee T
+     */
+    private static void showHelp(){
+        System.out.println(
+                "\n Welcome to Revilo Task Scheduler. " +
+                        "\n\n To use our scheduler, please provide the arguments [input file] [# processors to " +
+                        "schedule on] " +
+                        "\n \n Optional Flags: " +
+                        "\n\t\"--parallel\", \"-p\" allows the specification of the number of processors " +
+                        "to use to when running our scheduler " +
+                        "\n\t \"--visualise\", \"--visualize\", \"-v\" specifies if visualisation of current " +
+                        "progress should be shown" +
+                        "\n\t \"--output\", \"-o\" allows for the specification of a custom name for the output " +
+                        "file" +
+                        "\n\t \"--help\", \"-h\" specifies that this help message should be displayed." +
+                        "\n"
+        );
     }
 }

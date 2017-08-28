@@ -51,6 +51,7 @@ public class MainLauncherController implements Initializable, ScheduleResultList
 
     public MainLauncherController(App app, MainLauncher ml) {
         _nodeStarts = new ArrayList<>();
+        thisStage = ml.getPrimaryStage();
         this.app = app;
         this.ml = ml;
 
@@ -127,8 +128,9 @@ public class MainLauncherController implements Initializable, ScheduleResultList
             }
         });
 
-
         processorLabel.setText(App.getExecCores() + "");
+
+        // start running the algorithm
         Task task = new Task<Void>() {
             @Override
             public Void call() throws Exception {
@@ -140,6 +142,7 @@ public class MainLauncherController implements Initializable, ScheduleResultList
         thread.start();
 
         Timer timer = new Timer();
+        // update all the GUI information in a GUI thread
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
@@ -152,7 +155,7 @@ public class MainLauncherController implements Initializable, ScheduleResultList
                         // calculate current used memory
                         long currentMemory = Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory();
                         double timeElapsed = App.getRunningTime();
-                        memoryLabel.setText((currentMemory)  / (1024l * 1024l) + ""); //needs to be better
+                        memoryLabel.setText((currentMemory)  / (1024l * 1024l) + "");
                         timeLabel.setText(
                                 (timeElapsed>60)?
                                 String.format("%d:%02.0f", (int)timeElapsed/60, timeElapsed%60)
@@ -169,8 +172,7 @@ public class MainLauncherController implements Initializable, ScheduleResultList
             }
         }, 0, 50);
 
-
-
+        // Set up rest of GUI in a GUI thread. This will run only once
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
@@ -209,7 +211,6 @@ public class MainLauncherController implements Initializable, ScheduleResultList
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
-//                graphNameLabel.setText("  Processing complete! " + App.getInputFileName() + " Optimal length: " + App.getAlgorithmManager().getUpperBound()); //padding
                 systemLabel.setText("COMPLETE");
                 statusLabel.setText("Optimal length: " + App.getAlgorithmManager().getUpperBound() + " (Time taken: " + App.getRunningTime() + " seconds)");
             }
@@ -235,9 +236,20 @@ public class MainLauncherController implements Initializable, ScheduleResultList
 
         yAxis.setCategories(FXCollections.observableArrayList(processorCatStr));
         ganttChart = new GanttChart<Number, String>(xAxis, yAxis);
+
         ganttPane.setCenter(ganttChart);
 
-        
+
+
+        //live adjust gantt chart based on window size
+        ganttChart.heightProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                ganttChart.setBlockHeight(newValue.doubleValue()*0.70/(App.getExecCores()));
+
+            }
+        });
+
     }
 
     /**
@@ -258,13 +270,12 @@ public class MainLauncherController implements Initializable, ScheduleResultList
             pcatName.add(new ArrayList<>());
         }
 
-
         for (int i = 0; i < _nodeStarts.size(); i++) { //using node starts as not all nodes might be set yet
             int psr = _nodeProcessor.get(i);
             XYChart.Series psrCat = processorCat.get(psr);
             ArrayList<String> pcat = pcatName.get(psr);
             String styleclass;
-            switch (psr) {
+            switch (psr) { // set up colors for different processors
                 case 0: styleclass = "gantt0"; break;
                 case 1: styleclass = "gantt1"; break;
                 case 2: styleclass = "gantt2"; break;
@@ -291,7 +302,7 @@ public class MainLauncherController implements Initializable, ScheduleResultList
                 String node = pcatName.get(iterI).get(iterJ);   //nodename
                 int startTime = (int)d.getXValue();
                 String processor = (String)d.getYValue();
-                processor = processor.substring(processorStripLength); // value of "PSR " in previous loop
+                processor = processor.substring(processorStripLength);
                 ExtraData nodeW = (ExtraData)d.getExtraValue();
                 long nodeWeight = nodeW.getLength();
                 Tooltip.install(bar, new Tooltip("Node\t" + node + "\nWeight\t" + nodeWeight + "\nStart\t" + startTime + "\nProc.\t" + processor));
